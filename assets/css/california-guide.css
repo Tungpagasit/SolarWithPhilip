@@ -126,14 +126,13 @@
     .hero-visual { margin: 0; }
     .hero-photo-frame {
 position: relative;
-width: 750px;
-height: 750px;
-max-width: 100%;
+width: 650px;
+aspect-ratio: 1 / 1;
+overflow: hidden;
 border-radius: 28px;
 padding: 9px;
 background: linear-gradient(145deg, rgba(255,255,255,.27), rgba(255,255,255,.08));
 box-shadow: 0 30px 70px rgba(0,0,0,.30);
-overflow: hidden;
 }
     .hero-photo-frame::before {
       content: "";
@@ -152,8 +151,8 @@ width: 100%;
 height: 100%;
 display: block;
 border-radius: 21px;
-object-fit: cover;
-object-position: center center;
+object-fit: contain;
+object-position: center;
 background: var(--soft);
 }
     .hero-caption {
