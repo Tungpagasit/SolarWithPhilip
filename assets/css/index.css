@@ -47,3 +47,7 @@ color:#6B7280 !important;
 .footer .disclosure a{
 color:#6B7280 !important;
 }
+.swp-links a.active{
+background:#EEF6F5;
+color:#147D78;
+}
