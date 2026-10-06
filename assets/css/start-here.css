@@ -40,3 +40,8 @@ h1,h2,h3{color:var(--navy);line-height:1.18} h1{font-size:clamp(2.4rem,5vw,4.5re
 .swp-brand{font-weight:900;color:#12324A;text-decoration:none;white-space:nowrap}.swp-brand span{color:#E8A93A}
 .swp-links{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}.swp-links a{color:#20313D;text-decoration:none;font-size:.86rem;font-weight:700;padding:8px 9px;border-radius:9px}.swp-links a:hover{background:#EEF6F5;color:#147D78}
 @media(max-width:900px){.swp-nav-inner{align-items:flex-start;flex-direction:column}.swp-links{overflow:auto;flex-wrap:nowrap;width:100%;padding-bottom:4px}.swp-links a{white-space:nowrap}}
+
+
+.footer .disclosure{
+color:#495057 !important;
+}
