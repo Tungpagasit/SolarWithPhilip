@@ -125,12 +125,14 @@
     }
     .hero-visual { margin: 0; }
     .hero-photo-frame {
-      position: relative;
-      border-radius: 28px;
-      padding: 9px;
-      background: linear-gradient(145deg, rgba(255,255,255,.27), rgba(255,255,255,.08));
-      box-shadow: 0 30px 70px rgba(0,0,0,.30);
-    }
+position: relative;
+width: 650px;
+height: 650px;
+border-radius: 28px;
+padding: 9px;
+background: linear-gradient(145deg, rgba(255,255,255,.27), rgba(255,255,255,.08));
+box-shadow: 0 30px 70px rgba(0,0,0,.30);
+}
     .hero-photo-frame::before {
       content: "";
       position: absolute;
