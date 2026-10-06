@@ -127,7 +127,7 @@
     .hero-photo-frame {
 position: relative;
 width: 650px;
-height: 650px;
+height: 850px;
 border-radius: 28px;
 padding: 9px;
 background: linear-gradient(145deg, rgba(255,255,255,.27), rgba(255,255,255,.08));
