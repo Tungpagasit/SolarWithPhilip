@@ -50,3 +50,7 @@ background:#EEF6F5;
 .footer .disclosure{
 color:#20313D !important;
 }
+.swp-links a.active{
+background:#EEF6F5;
+color:#147D78;
+}
