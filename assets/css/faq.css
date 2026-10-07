@@ -47,6 +47,7 @@ color:#147D78;
 .faq-intro{
 background:#fff;
 border:1px solid var(--line);
+border-left:5px solid var(--gold);
 border-radius:20px;
 padding:28px;
 margin:24px 0 40px;
@@ -56,6 +57,8 @@ box-shadow:0 8px 24px rgba(0,0,0,.05);
 .faq-intro h2{
 margin:0 0 18px;
 color:var(--navy);
+font-size:clamp(1.6rem,3vw,2.2rem);
+line-height:1.2;
 }
  
 .faq-intro p{
