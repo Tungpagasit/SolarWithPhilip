@@ -44,3 +44,25 @@ h1,h2,h3{color:var(--navy);line-height:1.18} h1{font-size:clamp(2.4rem,5vw,4.5re
 background:#EEF6F5;
 color:#147D78;
 }
+.faq-intro{
+background:#fff;
+border:1px solid var(--line);
+border-radius:20px;
+padding:28px;
+margin:24px 0 40px;
+box-shadow:0 8px 24px rgba(0,0,0,.05);
+}
+ 
+.faq-intro h2{
+margin:0 0 18px;
+color:var(--navy);
+}
+ 
+.faq-intro p{
+margin:0 0 14px;
+line-height:1.75;
+}
+ 
+.faq-intro p:last-child{
+margin-bottom:0;
+}
