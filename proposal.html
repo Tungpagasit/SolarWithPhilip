@@ -207,7 +207,13 @@ What remains with the utility? What happens if usage grows? What is guaranteed? 
            i
           </span>
          </label>
-         <input name="email" required="" type="email"/>
+         <input
+  name="email"
+  required=""
+  type="email"
+  autocomplete="email"
+  maxlength="254"
+/>
         </div>
         <div>
          <label>
@@ -231,15 +237,36 @@ What remains with the utility? What happens if usage grows? What is guaranteed? 
           </option>
          </select>
         </div>
-        <div class="full">
-         <label>
-          Property address
-          <span class="info" title="The address is needed to evaluate utility territory, roof conditions, sun exposure and local requirements.">
-           i
-          </span>
-         </label>
-         <input name="address" required=""/>
-        </div>
+       <div class="full">
+ <label>
+  Property address
+  <span class="info" title="The property location helps identify utility territory and local requirements.">
+   i
+  </span>
+ </label>
+ <input name="address" required="" autocomplete="street-address"/>
+</div>
+
+<div>
+ <label>
+  City
+ </label>
+ <input name="city" required="" autocomplete="address-level2"/>
+</div>
+
+<div>
+ <label>
+  ZIP code
+ </label>
+ <input
+  name="zip"
+  required=""
+  inputmode="numeric"
+  autocomplete="postal-code"
+  pattern="[0-9]{5}(-[0-9]{4})?"
+  title="Enter a valid 5-digit ZIP code."
+ />
+</div>
         <div>
          <label>
           Utility company
@@ -284,7 +311,7 @@ What remains with the utility? What happens if usage grows? What is guaranteed? 
            i
           </span>
          </label>
-         <input accept=".pdf,.csv,.xlsx,.png,.jpg,.jpeg" name="usage" required="" type="file"/>
+         <input accept=".pdf,.csv,.xlsx,.png,.jpg,.jpeg" name="usage" type="file"/>
         </div>
         <div class="full">
          <label>
@@ -293,7 +320,7 @@ What remains with the utility? What happens if usage grows? What is guaranteed? 
            i
           </span>
          </label>
-         <input accept=".pdf,.png,.jpg,.jpeg,.txt" name="existing-proposal" required="" type="file"/>
+         <input accept=".pdf,.png,.jpg,.jpeg,.txt" name="existing-proposal" type="file"/>
         </div>
         <div class="full">
          <label>
@@ -337,7 +364,7 @@ What remains with the utility? What happens if usage grows? What is guaranteed? 
         </div>
         <div class="full">
          <label>
-          <input required="" style="width:auto" type="checkbox"/>
+          <input name="authorized" value="yes" required="" style="width:auto" type="checkbox"/>
           I authorize Philip to review this information and contact me using my selected method.
          </label>
         </div>
@@ -345,9 +372,12 @@ What remains with the utility? What happens if usage grows? What is guaranteed? 
        <button class="btn teal" type="submit">
         Submit My Information
        </button>
-       <p style="font-size:.87rem;color:var(--muted)">
-        Deployment note: configure Netlify form notifications to vt@wegreenourworld.com. Confirm file size limits and publish a privacy policy before launch.
-       </p>
+       <div id="proposal-message"
+     role="status"
+     aria-live="polite"
+     style="display:none;margin-top:18px;padding:16px;border-radius:10px;">
+</div>
+       
       </form>
      </div>
     </div>
@@ -424,6 +454,75 @@ What remains with the utility? What happens if usage grows? What is guaranteed? 
   </footer>
   <script src="assets/js/proposal.js">
   </script>
+  <script>
+const proposalForm = document.querySelector('form[name="proposal"]');
+const proposalMessage = document.getElementById('proposal-message');
+ 
+proposalForm.addEventListener('submit', async function (event) {
+event.preventDefault();
+ 
+if (!proposalForm.checkValidity()) {
+proposalForm.reportValidity();
+return;
+}
+ 
+const submitButton = proposalForm.querySelector('button[type="submit"]');
+const originalButtonText = submitButton.textContent;
+ 
+submitButton.disabled = true;
+submitButton.textContent = 'Sending...';
+ 
+proposalMessage.style.display = 'none';
+proposalMessage.textContent = '';
+ 
+try {
+const formData = new FormData(proposalForm);
+ 
+const response = await fetch(proposalForm.action, {
+method: 'POST',
+body: formData
+});
+ 
+const result = await response.json();
+ 
+if (!response.ok || !result.success) {
+throw new Error(
+result.error || 'We could not submit your information.'
+);
+}
+ 
+proposalMessage.style.display = 'block';
+proposalMessage.style.background = '#eaf7f3';
+proposalMessage.style.color = '#173f35';
+proposalMessage.style.border = '1px solid #9fd3c4';
+ 
+proposalMessage.innerHTML =
+'<strong>Thank you. Your information has been sent.</strong><br>' +
+'Philip will review what you provided and respond within 48 hours.';
+ 
+proposalForm.reset();
+ 
+proposalMessage.scrollIntoView({
+behavior: 'smooth',
+block: 'center'
+});
+ 
+} catch (error) {
+proposalMessage.style.display = 'block';
+proposalMessage.style.background = '#fff1f1';
+proposalMessage.style.color = '#8a1f1f';
+proposalMessage.style.border = '1px solid #e4aaaa';
+ 
+proposalMessage.textContent =
+error.message ||
+'We could not submit your information. Please try again.';
+} finally {
+submitButton.disabled = false;
+submitButton.textContent = originalButtonText;
+}
+});
+</script>
+Console
  </body>
 </html>
 
