@@ -1,1 +1,7 @@
+backend:
+  name: github
+  repo: Tungpagasit/SolarWithPhilip
+  branch: main
 
+media_folder: "assets/images"
+public_folder: "/assets/images"
