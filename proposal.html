@@ -499,7 +499,14 @@ throw new Error(
 result.error || 'We could not submit your information.'
 );
 }
- 
+
+ if (typeof gtag === 'function') {
+  gtag('event', 'generate_lead', {
+    lead_source: 'proposal_form',
+    form_name: 'proposal'
+  });
+}
+ 
 proposalMessage.style.display = 'block';
 proposalMessage.style.background = '#eaf7f3';
 proposalMessage.style.color = '#173f35';
