@@ -12,760 +12,1263 @@
 
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="description" content="A public-awareness page about California electricity costs, growing demand, and the implications for household finances."/>
+  <meta name="description" content="An evidence-based guide to what California electricity customers pay for, how demand and infrastructure shape costs, and why long-term household energy planning matters."/>
   <title>The Future of Energy Costs in California | Solar With Philip</title>
 
   <link href="assets/css/energy-costs.css" rel="stylesheet"/>
 
   <style>
-    .chart-figure{margin:24px 0 0}
-    .chart-image{display:block;width:100%;height:auto;border-radius:18px;border:1px solid rgba(15,45,68,.12);background:#fff}
-    .chart-caption{margin:12px 4px 0;color:var(--muted,#5d6b75);font-size:.92rem;line-height:1.55}
-    .chart-source-links{margin-top:14px;font-size:.9rem}
-    .chart-source-links a{overflow-wrap:anywhere}
-    .callout{margin:28px 0;padding:22px 24px;border-left:5px solid #16a085;border-radius:12px;background:#eef8f5}
+    :root{
+      --navy:#102b43;--navy-2:#173b59;--green:#124d42;--green-2:#17695c;
+      --teal:#169886;--gold:#efad24;--cream:#f7f1df;--sky:#eaf7fc;
+      --soft:#eef8f5;--paper:#ffffff;--ink:#173047;--muted:#5d6b75;
+      --line:rgba(15,45,68,.14);--shadow:0 16px 42px rgba(15,45,68,.10);
+      --radius:20px;--max:1180px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth;scroll-padding-top:120px}
+
+    body{
+      margin:0;
+      background:#fff;
+      color:var(--ink);
+      font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+      font-size:18px;
+      line-height:1.7
+    }
+
+    img{max-width:100%}
+    a{color:#087b8c;text-decoration-thickness:1px;text-underline-offset:3px}
+    a:hover{color:#055b68}
+
+    .container{width:min(calc(100% - 40px),var(--max));margin-inline:auto}
+    .narrow{max-width:900px}
+
+    .eyebrow{
+      margin:0 0 10px;
+      color:var(--teal);
+      font-size:.78rem;
+      font-weight:850;
+      letter-spacing:.14em;
+      text-transform:uppercase
+    }
+
+    h1,h2,h3{color:var(--navy);line-height:1.12;letter-spacing:-.025em}
+    h1{font-size:clamp(2.45rem,5.6vw,5.3rem)}
+    h2{font-size:clamp(2rem,3.7vw,3.55rem);margin:0 0 20px}
+    h3{font-size:1.28rem;margin:22px 0 9px}
+    p{margin:0 0 18px}
+
+    .lead{font-size:1.2rem;line-height:1.6}
+    .quiet-note,.source-note{color:var(--muted);font-size:.94rem}
+
+    .swp-site-nav{
+      position:sticky;
+      top:0;
+      z-index:50;
+      background:rgba(255,255,255,.97);
+      border-bottom:1px solid var(--line);
+      backdrop-filter:blur(12px)
+    }
+
+    .swp-nav-inner{
+      width:min(calc(100% - 34px),1280px);
+      margin:auto;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:26px;
+      min-height:72px
+    }
+
+    .swp-brand{
+      flex:0 0 auto;
+      color:var(--navy);
+      font-size:1.3rem;
+      font-weight:850;
+      text-decoration:none
+    }
+
+    .swp-brand span{color:var(--teal)}
+    .swp-links{display:flex;gap:6px;overflow-x:auto;padding:8px 0;scrollbar-width:none}
+
+    .swp-links a{
+      white-space:nowrap;
+      padding:8px 10px;
+      border-radius:9px;
+      color:#395164;
+      font-size:.83rem;
+      font-weight:700;
+      text-decoration:none
+    }
+
+    .swp-links a:hover,.swp-links a.active{color:var(--green);background:var(--soft)}
+
+    .opening-hero{
+      position:relative;
+      overflow:hidden;
+      padding:92px 0 82px;
+      color:#fff;
+      background:linear-gradient(135deg,#102b43 0%,#124d42 78%)
+    }
+
+    .opening-hero:after{
+      content:"";
+      position:absolute;
+      width:460px;
+      height:460px;
+      border-radius:50%;
+      right:-180px;
+      top:-190px;
+      border:90px solid rgba(255,255,255,.045)
+    }
+
+    .opening-hero .container{position:relative;z-index:1}
+    .opening-hero .eyebrow{color:#f7ce73}
+    .opening-hero h1{max-width:1030px;margin:8px 0 24px;color:#fff}
+
+    .opening-hero .lead{
+      max-width:920px;
+      color:#ecf7f5;
+      font-size:clamp(1.16rem,2vw,1.5rem)
+    }
+
+    .opening-hero .recognition{
+      max-width:960px;
+      margin-top:34px;
+      padding:26px 28px;
+      border:1px solid rgba(255,255,255,.22);
+      border-radius:18px;
+      background:rgba(255,255,255,.08);
+      box-shadow:0 16px 40px rgba(0,0,0,.12)
+    }
+
+    .opening-hero .recognition p:last-child{margin-bottom:0}
+
+    .nav{
+      position:sticky;
+      top:72px;
+      z-index:40;
+      background:#f8fbfd;
+      border-bottom:1px solid var(--line)
+    }
+
+    .nav-inner{display:flex;gap:8px;overflow-x:auto;padding:11px 0;scrollbar-width:none}
+
+    .nav a{
+      white-space:nowrap;
+      padding:7px 11px;
+      border-radius:20px;
+      color:#41596b;
+      font-size:.78rem;
+      font-weight:750;
+      text-decoration:none
+    }
+
+    .nav a:hover{background:#fff;color:var(--green)}
+
+    main>section{padding:84px 0}
+    .section-head{max-width:960px;margin-bottom:38px}
+    .section-head>p:last-child{font-size:1.08rem;color:#526776}
+    .alt{background:#f6f8fa}
+    .soft{background:var(--sky)}
+    .trust-band{background:linear-gradient(180deg,#eaf7f2,#fff)}
+    .guide-band{background:linear-gradient(180deg,#fbf3dd,#fff)}
+
+    details{
+      margin:14px 0;
+      border:1px solid var(--line);
+      border-radius:15px;
+      background:#fff;
+      box-shadow:0 7px 22px rgba(15,45,68,.045);
+      overflow:hidden
+    }
+
+    summary{
+      position:relative;
+      cursor:pointer;
+      list-style:none;
+      padding:21px 62px 21px 23px;
+      color:var(--navy);
+      font-weight:820;
+      line-height:1.35
+    }
+
+    summary::-webkit-details-marker{display:none}
+
+    summary:after{
+      content:"+";
+      position:absolute;
+      right:22px;
+      top:50%;
+      transform:translateY(-50%);
+      width:30px;
+      height:30px;
+      display:grid;
+      place-items:center;
+      border-radius:50%;
+      background:var(--soft);
+      color:var(--green);
+      font-size:1.35rem
+    }
+
+    details[open] summary{border-bottom:1px solid var(--line);background:#fbfdfd}
+    details[open] summary:after{content:"–"}
+
+    .details-body{padding:24px 25px 28px}
+    .details-body h3{margin-top:28px}
+    .details-body ul{padding-left:23px}
+    .details-body li{margin:9px 0}
+
+    .detail-source,.chart-source-links{
+      margin-top:22px;
+      padding:15px 17px;
+      border:1px solid rgba(15,45,68,.09);
+      border-radius:11px;
+      background:#f5f9fb;
+      color:#4b6070;
+      font-size:.88rem;
+      line-height:1.6
+    }
+
+    .detail-source strong{color:var(--navy)}
+
+    .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+    .grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+
+    .card,.movement-card{
+      padding:26px;
+      border:1px solid var(--line);
+      border-radius:18px;
+      background:#fff;
+      box-shadow:0 10px 28px rgba(15,45,68,.055)
+    }
+
+    .card h3,.movement-card h3{margin-top:0}
+
+    .movement-card>strong{
+      display:inline-grid;
+      place-items:center;
+      width:42px;
+      height:42px;
+      margin-bottom:17px;
+      border-radius:50%;
+      background:var(--green);
+      color:#fff
+    }
+
+    .statement{
+      padding:70px 0!important;
+      text-align:center;
+      background:var(--navy);
+      color:#fff
+    }
+
+    .statement h2{color:#fff}
+    .statement p{max-width:920px;margin:0 auto 16px;color:#edf4f7}
+
+    .final{
+      max-width:900px;
+      margin:28px auto;
+      padding:24px 27px;
+      border:1px solid rgba(255,255,255,.22);
+      border-radius:16px;
+      background:rgba(255,255,255,.08);
+      font-size:1.18rem;
+      font-weight:760;
+      line-height:1.5
+    }
+
+    .alt .final,.callout .final{
+      color:var(--navy);
+      border-color:var(--line);
+      background:#fff
+    }
+
+    .chart-card{
+      margin:28px 0 54px;
+      padding:28px;
+      border:1px solid var(--line);
+      border-radius:22px;
+      background:#fff;
+      box-shadow:var(--shadow)
+    }
+
+    .chart-card>h3{margin-top:0}
+    .chart-figure{margin:22px 0 0}
+
+    .chart-image{
+      display:block;
+      width:100%;
+      height:auto;
+      border:1px solid var(--line);
+      border-radius:16px;
+      background:#fff
+    }
+
+    .chart-caption{margin:13px 4px 0;color:var(--muted);font-size:.9rem;line-height:1.55}
+
+    .callout{
+      margin:26px 0;
+      padding:22px 24px;
+      border-left:5px solid var(--teal);
+      border-radius:12px;
+      background:var(--soft)
+    }
+
     .callout h3{margin-top:0}
     .callout p:last-child{margin-bottom:0}
-    .solar-response{background:#f7f1df}
-    .solar-response .chart-card{max-width:1180px;margin-inline:auto}
-    @media(max-width:700px){
-      .chart-image{border-radius:10px}
-      .callout{padding:18px}
+
+    .reader-thought{
+      max-width:900px;
+      margin:40px auto 0;
+      padding:25px 27px;
+      border:1px solid rgba(18,77,66,.18);
+      border-radius:16px;
+      background:var(--soft);
+      color:#334f5e;
+      text-align:center;
+      box-shadow:0 12px 30px rgba(15,45,68,.07)
+    }
+
+    .reader-thought strong{color:var(--green)}
+
+    .personal{
+      padding:38px;
+      border:1px solid rgba(18,77,66,.15);
+      border-radius:22px;
+      background:#fff;
+      box-shadow:var(--shadow)
+    }
+
+    .hero-question{
+      margin:28px 0;
+      padding:25px;
+      border-left:5px solid var(--gold);
+      border-radius:12px;
+      background:#fff;
+      font-size:1.18rem;
+      font-weight:700;
+      color:var(--navy)
+    }
+
+    .section-bridge{
+      padding:76px 0!important;
+      background:linear-gradient(135deg,var(--navy),var(--navy-2));
+      text-align:center;
+      color:#fff
+    }
+
+    .section-bridge h2{color:#fff}
+
+    .section-bridge p{
+      max-width:900px;
+      margin:0 auto 18px;
+      color:#eef5f8;
+      font-size:1.12rem
+    }
+
+    .solar-response{background:var(--cream)}
+    .movement{background:#f0f7f4}
+
+    .share{
+      padding:42px;
+      border-radius:24px;
+      background:linear-gradient(135deg,#102b43,#124d42);
+      color:#fff;
+      box-shadow:var(--shadow)
+    }
+
+    .share h2{color:#fff}
+    .share .eyebrow{color:#f7ce73}
+    .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+
+    .button{
+      appearance:none;
+      border:0;
+      border-radius:11px;
+      padding:13px 18px;
+      background:var(--gold);
+      color:#173047;
+      font:inherit;
+      font-size:.92rem;
+      font-weight:850;
+      cursor:pointer
+    }
+
+    .button.secondary{
+      border:1px solid rgba(255,255,255,.32);
+      background:transparent;
+      color:#fff
+    }
+
+    .button:hover{filter:brightness(.97);transform:translateY(-1px)}
+    .status{margin-top:14px;min-height:1.2em}
+    .source-list{padding-left:22px}
+    .source-list li{margin:11px 0}
+
+    .footer{
+      padding:80px 0;
+      background:#0b2235;
+      color:#eaf1f4;
+      text-align:center
+    }
+
+    .footer h2{color:#fff}
+    .footer .eyebrow{color:#f7ce73}
+    .footer p{max-width:900px;margin:0 auto 18px}
+    .footer .final{color:#fff}
+
+    @media(max-width:900px){
+      body{font-size:17px}
+      .grid,.grid.two{grid-template-columns:1fr}
+      .swp-nav-inner{display:block;padding-top:12px}
+      .swp-site-nav{position:relative}
+      .nav{top:0}
+      .opening-hero{padding:68px 0}
+      .opening-hero h1{font-size:clamp(2.35rem,10vw,4rem)}
+      main>section{padding:68px 0}
+      .chart-card{padding:20px}
+      .personal,.share{padding:29px}
+    }
+
+    @media(max-width:600px){
+      .container{width:min(calc(100% - 26px),var(--max))}
+      .opening-hero{padding:54px 0}
+      .opening-hero .recognition{padding:20px}
+      .nav{position:relative}
+      .details-body{padding:20px}
+      summary{padding:18px 54px 18px 18px}
+      .chart-card{margin-bottom:36px;padding:14px;border-radius:15px}
+      .chart-image{border-radius:9px}
+      .callout,.reader-thought{padding:19px}
+      .actions{display:grid}
+      .button{width:100%}
+      .footer{padding:64px 0}
+    }
+
+    @media print{
+      .swp-site-nav,.nav,.actions{display:none!important}
+      .opening-hero,.statement,.section-bridge,.footer,.share{background:#fff!important;color:#000!important}
+      .opening-hero h1,.statement h2,.section-bridge h2,.footer h2,.share h2{color:#000!important}
+      details{break-inside:avoid}
+      details:not([open])>.details-body{display:block!important}
+      .chart-card{box-shadow:none;break-inside:avoid}
+      .footer .final,.final{color:#000!important;border-color:#ccc!important}
     }
   </style>
 </head>
 
 <body>
 
-  <nav class="swp-site-nav">
-    <div class="swp-nav-inner">
-      <a class="swp-brand" href="index.html">Solar With <span>Philip</span></a>
-      <div class="swp-links">
-        <a href="index.html">Home</a>
-        <a href="start-here.html">Start Here</a>
-        <a href="proposal.html">Proposal</a>
-        <a href="energy-strategies.html">Energy Strategies</a>
-        <a href="california-guide.html">California Guide</a>
-        <a href="energy-costs.html" class="active">Energy Costs</a>
-        <a href="faq.html">FAQ</a>
-        <a href="about.html">About</a>
-        <a href="reviews.html">Reviews</a>
-        <a href="contact.html">Contact</a>
-      </div>
+<nav class="swp-site-nav">
+  <div class="swp-nav-inner">
+    <a class="swp-brand" href="index.html">Solar With <span>Philip</span></a>
+    <div class="swp-links">
+      <a href="index.html">Home</a>
+      <a href="start-here.html">Start Here</a>
+      <a href="proposal.html">Proposal</a>
+      <a href="energy-strategies.html">Energy Strategies</a>
+      <a href="california-guide.html">California Guide</a>
+      <a href="energy-costs.html" class="active">Energy Costs</a>
+      <a href="faq.html">FAQ</a>
+      <a href="about.html">About</a>
+      <a href="reviews.html">Reviews</a>
+      <a href="contact.html">Contact</a>
     </div>
-  </nav>
+  </div>
+</nav>
 
-  <header class="hero">
-    <div class="container">
-      <p class="eyebrow">Energy Costs Page</p>
-      <h1>The Future of Energy Costs in California</h1>
-      <h2>Looking Beyond Today’s Utility Bill</h2>
+<header class="opening-hero" id="top">
+  <div class="container">
+    <p class="eyebrow">Before Deciding Whether Solar Makes Sense</p>
+    <h1>Look at What You Are Paying for Now and the Cost of Not Changing</h1>
+    <p class="lead">
+      A household electric bill reflects more than the electricity used inside one home. It is connected to a vast system that must generate, move, balance, protect, store, and reliably deliver power as California's needs change.
+    </p>
 
-      <p>Most homeowners focus on this month’s bill.</p>
-
-      <div class="hero-question">
-        The more important question may be:<br/><br/>
-        What role will electricity play in your household finances over the next 10, 20, or 25 years?
-      </div>
-
-      <p style="margin-top:28px">
-        Electricity affects more than a utility bill. It can influence household budgets, retirement planning, transportation, business costs, comfort, lifestyle choices, and financial flexibility.
-      </p>
-
-      <p><strong>This page is not about fear.</strong></p>
-
+    <div class="recognition">
+      <p><strong>Every monthly bill pays for more than the electricity used inside one home.</strong></p>
       <p>
-        It is about understanding what has already changed, what is placing new demands on the electric system, and why long-term energy planning deserves attention.
+        It also reflects the shared system that produces, moves, protects, balances, and delivers electricity, along with the continuing work required to keep that system dependable as California changes.
       </p>
     </div>
-  </header>
-
-  <nav class="nav">
-    <div class="container nav-inner">
-      <a href="#standards">Information standards</a>
-      <a href="#drivers">Cost drivers</a>
-      <a href="#rates">Rates vs inflation</a>
-      <a href="#demand">Demand and EVs</a>
-      <a href="#solar-response">Homeowner response</a>
-      <a href="#impact">Household impact</a>
-      <a href="#movement">The movement</a>
-      <a href="#share">Share</a>
-    </div>
-  </nav>
-
-  <main>
-
-    <section class="alt">
-      <div class="container narrow">
-        <div class="section-head">
-          <p class="eyebrow">A long-term view</p>
-          <h2>Important Financial Decisions Are Often Made Before the Cost Becomes Obvious</h2>
-        </div>
-
-        <p class="lead">People buy health insurance before they are sick.</p>
-        <p class="lead">People save for retirement before they stop working.</p>
-        <p class="lead">People purchase life insurance before it is needed.</p>
-        <p class="lead">Long-term energy planning may deserve the same kind of foresight.</p>
-
-        <p>
-          The goal is not to predict one exact future price. The goal is to recognize long-term exposure early enough to preserve meaningful choices.
-        </p>
-      </div>
-    </section>
-
-    <section class="statement">
-      <div class="container">
-        <h2>The Goal Is Not to Predict the Future</h2>
-        <p>
-          No one knows exactly what electricity will cost 10, 20, or 30 years from now. History, however, can show what has already happened. Changes in demand and infrastructure can also reveal why electricity is becoming more important across the economy.
-        </p>
-      </div>
-    </section>
-
-    <section class="soft" id="standards">
-      <div class="container">
-        <div class="section-head">
-          <p class="eyebrow">How this page was built</p>
-          <h2>Before You Read Another Number, Know What It Measures</h2>
-          <p>
-            The challenge is not simply finding information. The challenge is separating measurements that answer different questions, understanding the source, and recognizing the limits of every chart.
-          </p>
-        </div>
-
-        <details open>
-          <summary>Sources intentionally not used as primary support</summary>
-          <div class="details-body">
-            <p>
-              To reduce the influence of organizations with direct financial or political interests, this page does not rely on the following as primary interpretation:
-            </p>
-            <ul>
-              <li>Utility-company marketing materials.</li>
-              <li>Solar-company, installer, finance-provider, lease-provider, or lead-generation marketing materials.</li>
-              <li>Political talking points or fear-based predictions.</li>
-            </ul>
-            <p>
-              Original government datasets, filings, tariffs, and official records may be used when necessary to verify a specific fact. When they are used, the chart should identify the measurement and limitation clearly.
-            </p>
-          </div>
-        </details>
-
-        <details>
-          <summary>Sources preferred</summary>
-          <div class="details-body">
-            <ul>
-              <li>Public datasets that can be reviewed or reproduced.</li>
-              <li>Independent analysts with transparent methodology.</li>
-              <li>Academic, economic, consumer, and affordability research.</li>
-              <li>Multiple sources when a claim requires additional context.</li>
-            </ul>
-          </div>
-        </details>
-
-        <details>
-          <summary>The Informed Homeowner Principle</summary>
-          <div class="details-body">
-            <p>
-              <strong>Do not blindly trust utility companies. Do not blindly trust energy companies. Do not blindly trust politicians. Do not blindly trust websites, including this one.</strong>
-            </p>
-            <p>
-              Verify. Compare. Think critically. Ask what is being measured, what is included, what is excluded, and whether a number is historical, averaged, preliminary, estimated, or projected.
-            </p>
-          </div>
-        </details>
-      </div>
-    </section>
-
-    <section id="drivers">
-      <div class="container">
-        <div class="section-head">
-          <p class="eyebrow">What drives electricity costs?</p>
-          <h2>The Complete Picture Is More Complex Than One Company Choosing a Price</h2>
-          <p>
-            Electricity prices reflect a system that must generate, move, store, manage, protect, and reliably deliver power as technology and demand change.
-          </p>
-        </div>
-
-        <details>
-          <summary>Growing and changing energy demand</summary>
-          <div class="details-body">
-            <p>Activities that once relied on gasoline or natural gas are increasingly shifting toward electricity.</p>
-            <ul>
-              <li>Electric vehicles and commercial fleets</li>
-              <li>Heat pumps and electric water heating</li>
-              <li>Data centers and artificial-intelligence infrastructure</li>
-              <li>Manufacturing and other large commercial loads</li>
-            </ul>
-            <p>
-              Where and when new demand appears can be as important as how much electricity it uses.
-            </p>
-          </div>
-        </details>
-
-        <details>
-          <summary>Aging infrastructure</summary>
-          <div class="details-body">
-            <p>
-              California’s electric grid was built over decades. Equipment requires ongoing inspection, maintenance, modernization, replacement, and expansion.
-            </p>
-          </div>
-        </details>
-
-        <details>
-          <summary>Wildfire prevention and vegetation management</summary>
-          <div class="details-body">
-            <p>
-              Maintaining a system in wildfire-prone areas can include equipment inspection, vegetation management, infrastructure hardening, monitoring, rebuilding, insurance, emergency work, and selected undergrounding.
-            </p>
-          </div>
-        </details>
-
-        <details>
-          <summary>Renewable-energy transition and storage</summary>
-          <div class="details-body">
-            <p>
-              Renewable generation can reduce fuel use, while a changing generation mix can also require transmission, storage, flexible demand, reserve capacity, and new operating practices.
-            </p>
-          </div>
-        </details>
-
-        <details>
-          <summary>Reliability requirements</summary>
-          <div class="details-body">
-            <p>
-              The electric system must continue operating during heat waves, extreme weather, wildfire conditions, equipment failures, and periods of high demand. Reliability requires planning and investment.
-            </p>
-          </div>
-        </details>
-      </div>
-    </section>
-
-    <section class="statement">
-      <div class="container">
-        <h2>Using the Same Amount of Electricity Does Not Guarantee Paying the Same Amount</h2>
-        <p>
-          Household usage matters, but the price of electricity also reflects the cost of operating and changing the larger system.
-        </p>
-      </div>
-    </section>
-
-    <section class="alt" id="rates">
-      <div class="container">
-        <div class="section-head">
-          <p class="eyebrow">A decade of change</p>
-          <h2>California Electricity Costs Have Risen Faster Than General Inflation</h2>
-          <p>
-            The chart compares published changes in residential average electric rates with a general-inflation comparison for the stated period. It describes history, not a promise about future rates.
-          </p>
-        </div>
-
-        <article class="chart-card">
-          <h3>Chart 1: Residential Electric Rate Change vs. General Inflation</h3>
-
-          <figure class="chart-figure">
-            <img
-              class="chart-image"
-              src="assets/images/chart-1-electricity-inflation.png"
-              alt="Bar chart comparing California residential average electric rate increases for PG&amp;E, SCE, and SDG&amp;E with general inflation from January 2015 through April 2025."
-              loading="lazy"
-            />
-            <figcaption class="chart-caption">
-              Historical rate changes are not forecasts. The measurements, dates, and source notes shown in the chart should be reviewed before applying the comparison to an individual household.
-            </figcaption>
-          </figure>
-
-          <div class="callout">
-            <h3>The household question</h3>
-            <p>
-              If an essential recurring cost rises faster than general inflation for an extended period, how could that affect savings, retirement planning, and other household priorities?
-            </p>
-          </div>
-
-          <details>
-            <summary>What this chart shows</summary>
-            <div class="details-body">
-              <p>
-                The chart shows published percentage changes in residential average electric rates for the three named investor-owned utilities and a general-inflation comparison over the chart’s stated period.
-              </p>
-            </div>
-          </details>
-
-          <details>
-            <summary>What this chart does not show</summary>
-            <div class="details-body">
-              <p>
-                It does not represent every customer’s bill, every rate plan, fixed charges, discounts, household usage, or future price changes. Actual household results vary.
-              </p>
-            </div>
-          </details>
-        </article>
-      </div>
-    </section>
-
-    <section>
-      <div class="container">
-        <div class="section-head">
-          <p class="eyebrow">Electricity is becoming more important</p>
-          <h2>A Generation Ago, Electricity Primarily Powered Lights and Appliances</h2>
-          <p>
-            Today electricity increasingly supports transportation, home comfort, work, internet connectivity, security, digital services, and technologies embedded in daily life.
-          </p>
-        </div>
-
-        <div class="grid">
-          <article class="card icon-card">
-            <h3>Transportation</h3>
-            <p>Vehicle charging moves part of transportation energy from gasoline toward the electric system.</p>
-          </article>
-
-          <article class="card icon-card">
-            <h3>Homes</h3>
-            <p>Cooling, heat pumps, water heating, batteries, home offices, and connected devices increase dependence on reliable electricity.</p>
-          </article>
-
-          <article class="card icon-card">
-            <h3>Business and Technology</h3>
-            <p>Warehouses, fleet depots, manufacturing, data centers, communications, and artificial intelligence require physical electrical infrastructure.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="soft" id="demand">
-      <div class="container">
-        <div class="section-head">
-          <p class="eyebrow">The demand picture</p>
-          <h2>Homeowners Are Not the Only Ones Becoming More Dependent on Electricity</h2>
-          <p>
-            The purpose is not to label electrification as good or bad. The purpose is to understand the scale, timing, location, and infrastructure involved as more of the economy depends on electricity.
-          </p>
-        </div>
-
-        <article class="chart-card">
-          <h3>Chart 2: California EV Adoption Has Accelerated Rapidly</h3>
-
-          <figure class="chart-figure">
-            <img
-              class="chart-image"
-              src="assets/images/chart-2-ev-adoption.png"
-              alt="Bar chart showing annual new California light-duty battery-electric and plug-in-hybrid vehicle sales from 2013 through 2025, plus a cumulative sales figure through the second quarter of 2026."
-              loading="lazy"
-            />
-            <figcaption class="chart-caption">
-              Annual vehicle sales show adoption activity. They do not directly measure vehicle charging, charging time, grid location, or total electricity demand.
-            </figcaption>
-          </figure>
-
-          <div class="callout">
-            <h3>Why this matters</h3>
-            <p>
-              Every vehicle does not charge at the same time or place. But sustained growth in plug-in vehicles creates a new category of electricity use that must be served by homes, workplaces, fleet yards, apartments, public chargers, and transportation corridors.
-            </p>
-          </div>
-
-          <details>
-            <summary>Residential and commercial charging are different</summary>
-            <div class="details-body">
-              <p>
-                Residential charging is distributed across homes. Commercial charging can concentrate substantial power requirements at fleet yards, workplaces, warehouses, public charging sites, apartment properties, and transportation corridors.
-              </p>
-            </div>
-          </details>
-        </article>
-
-        <article class="chart-card">
-          <h3>Chart 3: California’s Vehicle Fleet Is Changing</h3>
-
-          <figure class="chart-figure">
-            <img
-              class="chart-image"
-              src="assets/images/chart-3-vehicle-mix.png"
-              alt="Infographic comparing the approximate 2022 and 2025 composition of California's registered light-duty vehicle fleet by gasoline, hybrid, plug-in-hybrid, battery-electric, and other vehicles, with a separate international comparison of 2025 new-car EV sales shares."
-              loading="lazy"
-            />
-            <figcaption class="chart-caption">
-              Registered-fleet composition and one-year new-car sales share are different measurements. The chart separates them and identifies the California comparison as approximate because the two years use different published datasets and methodologies.
-            </figcaption>
-          </figure>
-
-          <div class="callout">
-            <h3>The transition is visible, but incomplete</h3>
-            <p>
-              Plug-in vehicles can grow rapidly in new-car sales while still representing a smaller portion of the total registered fleet. That distinction matters when considering both the pace and duration of future charging growth.
-            </p>
-          </div>
-
-          <details>
-            <summary>Why vehicle definitions matter</summary>
-            <div class="details-body">
-              <p>
-                A battery-electric vehicle relies on stored electricity. A plug-in hybrid uses electricity and fuel. A conventional hybrid generally does not charge from the grid. Combining these categories can overstate electricity demand.
-              </p>
-            </div>
-          </details>
-        </article>
-
-        <article class="chart-card">
-          <h3>Chart 4: Who Is Driving Future Electricity Demand?</h3>
-
-          <figure class="chart-figure">
-            <img
-              class="chart-image"
-              src="assets/images/chart-4-electric-demand.png"
-              alt="Infographic comparing traditional California residential, commercial, and industrial electricity consumption with emerging loads from consumer EV charging, data centers, and artificial intelligence."
-              loading="lazy"
-            />
-            <figcaption class="chart-caption">
-              The infographic combines California sector figures with separately identified EV-charging and data-center measurements. Values may use different reporting methods and should not be treated as one directly additive dataset.
-            </figcaption>
-          </figure>
-
-          <div class="callout">
-            <h3>Future demand is no longer only about homes</h3>
-            <p>
-              Households remain important electricity users, but the grid increasingly serves transportation, business operations, logistics, cloud computing, data centers, artificial intelligence, and other emerging loads.
-            </p>
-          </div>
-
-          <details>
-            <summary>Consumer EV charging</summary>
-            <div class="details-body">
-              <p>
-                The chart illustrates growth in a newer category of electricity consumption. Charging time and location determine how that energy use interacts with local infrastructure and system peaks.
-              </p>
-            </div>
-          </details>
-
-          <details>
-            <summary>Data centers and artificial intelligence</summary>
-            <div class="details-body">
-              <p>
-                Digital services require computing facilities, cooling, networking, and reliable power. California-specific figures and broader U.S. figures must remain clearly separated.
-              </p>
-            </div>
-          </details>
-
-          <details>
-            <summary>Manufacturing and building electrification</summary>
-            <div class="details-body">
-              <p>
-                Industrial processes and buildings may shift from fossil fuels to electricity, changing both the volume and timing of demand.
-              </p>
-            </div>
-          </details>
-        </article>
-      </div>
-    </section>
-
-    <section class="statement">
-      <div class="container">
-        <h2>Electricity Must Be Available at the Right Time and in the Right Place</h2>
-        <p>
-          Total annual energy is only part of the story. Transmission, substations, local distribution, transformers, storage, charging infrastructure, and reliability resources must support when and where electricity is needed.
-        </p>
-      </div>
-    </section>
-
-    <section id="infrastructure">
-      <div class="container">
-        <div class="section-head">
-          <p class="eyebrow">The infrastructure challenge</p>
-          <h2>The System Behind the Outlet Also Has a Cost</h2>
-          <p>Producing electricity is only one part of delivering dependable power.</p>
-        </div>
-
-        <div class="grid">
-          <article class="card">
-            <h3>Transmission</h3>
-            <p>Moving electricity over long distances.</p>
-          </article>
-          <article class="card">
-            <h3>Distribution</h3>
-            <p>Delivering power through substations, feeders, transformers, poles, and wires.</p>
-          </article>
-          <article class="card">
-            <h3>Storage</h3>
-            <p>Shifting electricity across time and helping balance supply and demand.</p>
-          </article>
-          <article class="card">
-            <h3>Reliability</h3>
-            <p>Maintaining service during extreme conditions, equipment failures, and high-demand periods.</p>
-          </article>
-          <article class="card">
-            <h3>Vegetation Management</h3>
-            <p>Inspection, planning, tree trimming, hazard removal, and clearance work around infrastructure.</p>
-          </article>
-          <article class="card">
-            <h3>Wildfire Protection</h3>
-            <p>Hardening, monitoring, rebuilding, insurance, emergency work, and selected undergrounding.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="solar-response" id="solar-response">
-      <div class="container">
-        <div class="section-head">
-          <p class="eyebrow">A historic homeowner response</p>
-          <h2>Millions of Californians Chose to Produce Electricity Where It Is Used</h2>
-          <p>
-            Rooftop solar grew from an early-adopter choice into a significant customer-sited energy resource. This history does not prove that solar is right for every household, but it shows that many Californians sought a more active role in how their electricity was produced.
-          </p>
-        </div>
-
-        <article class="chart-card">
-          <h3>Chart 5: Californians Voted With Their Roofs</h3>
-
-          <figure class="chart-figure">
-            <img
-              class="chart-image"
-              src="assets/images/chart-5-rooftop-solar.png"
-              alt="Timeline infographic showing the growth of California customer-sited solar from an early-adopter choice in 2005 to 17.4 gigawatts of customer-sited solar capacity by 2024, with an estimated annual electricity-use equivalent of roughly five million California homes."
-              loading="lazy"
-            />
-            <figcaption class="chart-caption">
-              The homes-equivalent figure illustrates scale. It is not a count of solar homes. Actual solar production varies by location, orientation, weather, shading, and system performance.
-            </figcaption>
-          </figure>
-
-          <div class="callout">
-            <h3>The larger lesson</h3>
-            <p>
-              California homeowners did not all choose solar for the same reason. But the scale of adoption shows a broad desire for greater control, more predictable long-term planning, and less dependence on buying every kilowatt-hour from the utility.
-            </p>
-          </div>
-
-          <details>
-            <summary>What this chart does and does not show</summary>
-            <div class="details-body">
-              <p>The chart uses customer-sited solar capacity to illustrate the scale of distributed solar in California.</p>
-              <p>
-                It does not show the number of solar homes, prove savings for a particular household, predict future utility rates, or establish that solar is the correct choice for everyone.
-              </p>
-            </div>
-          </details>
-        </article>
-      </div>
-    </section>
-
-    <section class="statement">
-      <div class="container">
-        <h2>A Pattern Worth Paying Attention To</h2>
-
-        <p>The purpose of this page is not to convince every homeowner to install solar.</p>
-        <p>The purpose is to ask a simple question:</p>
-
-        <div class="final">
-          If millions of California homeowners voluntarily invested their own money, signed long-term agreements, or chose to place solar on their homes over the last two decades, what did they see that others may have overlooked?
-        </div>
-
-        <p>People rarely act at that scale without a reason.</p>
-        <p>Some wanted environmental benefits.</p>
-        <p>Some wanted more predictable long-term energy expenses.</p>
-        <p>Some wanted protection from future utility costs.</p>
-        <p>Some wanted greater energy independence.</p>
-        <p>Some simply wanted greater control over an important part of their household budget.</p>
-        <p>The reasons may differ.</p>
-        <p><strong>The pattern is difficult to ignore.</strong></p>
-      </div>
-    </section>
-
-    <section class="alt" id="impact">
-      <div class="container">
-        <div class="section-head">
-          <p class="eyebrow">The human consequence</p>
-          <h2>The Cost of Electricity Affects More Than Electricity</h2>
-          <p>When an essential recurring expense rises, it competes with other uses of income.</p>
-        </div>
-
-        <div class="grid two">
-          <article class="card<p>For years, many Californians conserved energy because it felt environmentally responsible.</p>
-            <p>A different possibility may emerge: some households may conserve primarily because they feel financially pressured.</p>
-            <p><strong>Energy efficiency is empowering when it is a choice. It feels different when it becomes a necessity.</strong></p>
-          </div>
-        </details>
-
-        <details>
-          <summary>Could energy costs contribute to people leaving California?</summary>
-          <div class="details-body">
-            <p>
-              Electricity alone does not determine where someone lives. It joins housing, insurance, transportation, food, taxes, and other costs that collectively shape household affordability.
-            </p>
-            <p>
-              This page does not predict that people will leave. It recognizes that recurring energy costs can add to broader financial pressure.
-            </p>
-          </div>
-        </details>
-      </div>
-    </section>
-
-    <section>
-      <div class="container">
-        <div class="personal">
-          <p class="eyebrow">Why I created this page</p>
-          <h2>This Comes From Care, Not Fear</h2>
-
-          <p class="lead">I am not sharing this information to frighten anyone.</p>
-
-          <p>
-            I am sharing it because energy decisions have long-term consequences, and too many people are expected to make those decisions without seeing the larger picture.
-          </p>
-
-          <p>
-            A utility bill affects the comfort of our homes, our transportation, our savings, our retirement plans, our businesses, and the choices available to our families.
-          </p>
-
-          <p>
-            We may not control every policy, utility decision, wildfire cost, infrastructure project, or market change. But we can understand our exposure, compare available choices, and plan earlier.
-          </p>
-
-          <p><strong>The goal is awareness early enough that people still have choices.</strong></p>
-        </div>
-      </div>
-    </section>
-
-    <section class="movement" id="movement">
-      <div class="container">
-        <div class="section-head">
-          <p class="eyebrow">The Informed Homeowner Movement</p>
-          <h2>Awareness Should Be Shared, Not Sold</h2>
-          <p>
-            The Informed Homeowner Movement is a simple idea: Californians should help one another understand the costs, risks, contracts, assumptions, and long-term choices connected to home energy.
-          </p>
-        </div>
-
-        <div class="grid">
-          <article class="movement-card">
-            <strong>01</strong>
-            <h3>Better Information</h3>
-            <p>Use verifiable sources, explain measurements, separate history from estimates or projections, and disclose limitations.</p>
-          </article>
-
-          <article class="movement-card">
-            <strong>02</strong>
-            <h3>Better Questions</h3>
-            <p>Ask what a number includes, who produced it, how it was calculated, and whether it matches the complete household experience.</p>
-          </article>
-
-          <article class="movement-card">
-            <strong>03</strong>
-            <h3>Better Decisions</h3>
-            <p>Respect that every household is different. Information should expand thoughtful choices, not pressure everyone into one answer.</p>
-          </article>
-        </div>
-
-        <details>
-          <summary>What the movement stands for</summary>
-          <div class="details-body">
-            <ul>
-              <li>Independent thinking rather than blind trust.</li>
-              <li>Plain-language explanations rather than technical fog.</li>
-              <li>Complete cost rather than one attractive number.</li>
-              <li>Questioning both utility-industry and energy-industry claims.</li>
-              <li>Sharing useful information with family, neighbors, and the community.</li>
-            </ul>
-          </div>
-        </details>
-
-        <details>
-          <summary>What the movement does not stand for</summary>
-          <div class="details-body">
-            <ul>
-              <li>Fear-based predictions.</li>
-              <li>Utility bashing or political blame.</li>
-              <li>Assuming every forecast will happen exactly as modeled.</li>
-              <li>Telling every person to make the same decision.</li>
-              <li>Selecting facts only because they support a preferred conclusion.</li>
-            </ul>
-          </div>
-        </details>
-      </div>
-    </section>
-
-    <section id="share">
-      <div class="container">
-        <div class="share">
-          <p class="eyebrow">Help one more person become informed</p>
-
-          <h2>If This Information Helped You, Share It Before Someone You Care About Needs It</h2>
-
-          <p class="lead narrow">
-            Many people do not think about energy costs until they become a problem. By then, some opportunities may already be behind them.
-          </p>
-
-          <p>Awareness costs nothing.</p>
-          <p>Waiting can be expensive.</p>
-
-          <p>
-            If this page helped you think differently about California energy costs, consider sharing it with a family member, neighbor, retiree, homeowner, renter, working household, or small-business owner.
-          </p>
-
-          <p>
-            <strong>Not to alarm them. Not to sell them something. To help them ask better questions while meaningful choices are still available.</strong>
-          </p>
-
-          <div class="actions">
-            <button class="button" id="shareButton" type="button">Share This Energy Cost Guide</button>
-            <button class="button secondary" id="copyButton" type="button">Copy Page Link</button>
-            <button class="button secondary" onclick="window.print()" type="button">Print or Save as PDF</button>
-          </div>
-
-          <div aria-live="polite" class="status" id="status" role="status"></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="soft">
-      <div class="container">
-        <div class="section-head">
-          <p class="eyebrow">Chart and source standards</p>
-          <h2>How to Read the Visual Evidence on This Page</h2>
-          <p>
-            The charts answer different questions and do not all use the same units, geography, dates, or methodology. Each chart should be considered with its own title, source notes, disclosures, and limitations.
-          </p>
-        </div>
-
-        <details>
-          <summary>Minimum requirements for every chart</summary>
-          <div class="details-body">
-            <ul>
-              <li>Clear title, geography, and time period.</li>
-              <li>Plain-language units and readable labels.</li>
-              <li>Visible distinction between historical, preliminary, estimated, and projected values.</li>
-              <li>Source, date, methodology, and important limitations.</li>
-              <li>Alternative text for accessibility.</li>
-            </ul>
-          </div>
-        </details>
-
-        <p class="source-note">
-          <strong>Editorial standard:</strong> This page should never select a number because it creates the strongest reaction. It should use the measurement that best answers the stated question and explain what that measurement does and does not represent.
-        </p>
-      </div>
-    </section>
-
-  </main>
-
-  <footer class="footer">
-    <div class="container">
-      <p class="eyebrow">The closing thought</p>
-      <h2>The Goal Is Not Fear. The Goal Is Foresight.</h2>
-
+  </div>
+</header>
+
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="#drivers">What you pay for</a>
+    <a href="#rates">Rates vs inflation</a>
+    <a href="#demand">Changing demand</a>
+    <a href="#standards">Information standards</a>
+    <a href="#future">Long-term view</a>
+    <a href="#solar-response">Homeowner response</a>
+    <a href="#impact">Household impact</a>
+    <a href="#movement">The movement</a>
+    <a href="#share">Share</a>
+  </div>
+</nav>
+
+<main>
+
+<section id="drivers">
+  <div class="container">
+
+    <div class="section-head">
+      <p class="eyebrow">What drives electricity costs?</p>
+      <h2>The Complete Picture Is More Complex Than One Company Choosing a Price</h2>
       <p>
-        No chart can tell anyone exactly what electricity will cost in 10 or 20 years. History can show what has changed. Current adoption and consumption patterns can show how electricity’s role is expanding. Each household can then decide whether continuing without a long-term energy-cost plan is a risk it is comfortable accepting.
+        Electricity prices reflect a system that must be ready before a switch is flipped. The bill supports not only energy production, but also the networks, equipment, labor, planning, protection, financing, and reserve capability required to deliver electricity at the moment and location it is needed.
       </p>
+    </div>
 
+    <details open>
+      <summary>Growing and changing energy demand</summary>
+      <div class="details-body">
+        <p>
+          California's electric system must serve established household and business use while adapting to new categories of demand. The important issue is not only how much electricity is used in a year. Timing, location, concentration, and the speed at which new loads appear can determine whether generation, substations, transformers, feeders, transmission, storage, controls, or local distribution capacity must be expanded.
+        </p>
+
+        <h3>Electric vehicles and commercial fleets</h3>
+        <p>
+          A single vehicle may add a manageable household load. Thousands of vehicles charging across homes, apartment properties, workplaces, public stations, fleet yards, warehouses, and highway corridors create a broader planning challenge. Commercial fleets can concentrate many vehicles at one site and may require electrical upgrades beyond the chargers themselves.
+        </p>
+
+        <h3>Residential and public charging</h3>
+        <p>
+          Residential charging is distributed across neighborhoods and often occurs overnight. Public fast charging can draw much more power at fewer locations. The same number of vehicles can therefore create very different grid needs depending on where, when, and how quickly charging occurs.
+        </p>
+
+        <h3>Heat pumps and electric water heating</h3>
+        <p>
+          When space heating and water heating shift from natural gas to electricity, part of a building's energy demand moves onto the electric system. The effect depends on equipment efficiency, climate, building condition, time of use, and whether many homes increase demand during the same weather event.
+        </p>
+
+        <h3>Data centers and artificial-intelligence infrastructure</h3>
+        <p>
+          Data centers require continuous electricity for computing, storage, networking, cooling, and supporting equipment. The California Energy Commission identifies data centers as an emerging driver of state electricity-demand growth and incorporates projected data-center growth into its demand forecasting. Large, continuous loads can affect generation planning as well as the transmission and distribution systems serving a specific area.
+        </p>
+
+        <h3>Manufacturing and industrial electrification</h3>
+        <p>
+          Factories and industrial facilities may add electric equipment as processes change or expand. These loads can be large, site-specific, and operationally complex. New demand may require both energy supply and sufficiently capable local infrastructure.
+        </p>
+
+        <h3>Warehouses, logistics facilities, and fleet depots</h3>
+        <p>
+          Modern logistics combines buildings, refrigeration or climate control, automation, material-handling equipment, computing, and vehicle charging. When many of these functions are concentrated at one location, the local power requirement can differ substantially from ordinary household demand.
+        </p>
+
+        <h3>New residential and commercial development</h3>
+        <p>
+          New neighborhoods, apartments, offices, schools, retail facilities, and services add customers and alter where electricity must be delivered. Growth can require extensions or upgrades to substations, feeders, transformers, meters, communications, and other local assets.
+        </p>
+
+        <p class="detail-source">
+          <strong>Primary sources:</strong>
+          <a href="https://www.energy.ca.gov/programs-and-topics/topics/data-centers" target="_blank" rel="noopener">California Energy Commission: Data Centers</a>;
+          <a href="https://www.energy.ca.gov/data-reports/energy-almanac/zero-emission-vehicle-and-infrastructure-statistics-collection/new-zev" target="_blank" rel="noopener">California Energy Commission: New ZEV Sales</a>;
+          <a href="https://www.energy.ca.gov/data-reports/california-energy-planning-library/reliability" target="_blank" rel="noopener">California Energy Commission: Reliability</a>.
+        </p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Aging infrastructure</summary>
+      <div class="details-body">
+        <p>
+          California's electric system was built over many decades. Poles, conductors, cables, transformers, switches, substations, protection systems, communications equipment, and other assets require inspection, maintenance, repair, modernization, and eventual replacement.
+        </p>
+        <p>
+          Maintenance keeps existing equipment operating. Modernization adds capabilities such as improved monitoring, automation, controls, communications, and protection. Replacement addresses equipment that has reached the end of its useful life or no longer meets current requirements. Expansion adds capacity where communities or electricity demand have grown.
+        </p>
+        <p>
+          These categories can overlap. A project may replace old equipment, increase capacity, improve wildfire resilience, and add modern controls at the same time. The household sees a working outlet; behind that outlet is an asset network that must be financed, operated, and renewed continuously.
+        </p>
+        <p>
+          <strong>The cost does not disappear when one household conserves.</strong> Conservation can reduce the household's own consumption and may help the system during important hours, but the shared network must still be maintained so electricity is available when customers need it.
+        </p>
+        <p class="detail-source">
+          <strong>Explore the underlying system data:</strong>
+          <a href="https://www.energy.ca.gov/data-reports/energy-almanac/california-electricity-data" target="_blank" rel="noopener">California Energy Commission: California Electricity Data</a>.
+        </p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Wildfire prevention, vegetation management, and system hardening</summary>
+      <div class="details-body">
+        <p>
+          Operating electrical infrastructure in wildfire-prone areas requires work beyond ordinary energy delivery. Electrical corporations submit wildfire mitigation plans describing how lines and equipment will be constructed, maintained, and operated to reduce catastrophic wildfire risk.
+        </p>
+        <ul>
+          <li><strong>Inspection and monitoring:</strong> evaluating equipment condition, identifying hazards, and using field inspections, sensors, cameras, weather information, and other tools to understand risk.</li>
+          <li><strong>Vegetation management:</strong> trimming, removing, and monitoring vegetation near electrical facilities, supported by crews, contractors, access planning, environmental coordination, and recurring inspection.</li>
+          <li><strong>System hardening:</strong> replacing or strengthening vulnerable equipment, improving covered-conductor or protection strategies where applicable, and changing infrastructure to reduce ignition risk.</li>
+          <li><strong>Undergrounding in selected locations:</strong> moving some lines below ground can reduce certain overhead risks, while requiring design, trenching, permitting, construction, restoration, and future underground maintenance.</li>
+          <li><strong>Emergency work and rebuilding:</strong> restoring damaged facilities, mobilizing crews and materials, and rebuilding infrastructure after fires or severe weather.</li>
+          <li><strong>Operational measures:</strong> changing settings or operating practices during elevated wildfire conditions can reduce risk while also creating reliability and customer-impact considerations.</li>
+        </ul>
+        <p>
+          These activities serve a public-safety purpose. They also require labor, equipment, contractors, materials, technology, planning, oversight, and capital. Necessary protection is still part of the cost environment surrounding electricity delivery.
+        </p>
+        <p class="detail-source">
+          <strong>Primary source:</strong>
+          <a href="https://energysafety.ca.gov/what-we-do/electrical-infrastructure-safety/wildfire-mitigation-and-safety/wildfire-mitigation-plans/" target="_blank" rel="noopener">California Office of Energy Infrastructure Safety: Wildfire Mitigation Plans</a>.
+        </p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Renewable-energy transition, transmission, and storage</summary>
+      <div class="details-body">
+        <p>
+          Renewable generation can reduce fuel use, but electricity must still be delivered when customers need it. A changing generation mix can require new transmission, energy storage, flexible demand, reserve resources, interconnection work, forecasting, communications, and new operating practices.
+        </p>
+        <p>
+          Solar production is strongest during daylight hours. Household and system demand continue after sunset. Storage can shift electricity across time, while transmission can move power between regions. Flexible demand can move some consumption away from constrained periods. Reserve capability helps the system respond when expected supply or demand changes.
+        </p>
+        <p>
+          The transition is therefore not only about adding generation. It is also about coordinating generation, networks, storage, controls, and customer demand so the complete system remains dependable.
+        </p>
+        <p class="detail-source">
+          <strong>Primary sources:</strong>
+          <a href="https://www.energy.ca.gov/data-reports/energy-almanac/california-electricity-data" target="_blank" rel="noopener">California Energy Commission: Electricity generation, storage, supply, and demand data</a>;
+          <a href="https://www.caiso.com/todays-outlook" target="_blank" rel="noopener">California ISO: Today's Outlook</a>.
+        </p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Reliability requirements</summary>
+      <div class="details-body">
+        <p>
+          Reliability means having enough supply and functioning infrastructure to meet demand and avoid disruptions. Planning must consider ordinary conditions as well as periods when heat, wildfire, drought, equipment failures, or constrained imports place additional pressure on the system.
+        </p>
+        <p>
+          High temperatures can increase air-conditioning demand across a large geographic area. Neighboring states may experience similar conditions, which can affect the availability of imported electricity. Drought can reduce hydroelectric production. Wildfires can disrupt generation and transmission. These conditions can occur together.
+        </p>
+        <p>
+          Reliability also has a local dimension. Distribution equipment must carry electricity through substations, feeders, transformers, poles, wires, and underground systems to individual customers. The CPUC requires annual reporting of outage duration and frequency using metrics including SAIDI, SAIFI, CAIDI, and MAIFI.
+        </p>
+        <p>
+          <strong>The system must be prepared for the difficult hour, not only the average hour.</strong> That readiness requires planning, resources, maintenance, and investment even when an individual household's annual consumption remains unchanged.
+        </p>
+        <p class="detail-source">
+          <strong>Primary sources:</strong>
+          <a href="https://www.energy.ca.gov/data-reports/california-energy-planning-library/reliability/summer-reliability" target="_blank" rel="noopener">California Energy Commission: Summer Reliability</a>;
+          <a href="https://www.cpuc.ca.gov/industries-and-topics/electrical-energy/infrastructure/electric-reliability/electric-system-reliability-annual-reports" target="_blank" rel="noopener">CPUC: Electric System Reliability Annual Reports</a>.
+        </p>
+      </div>
+    </details>
+
+    <div class="section-head" style="margin-top:58px">
+      <p class="eyebrow">The infrastructure challenge</p>
+      <h2>The System Behind the Outlet Also Has a Cost</h2>
+      <p>
+        Producing electricity is only one part of dependable delivery. Every layer below has a purpose, and every layer requires physical assets, people, planning, maintenance, and capital.
+      </p>
+    </div>
+
+    <div class="grid">
+      <article class="card"><h3>Transmission</h3><p>High-voltage lines and related facilities move large quantities of electricity across long distances and connect generation with population and business centers.</p></article>
+      <article class="card"><h3>Distribution</h3><p>Substations, feeders, transformers, poles, wires, underground equipment, meters, and controls deliver power through communities to individual properties.</p></article>
+      <article class="card"><h3>Storage</h3><p>Batteries and other storage resources move electricity across time, supporting periods when production and demand do not occur together.</p></article>
+      <article class="card"><h3>Reliability</h3><p>Planning, reserve capability, maintenance, protection systems, forecasting, and emergency resources help keep service available under ordinary and stressed conditions.</p></article>
+      <article class="card"><h3>Vegetation Management</h3><p>Inspection, trimming, hazard removal, access, contractor work, and recurring management reduce contact and wildfire risks around electrical infrastructure.</p></article>
+      <article class="card"><h3>Wildfire Protection</h3><p>Hardening, monitoring, rebuilding, emergency work, operating changes, and selected undergrounding address wildfire exposure and public safety.</p></article>
+    </div>
+
+    <div class="reader-thought">
+      <strong>What this means for a household:</strong> electricity is purchased through a shared system whose costs and responsibilities continue to evolve.
+    </div>
+  </div>
+</section>
+
+<section class="statement">
+  <div class="container">
+    <h2>Using the Same Amount of Electricity Does Not Guarantee Paying the Same Amount</h2>
+    <p>
+      Household usage matters, but usage is only one part of the bill. The price applied to that usage is shaped by the cost of operating, protecting, financing, and changing the larger system.
+    </p>
+    <p>
+      A household may conserve, replace appliances, adjust the thermostat, or shift consumption to different hours. Those choices can reduce usage. They do not give the household control over every future rate, charge, or pricing structure applied to the electricity it must continue purchasing.
+    </p>
+    <div class="final">Conservation can reduce exposure. It does not necessarily eliminate exposure.</div>
+  </div>
+</section>
+
+<section class="alt" id="rates">
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow">A decade of change</p>
+      <h2>California Electricity Costs Have Risen Faster Than General Inflation</h2>
+      <p>
+        This chart describes published historical changes for its stated period. It does not promise or predict a future rate. It shows what occurred while households continued purchasing electricity through the conventional utility model.
+      </p>
+    </div>
+
+    <article class="chart-card">
+      <h3>Chart 1: Residential Electric Rate Change vs. General Inflation</h3>
+
+      <figure class="chart-figure">
+        <img class="chart-image" src="assets/images/chart-1-electricity-inflation.png" alt="Bar chart comparing California residential average electric rate increases for PG&E, SCE, and SDG&E with general inflation from January 2015 through April 2025." loading="lazy"/>
+        <figcaption class="chart-caption">
+          Historical rate changes are not forecasts. Review the measurements, dates, source notes, and limitations shown in the chart before applying the comparison to an individual household.
+        </figcaption>
+      </figure>
+
+      <div class="callout">
+        <h3>The household question</h3>
+        <p>
+          If an essential recurring cost rises faster than general inflation for an extended period, how could that affect savings, retirement planning, and other household priorities?
+        </p>
+      </div>
+
+      <details>
+        <summary>What this chart shows</summary>
+        <div class="details-body">
+          <p>
+            The chart shows published percentage changes in residential average electric rates for the three named investor-owned utilities and a general-inflation comparison over the chart's stated period.
+          </p>
+        </div>
+      </details>
+
+      <details>
+        <summary>What this chart does not show</summary>
+        <div class="details-body">
+          <p>
+            It does not represent every customer's bill, every rate plan, fixed charges, discounts, household usage, or future price changes. Actual household results vary.
+          </p>
+        </div>
+      </details>
+
+      <div class="chart-source-links">
+        <strong>Source links shown in the chart:</strong>
+        <a href="https://www.publicadvocates.cpuc.ca.gov/press-room/reports-and-analyses/q1-2025-electric-rates-report" target="_blank" rel="noopener">California Public Advocates Office electric-rates reporting</a>
+        and
+        <a href="https://www.bls.gov/cpi/" target="_blank" rel="noopener">U.S. Bureau of Labor Statistics Consumer Price Index</a>.
+      </div>
+    </article>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-head">
+      <p class="eyebrow">Electricity is becoming more important</p>
+      <h2>A Generation Ago, Electricity Primarily Powered Lights and Appliances</h2>
+      <p>
+        Today electricity increasingly supports transportation, home comfort, work, internet connectivity, security, digital services, and technologies embedded in daily life.
+      </p>
+    </div>
+
+    <div class="grid">
+      <article class="card icon-card"><h3>Transportation</h3><p>Vehicle charging moves part of transportation energy from gasoline toward the electric system.</p></article>
+      <article class="card icon-card"><h3>Homes</h3><p>Cooling, heat pumps, water heating, batteries, home offices, and connected devices increase dependence on reliable electricity.</p></article>
+      <article class="card icon-card"><h3>Business and Technology</h3><p>Warehouses, fleet depots, manufacturing, data centers, communications, and artificial intelligence require physical electrical infrastructure.</p></article>
+    </div>
+  </div>
+</section>
+
+<section class="soft" id="demand">
+  <div class="container">
+
+    <div class="section-head">
+      <p class="eyebrow">The demand picture</p>
+      <h2>The System Is Being Asked to Do More</h2>
+      <p>
+        A household may keep its own usage steady while the shared system adapts to changing transportation, buildings, commerce, computing, climate conditions, and the timing and location of demand.
+      </p>
+    </div>
+
+    <article class="chart-card">
+      <h3>Chart 2: California EV Adoption Has Accelerated Rapidly</h3>
+
+      <figure class="chart-figure">
+        <img class="chart-image" src="assets/images/chart-2-ev-adoption.png" alt="Bar chart showing annual new California light-duty battery-electric and plug-in-hybrid vehicle sales from 2013 through 2025, plus a cumulative sales figure through the second quarter of 2026." loading="lazy"/>
+        <figcaption class="chart-caption">
+          Annual vehicle sales show adoption activity. They do not directly measure charging, charging time, grid location, or total electricity demand.
+        </figcaption>
+      </figure>
+
+      <div class="callout">
+        <h3>Why this matters</h3>
+        <p>
+          Every vehicle does not charge at the same time or place. Sustained growth in plug-in vehicles nevertheless creates a growing category of use that must be served by homes, workplaces, fleets, apartments, public chargers, and transportation corridors.
+        </p>
+      </div>
+
+      <details>
+        <summary>Residential and commercial charging are different</summary>
+        <div class="details-body">
+          <p>
+            Residential charging is dispersed across homes. Commercial charging can concentrate substantial power requirements at fleet yards, workplaces, warehouses, public charging sites, apartment properties, and transportation corridors.
+          </p>
+        </div>
+      </details>
+
+      <div class="chart-source-links">
+        <a href="https://www.energy.ca.gov/data-reports/energy-almanac/zero-emission-vehicle-and-infrastructure-statistics-collection/new-zev" target="_blank" rel="noopener">California Energy Commission: New ZEV Sales</a>
+        ·
+        <a href="https://www.veloz.org/ev-market-report/" target="_blank" rel="noopener">Veloz: California EV Market Report</a>
+      </div>
+    </article>
+
+    <article class="chart-card">
+      <h3>Chart 3: California's Vehicle Fleet Is Changing</h3>
+
+      <figure class="chart-figure">
+        <img class="chart-image" src="assets/images/chart-3-vehicle-mix.png" alt="Infographic comparing the approximate 2022 and 2025 composition of California's registered light-duty vehicle fleet and selected international 2025 new-car EV shares." loading="lazy"/>
+        <figcaption class="chart-caption">
+          Registered-fleet composition and one-year new-car sales share are different measurements. The California comparison is approximate because the two years use different published datasets and methodologies.
+        </figcaption>
+      </figure>
+
+      <div class="callout">
+        <h3>The transition is visible, but incomplete</h3>
+        <p>
+          Plug-in vehicles can grow rapidly in new-car sales while representing a smaller portion of the total registered fleet. That difference matters when considering both the pace and duration of future charging growth.
+        </p>
+      </div>
+
+      <details>
+        <summary>Why vehicle definitions matter</summary>
+        <div class="details-body">
+          <p>
+            A battery-electric vehicle relies on stored electricity. A plug-in hybrid uses electricity and fuel. A conventional hybrid generally does not charge from the grid. Combining these categories can overstate demand reaching the electric system.
+          </p>
+        </div>
+      </details>
+
+      <div class="chart-source-links">
+        <a href="https://afdc.energy.gov/vehicle-registration" target="_blank" rel="noopener">U.S. Department of Energy AFDC: Vehicle Registration Counts</a>
+        ·
+        <a href="https://www.iea.org/data-and-statistics/charts/electric-car-sales-share-for-selected-countries-2015-2025" target="_blank" rel="noopener">International Energy Agency: Electric-car sales share</a>
+      </div>
+    </article>
+
+    <article class="chart-card">
+      <h3>Chart 4: Who Is Driving Future Electricity Demand?</h3>
+
+      <figure class="chart-figure">
+        <img class="chart-image" src="assets/images/chart-4-electric-demand.png" alt="Infographic comparing California traditional electricity consumption sectors with emerging loads from consumer EV charging, data centers, and artificial intelligence." loading="lazy"/>
+        <figcaption class="chart-caption">
+          The infographic combines measurements with different units, geographies, dates, and methods. The values are separately identified and should not be treated as one directly additive dataset.
+        </figcaption>
+      </figure>
+
+      <div class="callout">
+        <h3>Future demand is no longer only about homes</h3>
+        <p>
+          Households remain important electricity users, but the grid increasingly serves transportation, logistics, cloud computing, data centers, artificial intelligence, and other emerging loads.
+        </p>
+      </div>
+
+      <details>
+        <summary>Consumer EV charging</summary>
+        <div class="details-body">
+          <p>Charging time and location determine how vehicle electricity use interacts with local infrastructure and system peaks.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Data centers and artificial intelligence</summary>
+        <div class="details-body">
+          <p>
+            Digital services require computing facilities, cooling, networking, and reliable power. California-specific figures and broader U.S. trends must remain clearly separated.
+          </p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Manufacturing and building electrification</summary>
+        <div class="details-body">
+          <p>
+            Industrial processes and buildings may shift from fossil fuels to electricity, changing both the volume and timing of demand.
+          </p>
+        </div>
+      </details>
+
+      <div class="chart-source-links">
+        <a href="https://www.energy.ca.gov/data-reports/energy-almanac/california-electricity-data" target="_blank" rel="noopener">California Energy Commission: Electricity data</a>
+        ·
+        <a href="https://www.eia.gov/electricity/data/browser/" target="_blank" rel="noopener">U.S. EIA: Electricity Data Browser</a>
+        ·
+        <a href="https://www.energy.ca.gov/programs-and-topics/topics/data-centers" target="_blank" rel="noopener">California Energy Commission: Data Centers</a>
+      </div>
+    </article>
+
+    <div class="reader-thought">
+      <strong>The larger picture:</strong> future household electricity costs are connected to more than what happens inside the household.
+    </div>
+  </div>
+</section>
+
+<section class="trust-band" id="standards">
+  <div class="container">
+
+    <div class="section-head">
+      <p class="eyebrow">How this page was built</p>
+      <h2>Before You Read Another Number, Know What It Measures</h2>
+      <p>
+        The challenge is not simply finding information. The challenge is separating measurements that answer different questions, understanding the source, and recognizing the limits of every chart.
+      </p>
+    </div>
+
+    <details open>
+      <summary>Sources intentionally not used as primary interpretation</summary>
+      <div class="details-body">
+        <p>
+          To reduce the influence of organizations with direct financial or political interests, this page does not rely on utility marketing, solar-company marketing, finance-provider marketing, lead-generation material, or political talking points as its primary interpretation.
+        </p>
+        <p>
+          Original government datasets, filings, tariffs, and official records may be used to verify specific facts. When used, the measurement and limitation should be identified clearly.
+        </p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Sources preferred</summary>
+      <div class="details-body">
+        <ul>
+          <li>Public datasets that can be reviewed or reproduced.</li>
+          <li>Independent analysts with transparent methodology.</li>
+          <li>Academic, economic, consumer, and affordability research.</li>
+          <li>Multiple sources when an important claim needs additional context.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details>
+      <summary>The Informed Homeowner Principle</summary>
+      <div class="details-body">
+        <p>
+          <strong>Do not blindly trust utility companies. Do not blindly trust energy companies. Do not blindly trust politicians. Do not blindly trust websites, including this one.</strong>
+        </p>
+        <p>
+          Verify. Compare. Think critically. Ask what is measured, what is included, what is excluded, and whether a number is historical, averaged, preliminary, estimated, or projected.
+        </p>
+      </div>
+    </details>
+
+    <div class="personal" style="margin-top:44px">
+      <p class="eyebrow">Why I created this page</p>
+      <h2>This Comes From Care, Not Fear</h2>
+      <p class="lead">I am not sharing this information to frighten anyone.</p>
+      <p>
+        I am sharing it because energy decisions have long-term consequences, and too many people are expected to make those decisions without seeing the larger picture.
+      </p>
+      <p>
+        A utility bill affects the comfort of our homes, our transportation, our savings, our retirement plans, our businesses, and the choices available to our families.
+      </p>
+      <p>
+        We may not control every policy, utility decision, wildfire cost, infrastructure project, or market change. But we can understand our exposure, compare available choices, and plan earlier.
+      </p>
+      <p><strong>The goal is awareness early enough that people still have choices.</strong></p>
+    </div>
+  </div>
+</section>
+
+<section class="guide-band" id="future">
+  <div class="container narrow">
+
+    <div class="section-head">
+      <p class="eyebrow">A long-term guide</p>
+      <h2>The Future of Energy Costs in California</h2>
+      <h3>Looking Beyond Today's Utility Bill</h3>
+    </div>
+
+    <p class="lead">
+      Most homeowners naturally focus on this month's bill. The larger question is what role electricity may play in household finances over the next 10, 20, or 25 years.
+    </p>
+
+    <p>
+      Electricity influences more than a utility bill. It can affect household budgets, retirement planning, transportation, business costs, comfort, lifestyle choices, and financial flexibility.
+    </p>
+
+    <div class="hero-question">
+      No one knows one exact future electricity price. History can show what has already changed. Demand and infrastructure can show why electricity is becoming more important. Households can then decide how much future exposure they are comfortable carrying.
+    </div>
+
+    <div style="margin-top:44px">
+      <p class="eyebrow">A long-term view</p>
+      <h2>Important Financial Decisions Are Often Made Before the Cost Becomes Obvious</h2>
+      <p class="lead">People buy health insurance before they are sick.</p>
+      <p class="lead">People save for retirement before they stop working.</p>
+      <p class="lead">People purchase life insurance before it is needed.</p>
+      <p class="lead">Long-term energy planning may deserve the same kind of foresight.</p>
+      <p>
+        The goal is not to predict one exact future price. The goal is to recognize long-term exposure early enough to preserve meaningful choices.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="section-bridge" id="time-place">
+  <div class="container">
+    <h2>Electricity Must Be Available at the Right Time and in the Right Place</h2>
+    <p>
+      Total annual energy is only part of the story. Transmission, substations, local distribution, transformers, storage, charging infrastructure, controls, and reliability resources must support when and where electricity is needed.
+    </p>
+    <p>
+      Producing       assets/images/chart-5-rooftop-solar.png
+        <figcaption class="chart-caption">
+          The homes-equivalent figure illustrates scale. It is not a count of solar homes. Actual production varies by location, orientation, weather, shading, and system performance.
+        </figcaption>
+      </figure>
+
+      <div class="callout">
+        <h3>The larger lesson</h3>
+        <p>
+          California homeowners did not all choose solar for the same reason. The scale of adoption nevertheless shows sustained interest in greater control, more predictable planning, and less dependence on purchasing every kilowatt-hour from the utility.
+        </p>
+      </div>
+
+      <details>
+        <summary>What this chart does and does not show</summary>
+        <div class="details-body">
+          <p>
+            The chart uses customer-sited solar capacity to illustrate scale. It does not show the number of solar homes, prove savings for a particular household, predict future utility rates, or establish that solar is correct for everyone.
+          </p>
+        </div>
+      </details>
+
+      <div class="chart-source-links">
+        <a href="https://www.californiadgstats.ca.gov/" target="_blank" rel="noopener">California Distributed Generation Statistics</a>
+        ·
+        <a href="https://www.energy.ca.gov/data-reports/energy-almanac/california-electricity-data" target="_blank" rel="noopener">California Energy Commission: Solar PV capacity and generation data</a>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section class="statement">
+  <div class="container">
+    <h2>A Pattern Worth Paying Attention To</h2>
+    <p>The purpose of this page is not to convince every homeowner to install solar.</p>
+    <p>The purpose is to ask a simple question:</p>
+
+    <div class="final">
+      If millions of California homeowners voluntarily invested their own money, signed long-term agreements, or chose to place solar on their homes over the last two decades, what did they see that others may have overlooked?
+    </div>
+
+    <p>People rarely act at that scale without a reason.</p>
+    <p>
+      Some wanted environmental benefits. Some wanted more predictable long-term energy expenses. Some wanted less exposure to future utility costs. Some wanted greater energy independence. Some wanted more control over an important household expense.
+    </p>
+    <p><strong>The reasons may differ. The pattern is difficult to ignore.</strong></p>
+  </div>
+</section>
+
+<section class="alt" id="impact">
+  <div class="container">
+
+    <div class="section-head">
+      <p class="eyebrow">The human consequence</p>
+      <h2>The Cost of Electricity Affects More Than Electricity</h2>
+      <p>When an essential recurring expense rises, it competes with other uses of income.</p>
+    </div>
+
+    <div class="grid two">
+      <article class="card impact-card"><h3>Retirement and Fixed Income</h3><p>Recurring energy costs can consume a larger share of carefully planned income, especially when cooling, medical, or accessibility needs limit conservation.</p></article>
+      <article class="card impact-card"><h3>Working and Young Families</h3><p>Utility costs compete with childcare, transportation, groceries, education, savings, emergency reserves, and family experiences.</p></article>
+      <article class="card impact-card"><h3>Homeowners and Renters</h3><p>Electricity costs affect comfort, affordability, housing choices, and the ability to plan with confidence.</p></article>
+      <article class="card impact-card"><h3>Small Businesses</h3><p>Electricity can influence operating costs, pricing, competitiveness, hiring, and investment.</p></article>
+    </div>
+
+    <div class="callout">
+      <h3>The cost of not changing</h3>
+      <p>
+        The cost of not changing is not one predictable number. It is continued exposure to future electricity purchases, prices, and rate structures while electricity becomes increasingly important to daily life.
+      </p>
       <div class="final">
-        The question is no longer only:<br/>
-        “How much is my electric bill today?”<br/><br/>
-        The larger question may be:<br/>
-        “How will electricity affect my household finances over the next 20 years?”
+        Do I want to remain completely exposed to future electricity costs, or do I want some level of control over them?
+      </div>
+    </div>
+
+    <details>
+      <summary>The Conservation Paradox</summary>
+      <div class="details-body">
+        <p>For years, many Californians conserved energy because it felt environmentally responsible.</p>
+        <p>A different possibility may emerge: some households may conserve primarily because they feel financially pressured.</p>
+        <p><strong>Energy efficiency is empowering when it is a choice. It feels different when it becomes a necessity.</strong></p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Could energy costs contribute to people leaving California?</summary>
+      <div class="details-body">
+        <p>
+          Electricity alone does not determine where someone lives. It joins housing, insurance, transportation, food, taxes, and other costs that collectively shape household affordability.
+        </p>
+        <p>
+          This page does not predict that people will leave. It recognizes that recurring energy costs can add to broader financial pressure.
+        </p>
+      </div>
+    </details>
+
+  </div>
+</section>
+
+<section class="movement" id="movement">
+  <div class="container">
+
+    <div class="section-head">
+      <p class="eyebrow">The Informed Homeowner Movement</p>
+      <h2>Awareness Should Be Shared, Not Sold</h2>
+      <p>
+        The Informed Homeowner Movement is a simple idea: Californians should help one another understand the costs, risks, contracts, assumptions, and long-term choices connected to home energy.
+      </p>
+    </div>
+
+    <div class="grid">
+      <article class="movement-card">
+        <strong>01</strong>
+        <h3>Better Information</h3>
+        <p>Use verifiable sources, explain measurements, separate history from estimates or projections, and disclose limitations.</p>
+      </article>
+
+      <article class="movement-card">
+        <strong>02</strong>
+        <h3>Better Questions</h3>
+        <p>Ask what a number includes, who produced it, how it was calculated, and whether it matches the complete household experience.</p>
+      </article>
+
+      <article class="movement-card">
+        <strong>03</strong>
+        <h3>Better Decisions</h3>
+        <p>Respect that every household is different. Information should expand thoughtful choices, not pressure everyone into one answer.</p>
+      </article>
+    </div>
+
+    <details>
+      <summary>What the movement stands for</summary>
+      <div class="details-body">
+        <ul>
+          <li>Independent thinking rather than blind trust.</li>
+          <li>Plain-language explanations rather than technical fog.</li>
+          <li>Complete cost rather than one attractive number.</li>
+          <li>Questioning both utility-industry and energy-industry claims.</li>
+          <li>Sharing useful information with family, neighbors, and the community.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details>
+      <summary>What the movement does not stand for</summary>
+      <div class="details-body">
+        <ul>
+          <li>Fear-based predictions.</li>
+          <li>Utility bashing or political blame.</li>
+          <li>Assuming every forecast will happen exactly as modeled.</li>
+          <li>Telling every person to make the same decision.</li>
+          <li>Selecting facts only because they support a preferred conclusion.</li>
+        </ul>
+      </div>
+    </details>
+
+  </div>
+</section>
+
+<section id="share">
+  <div class="container">
+    <div class="share">
+
+      <p class="eyebrow">Help one more person become informed</p>
+      <h2>If This Information Helped You, Share It Before Someone You Care About Needs It</h2>
+
+      <p class="lead narrow">
+        Many people do not think about energy costs until they become a problem. By then, some opportunities may already be behind them.
+      </p>
+
+      <p>Awareness costs nothing. Waiting can be expensive.</p>
+
+      <p>
+        If this page helped you think differently about California energy costs, consider sharing it with a family member, neighbor, retiree, homeowner, renter, working household, or small-business owner.
+      </p>
+
+      <p><strong>Not to alarm them. Not to sell them something. To help them ask better questions while meaningful choices are still available.</strong></p>
+
+      <div class="actions">
+        <button class="button" id="shareButton" type="button">Share This Energy Cost Guide</button>
+        <button class="button secondary" id="copyButton" type="button">Copy Page Link</button>
+        <button class="button secondary" onclick="window.print()" type="button">Print or Save as PDF</button>
       </div>
 
-      <p>Better information. Better questions. Better decisions.</p>
-    </div>
-  </footer>
+      <div aria-live="polite" class="status" id="status" role="status"></div>
 
-  <script src="assets/js/energy-costs.js"></script>
+    </div>
+  </div>
+</section>
+
+<section class="soft">
+  <div class="container">
+
+    <div class="section-head">
+      <p class="eyebrow">Chart and source standards</p>
+      <h2>How to Read the Visual Evidence on This Page</h2>
+      <p>
+        The charts answer different questions and do not all use the same units, geography, dates, or methodology. Each chart should be considered with its own title, source notes, disclosures, and limitations.
+      </p>
+    </div>
+
+    <details>
+      <summary>Minimum requirements for every chart</summary>
+      <div class="details-body">
+        <ul>
+          <li>Clear title, geography, and time period.</li>
+          <li>Plain-language units and readable labels.</li>
+          <li>Visible distinction between historical, preliminary, estimated, and projected values.</li>
+          <li>Source, date, methodology, and important limitations.</li>
+          <li>Alternative text for accessibility.</li>
+        </ul>
+      </div>
+    </details>
+
+    <p class="source-note">
+      <strong>Editorial standard:</strong> This page should never select a number because it creates the strongest reaction. It should use the measurement that best answers the stated question and explain what that measurement does and does not represent.
+    </p>
+
+    <h3>Core public sources</h3>
+    <ul class="source-list">
+      <li><a href="https://www.energy.ca.gov/data-reports/energy-almanac/california-electricity-data" target="_blank" rel="noopener">California Energy Commission: California Electricity Data</a></li>
+      <li><a href="https://www.energy.ca.gov/data-reports/california-energy-planning-library/reliability" target="_blank" rel="noopener">California Energy Commission: Reliability</a></li>
+      <li><a href="https://energysafety.ca.gov/what-we-do/electrical-infrastructure-safety/wildfire-mitigation-and-safety/wildfire-mitigation-plans/" target="_blank" rel="noopener">California Office of Energy Infrastructure Safety: Wildfire Mitigation Plans</a></li>
+      <li><a href="https://www.cpuc.ca.gov/industries-and-topics/electrical-energy/infrastructure/electric-reliability/electric-system-reliability-annual-reports" target="_blank" rel="noopener">CPUC: Electric System Reliability Annual Reports</a></li>
+      <li><a href="https://www.eia.gov/state/seds/seds-data-complete.php?sid=CA" target="_blank" rel="noopener">U.S. Energy Information Administration: California State Energy Data</a></li>
+    </ul>
+
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="container">
+
+    <p class="eyebrow">The closing thought</p>
+    <h2>The Goal Is Not Fear. The Goal Is Foresight.</h2>
+
+    <p>
+      No chart can tell anyone exactly what electricity will cost in 10 or 20 years. History can show what has changed. Current adoption and consumption patterns can show how electricity's role is expanding. Each household can then decide whether continuing without a long-term energy-cost plan is a risk it is comfortable accepting.
+    </p>
+
+    <div class="final">
+      The question is no longer only:<br/>
+      “How much is my electric bill today?”<br/><br/>
+      The larger question may be:<br/>
+      “How will electricity affect my household finances over the next 20 years?”
+    </div>
+
+    <p>Better information. Better questions. Better decisions.</p>
+
+  </div>
+</footer>
+
+<script src="assets/js/energy-costs.js"></script>
 
 </body>
 </html>
