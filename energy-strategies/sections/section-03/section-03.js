@@ -1,0 +1,1 @@
+(function(){if(window.SWPProfile){SWPProfile.set('section3',{reviewed:true,optionsReviewed:['Utility / Grid Electricity','Residential Wind','Ground-Source / Geothermal','Solar + Storage'],practicalConclusion:'Solar + Storage is the onsite electricity option to evaluate further for an ordinary California home.'});}})();
