@@ -1,15 +1,86 @@
-// Original locked Energy Strategies behavior. Runs after all section fragments load.
-(function(){
-  window.initializeEnergyStrategies = function(){
-    const state={solutions:[],concerns:[],path:'',loads:{}};function money(n){return n?new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(n):'—'}function calc(){let bill=+document.getElementById('bill').value||0,blend=+document.getElementById('blend').value||.4,rg=+document.getElementById('rg').value/100,ug=+document.getElementById('ug').value/100,g=rg+ug,current=bill/blend,added=0;state.loads={};currentKwh.textContent=bill?Math.round(current)+' kWh/month planning estimate':'Enter the payment to estimate kWh/month.';[5,10,15,20].forEach(y=>document.getElementById('y'+y).textContent=money(bill*Math.pow(1+g,y)));document.querySelectorAll('.driver').forEach(d=>{let c=d.querySelector('.toggle');if(c.checked){let v=+d.querySelector('.load').value||0;state.loads[c.dataset.key]=v;added+=v}});futureUsage.innerHTML=added?`Added or future usage: <b>${added} kWh/month</b>, about <b>${money(added*blend)}/month</b> at the assumed rate.`:'No added usage selected.';let total=current+added,totalCost=bill+added*blend;situation.innerHTML=bill?`<b>Estimated current usage:</b> ${Math.round(current)} kWh/month<br><b>Added/future usage:</b> ${added} kWh/month<br><b>Total planned usage:</b> ${Math.round(total)} kWh/month<br><b>Estimated current-equivalent cost:</b> ${money(totalCost)}/month<br><b>Selected combined annual increase:</b> ${(g*100).toFixed(0)}%<br><b>5/10/15/20-year monthly illustration:</b> ${money(totalCost*Math.pow(1+g,5))} / ${money(totalCost*Math.pow(1+g,10))} / ${money(totalCost*Math.pow(1+g,15))} / ${money(totalCost*Math.pow(1+g,20))}<br><b>Solutions selected:</b> ${state.solutions.join(', ')||'None yet'}`:'Enter your information and select the outcomes you want.'}document.querySelectorAll('input,select,textarea').forEach(x=>x.addEventListener('input',calc));document.querySelectorAll('.solution').forEach(x=>x.onclick=()=>{x.classList.toggle('selected');let v=x.dataset.value;state.solutions=x.classList.contains('selected')?[...new Set([...state.solutions,v])]:state.solutions.filter(a=>a!==v);calc()});document.querySelectorAll('.concern').forEach(x=>x.onchange=()=>{state.concerns=[...document.querySelectorAll('.concern:checked')].map(i=>i.value);selectedConcerns.innerHTML=state.concerns.length?'<b>Your priorities:</b> '+state.concerns.join(' • '):'No considerations selected yet.'});document.querySelectorAll('input[name=path]').forEach(x=>x.onchange=()=>state.path=x.value);function downloadProfile(){calc();let b=new Blob([JSON.stringify({file_type:'SolarWithPhilip_Concern_Profile',version:'7.0-integrated',state,section5:{outcomes:esOutcomes,barriers:esBarriers},section6:{resolutions:esResolutions},})],{type:'application/octet-stream'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='Concern_Profile.swp';a.click()}calc();
-    const esOutcomes={},esBarriers={},esResolutions={},esResolutionCopy={'Roof condition or roof damage':'Roof review, written scope, contractor insurance, workmanship/penetration coverage, responsibility for damage, and future roof-replacement planning.','Installation reliability':'Approved design, licensed contractor, permit/inspection process, workmanship terms, defect-correction process, and activation verification.','Installation timeline':'Design and site-review milestones, permit and utility responsibilities, access needs, status updates, and an explanation that installation is not activation.','Equipment service and replacement':'Manufacturer coverage, workmanship coverage, monitoring, repair response, labor responsibility, replacement responsibility, and post-warranty exposure.','Long-term agreement':'Starting payment/rate, escalator if any, term, estimated total payments, service duties, transfer, purchase/buyout if offered, and end-of-term terms.','Home sale or transfer':'Transfer documents, notice and timing, payoff or assumption requirements, purchase option if offered, and transaction support.','Equipment appearance':'Panel layout, conduit path, battery/inverter location, clearance requirements, and any applicable HOA/local review.','Ownership structure':'Who owns during the term, purchase option if offered, timing/price conditions, and responsibility before and after ownership changes.'};
-    function esPick(box,store,label){box.querySelectorAll('button').forEach(b=>b.onclick=()=>{box.querySelectorAll('button').forEach(x=>x.classList.remove('active'));b.classList.add('active');store[label]=b.textContent.trim();esRender();})}
-    document.querySelectorAll('#outcomeChoices .decision-card').forEach(c=>esPick(c,esOutcomes,c.dataset.label));document.querySelectorAll('#barrierChoices .decision-card').forEach(c=>esPick(c,esBarriers,c.dataset.label));
-    function esList(id,vals){document.getElementById(id).innerHTML=vals.length?vals.map(x=>`<li>${x}</li>`).join(''):'<li>Nothing selected</li>';}
-    function esRender(){const must=Object.keys(esOutcomes).filter(k=>esOutcomes[k]==='Must Have'),important=Object.keys(esOutcomes).filter(k=>esOutcomes[k]==='Important'),stop=Object.keys(esBarriers).filter(k=>esBarriers[k]==='Could Stop Me'),resolve=Object.keys(esBarriers).filter(k=>esBarriers[k]==='Okay If Resolved'),none=Object.keys(esBarriers).filter(k=>esBarriers[k]==='Not a Concern');document.getElementById('outcomeSummary').innerHTML=`<b>Must Have:</b> ${must.join(', ')||'None'}<br><b>Important:</b> ${important.join(', ')||'None'}`;esList('stopSummary',stop);esList('resolveSummary',resolve);esList('noneSummary',none);document.getElementById('section5Summary').innerHTML=`<b>You want:</b> ${must.concat(important).join(', ')||'Nothing ranked yet'}<br><b>Potential impasses:</b> ${stop.join(', ')||'None'}<br><b>Acceptable if resolved:</b> ${resolve.join(', ')||'None'}`;esBuildResolutions();esResolutionSummary();}
-    function esBuildResolutions(){const keys=Object.keys(esBarriers).filter(k=>esBarriers[k]!=='Not a Concern');const host=document.getElementById('resolutionArea');host.innerHTML=keys.length?keys.map(k=>`<div class="resolution-card"><h3>${k} <small>(${esBarriers[k]})</small></h3><p><b>What should address it:</b> ${esResolutionCopy[k]}</p><div class="resolution-actions" data-key="${k}"><button>Resolved Enough</button><button>Need More Information</button><button>Still a Deal-Breaker</button><button>Discuss With Philip</button></div></div>`).join(''):'<div class="card">Choose possible barriers in Section 5 to build your personalized resolution list.</div>';document.querySelectorAll('.resolution-actions').forEach(a=>a.querySelectorAll('button').forEach(b=>b.onclick=()=>{a.querySelectorAll('button').forEach(x=>x.classList.remove('active'));b.classList.add('active');esResolutions[a.dataset.key]=b.textContent.trim();esResolutionSummary();}));}
-    function esResolutionSummary(){esList('resolvedSummary',Object.keys(esResolutions).filter(k=>esResolutions[k]==='Resolved Enough'));esList('moreSummary',Object.keys(esResolutions).filter(k=>esResolutions[k]==='Need More Information'||esResolutions[k]==='Discuss With Philip'));esList('dealSummary',Object.keys(esResolutions).filter(k=>esResolutions[k]==='Still a Deal-Breaker'));}
-    document.querySelectorAll('input[name="finalDecision"]').forEach(x=>x.onchange=()=>document.getElementById('finalSummary').innerHTML=`<b>Current direction:</b> ${x.value}<br><span>This can still change after Philip reviews the home, usage and actual proposals.</span>`);esRender();
-    if (typeof downloadProfile === "function") window.downloadProfile = downloadProfile;
-  };
-})();
+// ============================================================
+// SOLAR WITH PHILIP
+// ENERGY STRATEGIES CONTROLLER
+//
+// The section HTML is the visual source of truth.
+// JavaScript adapts to the locked section files.
+// ============================================================
+
+(function () {
+
+  window.initializeEnergyStrategies = function () {
+
+    // ========================================================
+    // CENTRAL PROFILE STATE
+    // ========================================================
+
+    const state = {
+      solutions: [],
+      concerns: [],
+      path: "",
+      loads: {}
+    };
+
+    const esOutcomes = {};
+    const esBarriers = {};
+    const esResolutions = {};
+
+    let finalDirection = "";
+
+
+    // ========================================================
+    // SECTION 6 RESOLUTION COPY
+    // ========================================================
+
+    const esResolutionCopy = {
+
+      "Roof condition or roof damage":
+        "Roof review, written scope, contractor insurance, workmanship and penetration coverage, responsibility for damage, and future roof-replacement planning.",
+
+      "Installation reliability":
+        "Approved design, licensed contractor, permit and inspection process, workmanship terms, defect-correction process, and activation verification.",
+
+      "Installation timeline":
+        "Design and site-review milestones, permit and utility responsibilities, access needs, status updates, and a clear explanation that physical installation is not the final activation step.",
+
+      "Equipment service and replacement":
+        "Manufacturer coverage, workmanship coverage, monitoring, repair response, labor responsibility, replacement responsibility, and post-warranty exposure.",
+
+      "Long-term agreement":
+        "Starting payment or rate, escalator if any, agreement term, estimated total payments, service obligations, transfer provisions, purchase or buyout options if offered, and end-of-term provisions.",
+
+      "Home sale or transfer":
+        "Transfer documents, notice requirements, timing, payoff or assumption requirements, purchase option if offered, and transaction support.",
+
+      "Equipment appearance":
+        "Panel layout, conduit path, battery and inverter location, required clearances, and any applicable HOA or local review.",
+
+      "Ownership structure":
+        "Who owns the system during the term, purchase options if offered, timing and price conditions, and responsibility before and after any ownership change."
+    };
+
+
+    // ========================================================
+    // HELPERS
+    // ========================================================
+
+    function getElement(id) {
+      return document.getElementById(id);
+    }
+
+
+    function money(number) {
+
+      if (!number) {
+        return "—";
+      }
+
+      return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+        maximumFractionDigits: 0
+      }).format(number);
+    }
+
+
+ 
