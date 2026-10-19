@@ -1,0 +1,27 @@
+.hero .eyebrow,.eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:12px;font-weight:800;color:#e6bd5e}
+.stephead{display:flex;gap:18px;align-items:flex-start;margin-bottom:28px}
+.badge{flex:0 0 auto;width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:var(--navy);color:#fff;font-weight:900}
+.stephead h2{margin:0;font-size:34px}
+.stephead p{margin:7px 0 0;color:var(--muted)}
+.summary{margin-top:28px;background:var(--navy);color:#fff;padding:25px;border-radius:18px}
+.summary ul{margin-bottom:0}
+.summary .muted{color:#bcd0df}
+.doc{display:inline-block;margin-top:8px;color:#17486c;font-weight:800;text-decoration:none}
+.stephead h2{font-size:29px}
+.selectgrid,.energygrid,.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.summary2{background:#10243d;color:#fff;border-radius:18px;padding:24px;margin-top:20px}
+.energy{background:#fff;border-radius:17px;padding:21px;box-shadow:var(--shadow);border-top:5px solid #77828b}
+.energy.solar{border-color:#d7a640}
+.proscons{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.selectgrid,.energygrid,.compare-grid,.drivers,.forecast,.solar101,.three,.consider,.proscons{grid-template-columns:1fr}
+.energy-art{width:100%;height:190px;object-fit:cover;border-radius:14px;margin-bottom:14px}
+.energy-art{height:160px}
+#s3 .s3-takeaway{margin-top:24px}
+#s3 .energy{height:100%}
+#s3 .energy img{display:block;width:100%;height:220px;object-fit:cover}
+#s3 .energy .inside{padding:20px}
+#s3 .proscons{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+#s3 .proscons h4{margin-bottom:7px}
+#s3 .proscons ul{margin-top:0;padding-left:20px}
+#s3 .full{grid-column:1/-1}
+@media(max-width:800px){#s3 .energygrid,#s3 .proscons{grid-template-columns:1fr}#s3 .energy img{height:190px}}

@@ -1,0 +1,1 @@
+SWPProfile.set('section3',{reviewed:true,optionsReviewed:['Utility / Grid Electricity','Residential Wind','Ground-Source / Geothermal','Solar + Storage'],adoptionMaintenanceReviewed:true,energySourceTakeawayReviewed:true});
