@@ -1,0 +1,6 @@
+const helpers=window.SWP.componentHelpers??=( {
+ bindFields(root){root.querySelectorAll('[data-field]').forEach(el=>{const path=el.dataset.field;const value=path.split('.').reduce((o,k)=>o?.[k],window.SWP.state);if(value!=null)el.value=value;el.addEventListener('input',()=>window.SWP.patch(path,el.type==='number'?(el.value===''?null:Number(el.value)):el.value))})},
+ money(v){return Number.isFinite(v)?new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(v):'Not available'},
+ number(v){return Number.isFinite(v)?new Intl.NumberFormat('en-US').format(v):'Pending'}
+});
+window.SWP.register('current-energy-summary',{mount(root){const draw=()=>{const s=window.SWP.calc.refresh();root.querySelector('[data-out="annual"]').textContent=s.currentEnergy.annualKwh?helpers.number(s.currentEnergy.annualKwh)+' kWh':'Not available';root.querySelector('[data-out="cost"]').textContent=helpers.money(window.SWP.calc.annualCost(s));root.querySelector('[data-out="rate"]').textContent=s.currentEnergy.effectiveRate?'$'+s.currentEnergy.effectiveRate.toFixed(2)+'/kWh':'Not available'};draw();document.addEventListener('swp:data',draw)}});

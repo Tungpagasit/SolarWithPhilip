@@ -1,0 +1,6 @@
+const helpers=window.SWP.componentHelpers??=( {
+ bindFields(root){root.querySelectorAll('[data-field]').forEach(el=>{const path=el.dataset.field;const value=path.split('.').reduce((o,k)=>o?.[k],window.SWP.state);if(value!=null)el.value=value;el.addEventListener('input',()=>window.SWP.patch(path,el.type==='number'?(el.value===''?null:Number(el.value)):el.value))})},
+ money(v){return Number.isFinite(v)?new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(v):'Not available'},
+ number(v){return Number.isFinite(v)?new Intl.NumberFormat('en-US').format(v):'Pending'}
+});
+window.SWP.register('solar-potential-visual',{mount(root){const draw=()=>{const p=window.SWP.state.property.solar?.solarPotential||{};root.querySelector('[data-solar="roof"]').textContent=p.wholeRoofStats?.areaMeters2?Math.round(p.wholeRoofStats.areaMeters2)+' m²':'Pending';root.querySelector('[data-solar="sun"]').textContent=p.maxSunshineHoursPerYear?Math.round(p.maxSunshineHoursPerYear)+' hrs':'Pending';root.querySelector('[data-solar="panels"]').textContent=p.maxArrayPanelsCount??'Pending'};draw();document.addEventListener('swp:data',draw)}});

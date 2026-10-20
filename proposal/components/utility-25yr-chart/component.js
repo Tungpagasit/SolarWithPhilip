@@ -1,0 +1,6 @@
+const helpers=window.SWP.componentHelpers??=( {
+ bindFields(root){root.querySelectorAll('[data-field]').forEach(el=>{const path=el.dataset.field;const value=path.split('.').reduce((o,k)=>o?.[k],window.SWP.state);if(value!=null)el.value=value;el.addEventListener('input',()=>window.SWP.patch(path,el.type==='number'?(el.value===''?null:Number(el.value)):el.value))})},
+ money(v){return Number.isFinite(v)?new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(v):'Not available'},
+ number(v){return Number.isFinite(v)?new Intl.NumberFormat('en-US').format(v):'Pending'}
+});
+window.SWP.register('utility-25yr-chart',{mount(root){const input=root.querySelector('[data-growth]'),out=root.querySelector('output'),chart=root.querySelector('[data-line]');function draw(){const start=window.SWP.calc.annualCost(window.SWP.state)||2400,g=Number(input.value)/100;out.textContent=input.value+'%';const vals=Array.from({length:25},(_,i)=>start*Math.pow(1+g,i));const max=Math.max(...vals);const pts=vals.map((v,i)=>`${i/24*100},${100-v/max*88}`).join(' ');chart.innerHTML=`<svg viewBox="0 0 100 100" preserveAspectRatio="none"><polyline points="${pts}" fill="none" stroke="#147D78" stroke-width="2" vector-effect="non-scaling-stroke"/></svg>`}input.oninput=draw;draw()}});
