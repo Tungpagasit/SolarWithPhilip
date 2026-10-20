@@ -1,6 +1,0 @@
-const helpers=window.SWP.componentHelpers??=( {
- bindFields(root){root.querySelectorAll('[data-field]').forEach(el=>{const path=el.dataset.field;const value=path.split('.').reduce((o,k)=>o?.[k],window.SWP.state);if(value!=null)el.value=value;el.addEventListener('input',()=>window.SWP.patch(path,el.type==='number'?(el.value===''?null:Number(el.value)):el.value))})},
- money(v){return Number.isFinite(v)?new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(v):'Not available'},
- number(v){return Number.isFinite(v)?new Intl.NumberFormat('en-US').format(v):'Pending'}
-});
-window.SWP.register('usage-input',{mount(root){const months='Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' ');const grid=root.querySelector('.usage-grid');grid.innerHTML=months.map((m,i)=>`<label class="usage-month"><span>${m} kWh</span><input type="number" min="0" data-i="${i}"></label>`).join('');grid.querySelectorAll('input').forEach(el=>{el.value=window.SWP.state.currentEnergy.monthlyKwh[el.dataset.i]??'';el.oninput=()=>{window.SWP.state.currentEnergy.monthlyKwh[el.dataset.i]=el.value===''?null:Number(el.value);window.SWP.calc.refresh()}});root.querySelectorAll('[data-upload]').forEach(el=>el.onchange=()=>{window.SWP.state.uploads[el.dataset.upload]=el.files[0]?.name||null;window.SWP.save()})}});

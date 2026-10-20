@@ -1,6 +1,0 @@
-const helpers=window.SWP.componentHelpers??=( {
- bindFields(root){root.querySelectorAll('[data-field]').forEach(el=>{const path=el.dataset.field;const value=path.split('.').reduce((o,k)=>o?.[k],window.SWP.state);if(value!=null)el.value=value;el.addEventListener('input',()=>window.SWP.patch(path,el.type==='number'?(el.value===''?null:Number(el.value)):el.value))})},
- money(v){return Number.isFinite(v)?new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(v):'Not available'},
- number(v){return Number.isFinite(v)?new Intl.NumberFormat('en-US').format(v):'Pending'}
-});
-window.SWP.register('submit-proposal',{mount(root){root.querySelector('[data-submit]').onclick=async()=>{const status=root.querySelector('[data-submit-status]');if(!window.SWP.state.authorization.accepted){status.textContent='Please complete the authorization checkbox first.';return}status.textContent='Saving…';try{const r=await fetch('/.netlify/functions/submit-proposal',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(window.SWP.state)});const data=await r.json();if(!r.ok)throw new Error(data.error||'Could not save');status.textContent='Your preliminary proposal has been saved.';window.SWP.state.status='submitted';window.SWP.save()}catch(e){status.textContent=e.message}}}});

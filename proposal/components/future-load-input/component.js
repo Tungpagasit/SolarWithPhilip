@@ -1,6 +1,0 @@
-const helpers=window.SWP.componentHelpers??=( {
- bindFields(root){root.querySelectorAll('[data-field]').forEach(el=>{const path=el.dataset.field;const value=path.split('.').reduce((o,k)=>o?.[k],window.SWP.state);if(value!=null)el.value=value;el.addEventListener('input',()=>window.SWP.patch(path,el.type==='number'?(el.value===''?null:Number(el.value)):el.value))})},
- money(v){return Number.isFinite(v)?new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(v):'Not available'},
- number(v){return Number.isFinite(v)?new Intl.NumberFormat('en-US').format(v):'Pending'}
-});
-window.SWP.register('future-load-input',{mount(root){const labels={ev:'EV charging',hvac:'Heat pump / HVAC',pool:'Pool / spa',waterHeating:'Electric water heating',appliances:'Electric appliances',addition:'Home addition',other:'Other future load'};const box=root.querySelector('.future-fields');box.innerHTML=Object.entries(labels).map(([k,l])=>`<label class="field"><span>${l} (annual kWh)</span><input type="number" min="0" data-k="${k}"></label>`).join('');box.querySelectorAll('input').forEach(el=>{el.value=window.SWP.state.futureEnergy.loads[el.dataset.k]||'';el.oninput=()=>{window.SWP.state.futureEnergy.loads[el.dataset.k]=Number(el.value)||0;window.SWP.calc.refresh()}})}});

@@ -1,1 +1,0 @@
-window.SWP.loadConcernProfile=()=>{try{const raw=localStorage.getItem('Concern_Profile')||localStorage.getItem('concernProfile');if(raw){window.SWP.state.concernProfile=JSON.parse(raw);window.SWP.save();return true}}catch(e){console.warn('Concern Profile could not be read',e)}return false};
