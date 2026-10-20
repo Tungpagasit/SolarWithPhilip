@@ -1,0 +1,1 @@
+const ms='Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' '),a=SWP.data.currentEnergy.monthlyKwh;root.querySelector('[data-grid]').innerHTML=ms.map((m,i)=>`<label>${m} kWh<input type="number" min="0" data-i="${i}" value="${a[i]??''}"></label>`).join('');root.querySelectorAll('[data-i]').forEach(e=>e.oninput=()=>{a[+e.dataset.i]=e.value===''?null:+e.value;SWP.save()});

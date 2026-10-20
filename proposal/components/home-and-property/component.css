@@ -1,0 +1,1 @@
+[data-analyze]:not(:disabled){box-shadow:0 8px 22px rgba(20,125,120,.24);animation:pulse 1.8s infinite}@keyframes pulse{50%{transform:translateY(-2px)}}

@@ -1,0 +1,127 @@
+{
+  "sections": [
+    {
+      "id": "section-01",
+      "kicker": "Start with the real home",
+      "title": "Build the clearest starting picture",
+      "paths": [
+        "all"
+      ],
+      "components": [
+        "path-choice",
+        "home-and-property",
+        "energy-history",
+        "uploads",
+        "authorization",
+        "section1-actions"
+      ]
+    },
+    {
+      "id": "section-02",
+      "kicker": "Your energy baseline",
+      "title": "Turn 12 months of usage into a cost strategy",
+      "paths": [
+        "strategy"
+      ],
+      "components": [
+        "energy-baseline",
+        "monthly-chart",
+        "milestone-costs"
+      ]
+    },
+    {
+      "id": "section-03",
+      "kicker": "Property intelligence",
+      "title": "What the roof and sun may support",
+      "paths": [
+        "strategy"
+      ],
+      "components": [
+        "property-results"
+      ]
+    },
+    {
+      "id": "section-04",
+      "kicker": "Future electricity",
+      "title": "Prepare for the home you are becoming",
+      "paths": [
+        "strategy"
+      ],
+      "components": [
+        "future-loads",
+        "future-summary"
+      ]
+    },
+    {
+      "id": "section-05",
+      "kicker": "Offset planning",
+      "title": "Why more annual production can reduce winter imports",
+      "paths": [
+        "strategy"
+      ],
+      "components": [
+        "offset-comparison",
+        "seasonal-explanation"
+      ]
+    },
+    {
+      "id": "section-06",
+      "kicker": "NEM 3 explained",
+      "title": "The grid is no longer a one-for-one battery",
+      "paths": [
+        "strategy"
+      ],
+      "components": [
+        "nem3-story",
+        "nem3-flow"
+      ]
+    },
+    {
+      "id": "section-07",
+      "kicker": "The long-term cost decision",
+      "title": "Explore utility versus solar cost over 30 years",
+      "paths": [
+        "strategy"
+      ],
+      "components": [
+        "cost-of-energy-lab"
+      ]
+    },
+    {
+      "id": "section-08",
+      "kicker": "Your preliminary direction",
+      "title": "Bring the complete picture together",
+      "paths": [
+        "strategy"
+      ],
+      "components": [
+        "final-summary",
+        "strategy-save"
+      ]
+    },
+    {
+      "id": "comparison-review",
+      "kicker": "Proposal comparison",
+      "title": "Your required steps are complete",
+      "paths": [
+        "comparison"
+      ],
+      "components": [
+        "comparison-ready",
+        "comparison-note",
+        "comparison-submit"
+      ]
+    },
+    {
+      "id": "comparison-complete",
+      "kicker": "Comparison received",
+      "title": "Your comparison is now with Philip",
+      "paths": [
+        "comparison-submitted"
+      ],
+      "components": [
+        "comparison-confirmation"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+const draw=()=>{const a=SWP.calc.annualKwh()||0,b=SWP.calc.futureKwh();root.querySelector('[data-a]').textContent=a.toLocaleString()+' kWh';root.querySelector('[data-b]').textContent='+'+b.toLocaleString()+' kWh';root.querySelector('[data-c]').textContent=(a+b).toLocaleString()+' kWh'};draw();document.addEventListener('swp:data',draw);
