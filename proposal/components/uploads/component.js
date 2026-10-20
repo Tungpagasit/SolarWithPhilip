@@ -1,0 +1,1 @@
+root.querySelectorAll('[data-u]').forEach(e=>e.onchange=()=>{const f=e.files[0],k=e.dataset.u;SWP.data.uploads[k]=f?{name:f.name,type:f.type,size:f.size,file:f}:null;root.querySelector(`[data-n="${k}"]`).textContent=f?f.name:'No file selected';SWP.resetConsent()});

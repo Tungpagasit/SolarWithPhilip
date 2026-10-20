@@ -1,0 +1,1 @@
+const num=n=>new Intl.NumberFormat('en-US').format(n),draw=()=>{const k=SWP.calc.annualKwh()||0,f=SWP.calc.futureKwh();root.querySelector('[data-a]').textContent=num(k)+' kWh';root.querySelector('[data-b]').textContent='+'+num(f)+' kWh';root.querySelector('[data-c]').textContent=num(k+f)+' kWh'};draw();document.addEventListener('swp:data',draw);

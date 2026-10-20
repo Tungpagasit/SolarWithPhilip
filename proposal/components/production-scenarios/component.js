@@ -1,0 +1,1 @@
+const num=n=>new Intl.NumberFormat('en-US').format(Math.round(n)),draw=()=>{const p=SWP.calc.planning();[['100',p.p100],['125',p.p125],['150',p.p150]].forEach(([n,v])=>root.querySelector(`[data-n="${n}"] .metric`).textContent=v?num(v)+' kWh':'Pending')};draw();document.addEventListener('swp:data',draw);

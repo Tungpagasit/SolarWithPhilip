@@ -1,0 +1,1 @@
+root.querySelector('[data-submit]').onclick=()=>{SWP.data.path='comparison-submitted';SWP.save();SWP.refreshFlow();document.getElementById('comparison-complete')?.scrollIntoView({behavior:'smooth'})};

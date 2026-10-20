@@ -1,0 +1,1 @@
+const draw=()=>root.querySelectorAll('[data-p]').forEach(b=>b.classList.toggle('selected',b.dataset.p===SWP.data.path));root.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{SWP.setPath(b.dataset.p);draw()});draw();
