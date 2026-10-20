@@ -1,3 +1,0 @@
-window.SWP.register('clarity-meter',{mount(root){
- const draw=()=>{const s=window.SWP.calc.refresh(false),k=s.currentEnergy.annualKwh,c=s.currentEnergy.annualCost,r=s.currentEnergy.effectiveRate;root.querySelector('[data-copy]').textContent=k!==null&&c!==null?`Your 12-month baseline is ${new Intl.NumberFormat('en-US').format(k)} kWh. At about ${r?'$'+r.toFixed(2)+'/kWh':'the available cost information'}, we now have a practical starting point for the property, future-energy, and production-planning views.`:'Complete all 12 monthly kWh entries for the clearest baseline. We can still use cost information as a planning fallback.'};draw();document.addEventListener('swp:data',draw);
-}});
