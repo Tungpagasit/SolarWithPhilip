@@ -1,0 +1,2 @@
+const H=window.SWP.helpers??=({money:v=>Number.isFinite(v)?new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(v):'Pending',num:v=>Number.isFinite(v)?new Intl.NumberFormat('en-US').format(v):'Pending',bind:r=>r.querySelectorAll('[data-field]').forEach(e=>{const p=e.dataset.field,v=window.SWP.get(p);if(v!=null)e.value=v;e.oninput=()=>window.SWP.patch(p,e.type==='number'?(e.value===''?null:Number(e.value)):e.value)})});
+window.SWP.register('nem3-flow',{mount(){}});
