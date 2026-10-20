@@ -1,8 +1,3 @@
-/* =========================================================
-   SECTION 03 — ENERGY SOURCE REALITY CHECK
-   2 x 2 quarter-page layout with image backgrounds
-   ========================================================= */
-
 #s3 .energygrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -12,122 +7,39 @@
 
 
 /* =========================================================
-   ENERGY BLOCK
+   FOUR QUARTER-PAGE BLOCKS
    ========================================================= */
 
 #s3 .energy {
   position: relative;
-  min-height: 360px;
 
-  border-radius: 17px;
+  min-height: 410px;
+
   overflow: hidden;
 
   border: 1px solid var(--line);
+  border-radius: 17px;
+
+  background-color: var(--navy);
+
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
 
   box-shadow:
     0 10px 28px rgba(16, 36, 61, 0.10);
-
-  background-color: var(--navy);
 }
 
 
-/* Hide the normal image element.
-   The image becomes a background instead. */
+/* Solar gets only a subtle emphasis */
 
-#s3 .energy-art {
-  position: absolute;
-
-  width: 1px;
-  height: 1px;
-
-  opacity: 0;
-  pointer-events: none;
-}
-
-
-/* =========================================================
-   CORRECT BACKGROUND FOR EACH BLOCK
-   ========================================================= */
-
-#s3 .energy:nth-child(1) {
-  background-image:
-    linear-gradient(
-      to bottom,
-      rgba(16, 36, 61, 0.05) 0%,
-      rgba(16, 36, 61, 0.15) 32%,
-      rgba(16, 36, 61, 0.88) 68%,
-      rgba(16, 36, 61, 0.98) 100%
-    ),
-    url("01-utility-grid.png");
-
-  background-size: cover;
-  background-position: center;
-}
-
-
-#s3 .energy:nth-child(2) {
-  background-image:
-    linear-gradient(
-      to bottom,
-      rgba(16, 36, 61, 0.05) 0%,
-      rgba(16, 36, 61, 0.15) 32%,
-      rgba(16, 36, 61, 0.88) 68%,
-      rgba(16, 36, 61, 0.98) 100%
-    ),
-    url("02-residential-wind.png");
-
-  background-size: cover;
-  background-position: center;
-}
-
-
-#s3 .energy:nth-child(3) {
-  background-image:
-    linear-gradient(
-      to bottom,
-      rgba(16, 36, 61, 0.05) 0%,
-      rgba(16, 36, 61, 0.15) 32%,
-      rgba(16, 36, 61, 0.88) 68%,
-      rgba(16, 36, 61, 0.98) 100%
-    ),
-    url("03-ground-source-geothermal.png");
-
-  background-size: cover;
-  background-position: center;
-}
-
-
-#s3 .energy:nth-child(4) {
-  background-image:
-    linear-gradient(
-      to bottom,
-      rgba(16, 36, 61, 0.02) 0%,
-      rgba(16, 36, 61, 0.12) 32%,
-      rgba(16, 36, 61, 0.84) 68%,
-      rgba(16, 36, 61, 0.97) 100%
-    ),
-    url("04-solar-storage.png");
-
-  background-size: cover;
-  background-position: center;
-}
-
-
-/* =========================================================
-   SOLAR EMPHASIS
-   ========================================================= */
-
-#s3 .energy.solar {
+#s3 .energy-solar {
   border: 2px solid #d9b75f;
-
-  box-shadow:
-    0 11px 30px rgba(16, 36, 61, 0.12),
-    0 0 0 1px rgba(217, 183, 95, 0.14);
 }
 
 
 /* =========================================================
-   CONTENT OVER IMAGE
+   TEXT AREA
    ========================================================= */
 
 #s3 .inside {
@@ -139,7 +51,7 @@
 
   z-index: 2;
 
-  padding: 22px;
+  padding: 20px;
 
   color: #fff;
 }
@@ -150,18 +62,18 @@
 
   color: #fff;
 
-  font-size: 23px;
+  font-size: 22px;
   line-height: 1.15;
 
   text-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.30);
+    0 2px 7px rgba(0, 0, 0, 0.35);
 }
 
 
 #s3 .inside > p {
   margin: 0 0 10px;
 
-  color: #e5edf3;
+  color: #eef4f8;
 
   font-size: 13px;
   line-height: 1.42;
@@ -169,7 +81,7 @@
 
 
 /* =========================================================
-   ADVANTAGES / CONSEQUENCES
+   STRENGTH / LIMITATION
    ========================================================= */
 
 #s3 .proscons {
@@ -188,15 +100,12 @@
   padding: 9px 10px;
 
   background:
-    rgba(255, 255, 255, 0.10);
+    rgba(11, 30, 48, 0.64);
 
   border:
-    1px solid
-    rgba(255, 255, 255, 0.14);
+    1px solid rgba(255, 255, 255, 0.14);
 
   border-radius: 9px;
-
-  backdrop-filter: blur(2px);
 }
 
 
@@ -213,7 +122,7 @@
 #s3 .proscons ul {
   margin: 0;
 
-  color: #eef4f8;
+  color: #f3f7fa;
 
   font-size: 12px;
   line-height: 1.38;
@@ -264,8 +173,7 @@
 
   background: #edf7f2;
 
-  border-left:
-    5px solid var(--green);
+  border-left: 5px solid var(--green);
 
   border-radius: 11px;
 
@@ -282,12 +190,11 @@
 
 
 /* =========================================================
-   ENERGY SOURCE TAKEAWAY
+   TAKEAWAY
    ========================================================= */
 
 #s3 .takeaway {
   margin-top: 16px;
-
   padding: 18px 21px;
 }
 
@@ -301,13 +208,11 @@
 
 #s3 .takeaway p {
   margin: 0;
-
-  line-height: 1.5;
 }
 
 
 /* =========================================================
-   TABLET / MOBILE
+   RESPONSIVE
    ========================================================= */
 
 @media (max-width: 800px) {
@@ -317,7 +222,7 @@
   }
 
   #s3 .energy {
-    min-height: 395px;
+    min-height: 430px;
   }
 
 }
@@ -325,16 +230,12 @@
 
 @media (max-width: 520px) {
 
-  #s3 .energy {
-    min-height: 440px;
-  }
-
   #s3 .proscons {
     grid-template-columns: 1fr;
   }
 
-  #s3 .inside {
-    padding: 18px;
+  #s3 .energy {
+    min-height: 510px;
   }
 
 }
