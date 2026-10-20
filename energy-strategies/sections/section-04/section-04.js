@@ -1,0 +1,1 @@
+(function(){if(window.SWPProfile){SWPProfile.set('section4',{reviewed:true,stepsReviewed:[1,2,3,4,5],nem3Reviewed:true,nem3Topics:['when','why','what changed','PG&E design problem','solar + battery design response'],practicalNextStepReviewed:true});}})();
