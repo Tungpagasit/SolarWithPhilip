@@ -1,1 +1,0 @@
-const s=root.querySelector('[data-status]');root.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{if(!SWP.data.authorization.accepted){s.textContent='Please check authorization first.';return}if(b.dataset.a==='comparison'&&!SWP.data.uploads.proposalQuote){s.textContent='Please upload the proposal or quote for comparison.';return}SWP.advance(b.dataset.a)});

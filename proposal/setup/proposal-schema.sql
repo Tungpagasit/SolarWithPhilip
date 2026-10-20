@@ -1,2 +1,0 @@
--- Existing Supabase proposal table and proposal-uploads bucket were already created successfully.
--- Keep this file as the package marker; do not rerun setup unless the schema is intentionally revised.
