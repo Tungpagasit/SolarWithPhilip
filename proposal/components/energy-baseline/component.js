@@ -1,0 +1,3 @@
+const rate=root.querySelector('[data-rate]');if(!(SWP.data.planning.utilityRate>0))SWP.data.planning.utilityRate=SWP.calc.utilityDefaults[SWP.data.homeowner.utility]||.406;
+function draw(){const k=SWP.calc.annualKwh(),c=SWP.calc.annualCost();root.querySelector('[data-kwh]').textContent=k===null?'Complete all 12 months':k.toLocaleString()+' kWh';root.querySelector('[data-cost]').textContent=c===null?'Waiting for complete usage':c.toLocaleString('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0});rate.value=SWP.calc.utilityRate().toFixed(2)}
+rate.oninput=()=>{SWP.data.planning.utilityRate=Number(rate.value);SWP.save()};draw();document.addEventListener('swp:data',draw);
