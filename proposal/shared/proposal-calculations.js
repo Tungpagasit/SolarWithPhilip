@@ -7,8 +7,7 @@
   };
 
   /*
-   * Return all 12 monthly kWh values from the
-   * canonical Proposal energy record.
+   * Canonical 12-month household usage.
    */
   const rawUsage = () =>
     Array.from({ length: 12 }, (_, index) => {
@@ -26,9 +25,6 @@
       return Number(value);
     });
 
-  /*
-   * Validate the canonical 12-month usage record.
-   */
   function usageStatus() {
     const values = rawUsage();
 
@@ -58,15 +54,12 @@
     return usageStatus().complete;
   }
 
-  /*
-   * Current annual household usage.
-   */
   function annualKwh() {
     return usageStatus().annual;
   }
 
   /*
-   * Current utility rate.
+   * Utility rate.
    */
   function utilityRate() {
     let rate =
@@ -87,9 +80,6 @@
     return rate;
   }
 
-  /*
-   * Current annual electricity cost.
-   */
   function annualCost() {
     const currentAnnualKwh =
       annualKwh();
@@ -101,11 +91,10 @@
   }
 
   /*
-   * Decision_Profile future-load values are
-   * stored as monthly kWh.
+   * Decision_Profile future-load values
+   * are stored as MONTHLY kWh.
    *
-   * Sum the monthly additions, then multiply
-   * by 12 to return annual future kWh.
+   * Return annual future usage.
    */
   function futureKwh() {
     const monthlyFutureKwh =
@@ -121,8 +110,7 @@
   }
 
   /*
-   * Total annual planning usage:
-   * current annual usage plus annual future usage.
+   * Total annual planning usage.
    */
   function planningKwh() {
     const currentAnnualKwh =
@@ -135,7 +123,7 @@
   }
 
   /*
-   * Canonical monthly usage array.
+   * Current 12-month usage.
    */
   function monthlyUsage() {
     return usageStatus().values.map(
@@ -147,7 +135,50 @@
   }
 
   /*
-   * Annual solar-production target.
+   * Monthly future-load addition.
+   *
+   * Energy Strategies records future loads
+   * as monthly planning values.
+   */
+  function monthlyFutureKwh() {
+    return Object.values(
+      SWP.data.futureEnergy?.loads || {}
+    ).reduce(
+      (total, value) =>
+        total + (Number(value) || 0),
+      0
+    );
+  }
+
+  /*
+   * Planned monthly usage.
+   *
+   * Preserve the homeowner's actual
+   * 12-month seasonal pattern, then add the
+   * future monthly load assumption equally
+   * to each month.
+   */
+  function plannedMonthlyUsage() {
+    const status =
+      usageStatus();
+
+    if (!status.complete) {
+      return null;
+    }
+
+    const futureMonthly =
+      monthlyFutureKwh();
+
+    return status.values.map(
+      currentMonthKwh =>
+        currentMonthKwh +
+        futureMonthly
+    );
+  }
+
+  /*
+   * Production target based on planned
+   * future annual electricity usage.
    */
   function productionTarget(
     offset = 1.25
@@ -157,12 +188,14 @@
 
     return annualPlanningKwh === null
       ? null
-      : annualPlanningKwh * offset;
+      : annualPlanningKwh *
+          offset;
   }
 
   /*
-   * Select the Google-modeled solar configuration
-   * closest to the requested production target.
+   * Select the Google-modeled solar
+   * configuration closest to the
+   * requested production target.
    */
   function selectSolarConfig(
     offset = 1.25
@@ -210,6 +243,9 @@
 
   /*
    * Current-usage utility-cost projection.
+   *
+   * This deliberately represents CURRENT
+   * household usage, before future loads.
    */
   function currentProjection(
     years = 30
@@ -265,6 +301,9 @@
 
   /*
    * Utility-versus-solar planning projection.
+   *
+   * Uses PLANNED usage, including
+   * Decision_Profile future loads.
    */
   function projection(
     years = 30
@@ -294,7 +333,8 @@
         SWP.data.planning.solarStartRate
       ) || 0.24;
 
-    const solarGrowth = 0.04;
+    const solarGrowth =
+      0.04;
 
     const rows = Array.from(
       { length: years + 1 },
@@ -341,7 +381,8 @@
         .slice(0, numberOfYears)
         .reduce(
           (sum, row) =>
-            sum + row[key] * 12,
+            sum +
+            row[key] * 12,
           0
         );
 
@@ -353,7 +394,23 @@
   }
 
   /*
-   * Preliminary seasonal import/export model.
+   * ============================================================
+   * PLANNED SEASONAL OFFSET MODEL
+   * ============================================================
+   *
+   * Uses:
+   *
+   * Actual monthly household usage
+   * +
+   * Decision_Profile monthly future additions
+   * =
+   * Planned monthly household usage
+   *
+   * Solar production is then calculated against
+   * planned annual usage at the requested offset.
+   *
+   * This is a planning illustration, not final
+   * interval-data or tariff modeling.
    */
   function seasonal(offset) {
     const status =
@@ -363,12 +420,27 @@
       return null;
     }
 
-    const usage =
-      status.values;
+    /*
+     * Planned 12-month usage including
+     * future electricity additions.
+     */
+    const use =
+      plannedMonthlyUsage();
 
-    const annualUsage =
-      status.annual;
+    if (!use) {
+      return null;
+    }
 
+    const annualPlannedUsage =
+      use.reduce(
+        (total, value) =>
+          total + value,
+        0
+      );
+
+    /*
+     * Monthly solar-production weighting.
+     */
     const weights = [
       0.74,
       0.76,
@@ -391,17 +463,28 @@
         0
       );
 
+    /*
+     * Annual production equals:
+     *
+     * planned annual usage × offset
+     *
+     * Then distribute that production
+     * across the 12 months.
+     */
     const production =
       weights.map(
         weight =>
-          annualUsage *
+          annualPlannedUsage *
           offset *
           weight /
           weightTotal
       );
 
+    /*
+     * Preliminary monthly imports.
+     */
     const imports =
-      usage.map(
+      use.map(
         (monthUsage, index) =>
           Math.max(
             monthUsage -
@@ -410,8 +493,11 @@
           )
       );
 
+    /*
+     * Preliminary monthly exports.
+     */
     const exports =
-      usage.map(
+      use.map(
         (monthUsage, index) =>
           Math.max(
             production[index] -
@@ -448,10 +534,18 @@
       exportRate;
 
     return {
-      use: usage,
+      use,
       prod: production,
       imports,
       exports,
+
+      currentAnnualUsage:
+        status.annual,
+
+      futureAnnualUsage:
+        futureKwh(),
+
+      annualPlannedUsage,
 
       annualProduction:
         production.reduce(
@@ -480,17 +574,26 @@
   SWP.calc = {
     usageStatus,
     usageComplete,
+
     annualKwh,
+    monthlyUsage,
+
     utilityRate,
     annualCost,
+
+    monthlyFutureKwh,
     futureKwh,
+    plannedMonthlyUsage,
     planningKwh,
-    monthlyUsage,
+
     productionTarget,
     selectSolarConfig,
+
     currentProjection,
     projection,
+
     seasonal,
+
     utilityDefaults: defaults
   };
 })();
