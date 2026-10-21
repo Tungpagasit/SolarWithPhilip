@@ -1,0 +1,1 @@
+const s=root.querySelector('[data-status]');root.querySelector('[data-submit]').onclick=async()=>{try{s.textContent='Submitting…';await SWP.submit('comparison');SWP.data.path='comparison-submitted';SWP.save();SWP.refreshFlow()}catch(e){s.textContent=e.message}};
