@@ -1,46 +1,92 @@
 /* monthly-chart: isolated component */
 
-const labels = 'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' ');
+const labels =
+  'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' ');
 
 const draw = () => {
-  const usage = SWP.calc.monthlyUsage();
-  const maxUsage = Math.max(...usage, 1);
+  /*
+   * Canonical 12-month usage record.
+   */
+  const usage =
+    SWP.calc.monthlyUsage();
+
+  const maxUsage =
+    Math.max(...usage, 1);
 
   /*
-   * Uses the homeowner's current electricity rate.
-   * Replace this line only if your canonical rate
-   * is stored somewhere else.
+   * Use the same utility-rate source as the
+   * rest of the Proposal calculations.
    */
   const rate =
-    SWP.data?.currentEnergy?.ratePerKwh || 0;
+    SWP.calc.utilityRate();
 
-  root.querySelector('[data-chart]').innerHTML = usage.map((kwh, i) => {
+  const chart =
+    root.querySelector('[data-chart]');
 
-    const cost = kwh * rate;
+  if (!chart) return;
 
-    return `
-      <div class="chartbar-wrap">
+  chart.innerHTML =
+    usage.map((kwh, index) => {
+      const monthlyKwh =
+        Number(kwh) || 0;
 
-        <div class="chart-value">
-          <strong>${Math.round(kwh).toLocaleString()} kWh</strong>
-          ${rate > 0
-            ? `<span>$${Math.round(cost).toLocaleString()}</span>`
-            : ''
-          }
+      const cost =
+        monthlyKwh * rate;
+
+      const barHeight =
+        Math.max(
+          3,
+          monthlyKwh /
+            maxUsage *
+            190
+        );
+
+      return `
+        <div class="chartbar-wrap">
+
+          <div class="chart-value">
+
+            <strong>
+              ${Math.round(
+                monthlyKwh
+              ).toLocaleString()} kWh
+            </strong>
+
+            <span>
+              ${cost.toLocaleString(
+                'en-US',
+                {
+                  style: 'currency',
+                  currency: 'USD',
+                  maximumFractionDigits: 0
+                }
+              )}
+            </span>
+
+          </div>
+
+          <div
+            class="chartbar"
+            style="height:${barHeight}px"
+          ></div>
+
+          <small>
+            ${labels[index]}
+          </small>
+
         </div>
-
-        <div
-          class="chartbar"
-          style="height:${Math.max(3, kwh / maxUsage * 190)}px"
-        ></div>
-
-        <small>${labels[i]}</small>
-
-      </div>
-    `;
-  }).join('');
+      `;
+    }).join('');
 };
 
 draw();
 
-document.addEventListener('swp:data', draw);
+document.addEventListener(
+  'swp:data',
+  draw
+);
+
+document.addEventListener(
+  'swp:profile-loaded',
+  draw
+);
