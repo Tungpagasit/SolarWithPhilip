@@ -1,1 +1,0 @@
-const labels='Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' ');const draw=()=>{const a=SWP.calc.monthlyUsage(),m=Math.max(...a,1);root.querySelector('[data-chart]').innerHTML=a.map((v,i)=>`<div class="chartbar" style="height:${Math.max(3,v/m*190)}px"><small>${labels[i]}</small></div>`).join('')};draw();document.addEventListener('swp:data',draw);
