@@ -1,1 +1,0 @@
-const s=root.querySelector('[data-status]');root.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{if(!SWP.data.authorization.accepted)return s.textContent='Please check authorization first.';if(b.dataset.go==='comparison'&&!SWP.data.uploads.proposalQuote)return s.textContent='Upload the proposal first.';SWP.advance(b.dataset.go)});
