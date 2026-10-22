@@ -1,5 +1,414 @@
-const crypto=require('crypto');
-const response=(statusCode,value)=>({statusCode,headers:{'content-type':'application/json'},body:JSON.stringify(value)});
-async function upload(url,key,id,name,file){if(!file?.data)return null;const clean=(file.name||name).replace(/[^a-zA-Z0-9._-]/g,'_'),path=`${id}/${name}-${clean}`,r=await fetch(`${url}/storage/v1/object/proposal-uploads/${path}`,{method:'POST',headers:{apikey:key,authorization:`Bearer ${key}`,'content-type':file.type||'application/octet-stream','x-upsert':'true'},body:Buffer.from(file.data,'base64')});if(!r.ok)throw Error(`Could not upload ${file.name||name}: ${await r.text()}`);return{name:file.name||name,path,type:file.type||'',size:file.size||0};}
-async function notify(id,p){if(!process.env.RESEND_API_KEY||!process.env.PROPOSAL_NOTIFICATION_FROM||!process.env.PROPOSAL_NOTIFICATION_TO)return false;const h=p.homeowner||{},r=await fetch('https://api.resend.com/emails',{method:'POST',headers:{authorization:`Bearer ${process.env.RESEND_API_KEY}`,'content-type':'application/json'},body:JSON.stringify({from:process.env.PROPOSAL_NOTIFICATION_FROM,to:[process.env.PROPOSAL_NOTIFICATION_TO],subject:`Solar With Philip preliminary analysis saved: ${h.name||id}`,html:`<h2>Preliminary analysis saved</h2><p><b>Reference:</b> ${id}</p><p><b>Homeowner:</b> ${h.name||''}</p><p><b>Email:</b> ${h.email||''}</p><p><b>Property:</b> ${[h.street,h.city,h.state,h.zip].filter(Boolean).join(', ')}</p><p>The complete Full Decision Profile is stored with the Supabase proposal record.</p>`})});if(!r.ok)throw Error(`Email notification failed: ${await r.text()}`);return true;}
-exports.handler=async event=>{if(event.httpMethod!=='POST')return response(405,{error:'Method not allowed.'});try{const p=JSON.parse(event.body||'{}'),url=process.env.SUPABASE_URL,key=process.env.SUPABASE_SERVICE_ROLE_KEY;if(!url||!key)throw Error('Supabase environment variables are not configured.');const id=crypto.randomUUID(),uploads={};uploads.utilityBill=await upload(url,key,id,'utilityBill',p.files?.utilityBill);uploads.decisionProfile=await upload(url,key,id,'decisionProfile',p.files?.decisionProfile);const fullJson=Buffer.from(JSON.stringify({...p,files:undefined},null,2)).toString('base64');uploads.fullDecisionProfile=await upload(url,key,id,'fullDecisionProfile',{name:'SolarWithPhilip_Full_Decision_Profile.json',type:'application/json',size:Buffer.byteLength(fullJson,'base64'),data:fullJson});const row={id,homeowner:p.homeowner||{},concern_profile:p.decisionProfile||{},current_energy:p.currentEnergy||{},future_energy:p.futureEnergy||{},property:p.property||{},planning:{...(p.planning||{}),scenarios:p.scenarios||{},fullDecisionProfile:{profileType:p.profileType,schemaVersion:p.schemaVersion,concernSummary:p.concernSummary||{},report:p.report||{}}},comparison:{note:''},uploads,authorization:p.authorization||{},submission:{kind:'preliminary-analysis',submittedAt:new Date().toISOString()},status:'submitted'};const r=await fetch(`${url}/rest/v1/proposals`,{method:'POST',headers:{apikey:key,authorization:`Bearer ${key}`,'content-type':'application/json',prefer:'return=minimal'},body:JSON.stringify(row)});if(!r.ok)throw Error(await r.text());const emailSent=await notify(id,p);return response(200,{ok:true,id,emailSent});}catch(error){return response(500,{error:error.message||'Submission failed.'})}};
+const crypto = require('crypto');
+
+const response = (statusCode, value) => ({
+  statusCode,
+  headers: {
+    'content-type': 'application/json'
+  },
+  body: JSON.stringify(value)
+});
+
+async function uploadFile(
+  supabaseUrl,
+  serviceKey,
+  submissionId,
+  fileType,
+  file
+) {
+  if (!file || !file.data) {
+    return null;
+  }
+
+  const cleanName = String(
+    file.name || fileType
+  ).replace(
+    /[^a-zA-Z0-9._-]/g,
+    '_'
+  );
+
+  const path =
+    `${submissionId}/${fileType}-${cleanName}`;
+
+  const uploadResponse = await fetch(
+    `${supabaseUrl}/storage/v1/object/proposal-uploads/${path}`,
+    {
+      method: 'POST',
+
+      headers: {
+        apikey: serviceKey,
+        authorization: `Bearer ${serviceKey}`,
+        'content-type':
+          file.type ||
+          'application/octet-stream',
+        'x-upsert': 'true'
+      },
+
+      body: Buffer.from(
+        file.data,
+        'base64'
+      )
+    }
+  );
+
+  if (!uploadResponse.ok) {
+    const message =
+      await uploadResponse.text();
+
+    throw new Error(
+      `Could not upload ${file.name || fileType}: ${message}`
+    );
+  }
+
+  return {
+    name: file.name || fileType,
+    path,
+    type: file.type || '',
+    size: file.size || 0
+  };
+}
+
+async function saveJsonFile(
+  supabaseUrl,
+  serviceKey,
+  submissionId,
+  filename,
+  object
+) {
+  const json = JSON.stringify(
+    object,
+    null,
+    2
+  );
+
+  const path =
+    `${submissionId}/${filename}`;
+
+  const uploadResponse = await fetch(
+    `${supabaseUrl}/storage/v1/object/proposal-uploads/${path}`,
+    {
+      method: 'POST',
+
+      headers: {
+        apikey: serviceKey,
+        authorization:
+          `Bearer ${serviceKey}`,
+        'content-type':
+          'application/json',
+        'x-upsert': 'true'
+      },
+
+      body: Buffer.from(
+        json,
+        'utf8'
+      )
+    }
+  );
+
+  if (!uploadResponse.ok) {
+    const message =
+      await uploadResponse.text();
+
+    throw new Error(
+      `Could not save Full Decision Profile: ${message}`
+    );
+  }
+
+  return {
+    name: filename,
+    path,
+    type: 'application/json',
+    size: Buffer.byteLength(
+      json,
+      'utf8'
+    )
+  };
+}
+
+exports.handler = async event => {
+  if (event.httpMethod !== 'POST') {
+    return response(
+      405,
+      {
+        error: 'Method not allowed.'
+      }
+    );
+  }
+
+  try {
+    const payload =
+      JSON.parse(
+        event.body || '{}'
+      );
+
+    const supabaseUrl =
+      process.env.SUPABASE_URL;
+
+    const serviceKey =
+      process.env
+        .SUPABASE_SERVICE_ROLE_KEY;
+
+    if (
+      !supabaseUrl ||
+      !serviceKey
+    ) {
+      throw new Error(
+        'Supabase environment variables are not configured.'
+      );
+    }
+
+    const submissionId =
+      crypto.randomUUID();
+
+    const uploads = {};
+
+    /*
+     * Utility bill
+     */
+    uploads.utilityBill =
+      await uploadFile(
+        supabaseUrl,
+        serviceKey,
+        submissionId,
+        'utilityBill',
+        payload.files?.utilityBill
+      );
+
+    /*
+     * Original Energy Strategies
+     * Decision_Profile.json
+     */
+    uploads.decisionProfile =
+      await uploadFile(
+        supabaseUrl,
+        serviceKey,
+        submissionId,
+        'decisionProfile',
+        payload.files?.decisionProfile
+      );
+
+    /*
+     * Create the complete portable record.
+     *
+     * Remove base64 upload bodies from the
+     * JSON so the complete record contains
+     * the actual planning information rather
+     * than duplicate binary files.
+     */
+    const fullDecisionProfile = {
+      schemaVersion:
+        payload.schemaVersion ||
+        '1.0',
+
+      profileType:
+        'SolarWithPhilipFullDecisionProfile',
+
+      savedAt:
+        new Date().toISOString(),
+
+      submissionId,
+
+      source: {
+        application:
+          'Solar With Philip',
+
+        experience:
+          'Preliminary Property and Energy Analysis'
+      },
+
+      homeowner:
+        payload.homeowner || {},
+
+      decisionProfile:
+        payload.decisionProfile || null,
+
+      currentEnergy:
+        payload.currentEnergy || {},
+
+      futureEnergy:
+        payload.futureEnergy || {},
+
+      property:
+        payload.property || {},
+
+      planning:
+        payload.planning || {},
+
+      scenarios:
+        payload.scenarios || {},
+
+      concernSummary:
+        payload.concernSummary || {},
+
+      authorization:
+        payload.authorization || {},
+
+      report:
+        {
+          ...(payload.report || {}),
+
+          commercialReuseAuthorized:
+            false,
+
+          homeownerSharingAllowed:
+            true
+        }
+    };
+
+    /*
+     * Save the Full Decision Profile
+     * JSON into Supabase Storage.
+     */
+    uploads.fullDecisionProfile =
+      await saveJsonFile(
+        supabaseUrl,
+        serviceKey,
+        submissionId,
+        'SolarWithPhilip_Full_Decision_Profile.json',
+        fullDecisionProfile
+      );
+
+    /*
+     * Preserve compatibility with the
+     * existing proposals table.
+     *
+     * concern_profile retains its existing
+     * database column name even though the
+     * homeowner-facing system is now called
+     * Decision_Profile.
+     */
+    const row = {
+      id:
+        submissionId,
+
+      homeowner:
+        payload.homeowner || {},
+
+      concern_profile:
+        payload.decisionProfile || {},
+
+      current_energy:
+        payload.currentEnergy || {},
+
+      future_energy:
+        payload.futureEnergy || {},
+
+      property:
+        payload.property || {},
+
+      planning: {
+        ...(payload.planning || {}),
+
+        scenarios:
+          payload.scenarios || {},
+
+        fullDecisionProfile: {
+          profileType:
+            fullDecisionProfile
+              .profileType,
+
+          schemaVersion:
+            fullDecisionProfile
+              .schemaVersion,
+
+          concernSummary:
+            fullDecisionProfile
+              .concernSummary,
+
+          report:
+            fullDecisionProfile
+              .report
+        }
+      },
+
+      comparison: {
+        note: ''
+      },
+
+      uploads,
+
+      authorization:
+        payload.authorization || {},
+
+      submission: {
+        kind:
+          'preliminary-analysis',
+
+        submittedAt:
+          new Date()
+            .toISOString()
+      },
+
+      status:
+        'submitted'
+    };
+
+    const databaseResponse =
+      await fetch(
+        `${supabaseUrl}/rest/v1/proposals`,
+        {
+          method: 'POST',
+
+          headers: {
+            apikey:
+              serviceKey,
+
+            authorization:
+              `Bearer ${serviceKey}`,
+
+            'content-type':
+              'application/json',
+
+            prefer:
+              'return=minimal'
+          },
+
+          body:
+            JSON.stringify(row)
+        }
+      );
+
+    if (!databaseResponse.ok) {
+      throw new Error(
+        await databaseResponse.text()
+      );
+    }
+
+    /*
+     * IMPORTANT:
+     *
+     * Email delivery is deliberately
+     * NOT performed here.
+     *
+     * The submission has been safely
+     * stored in Supabase.
+     */
+    return response(
+      200,
+      {
+        ok: true,
+
+        id:
+          submissionId,
+
+        savedToSupabase:
+          true,
+
+        fullDecisionProfileSaved:
+          true,
+
+        emailSent:
+          false
+      }
+    );
+
+  } catch (error) {
+    return response(
+      500,
+      {
+        error:
+          error.message ||
+          'Submission failed.'
+      }
+    );
+  }
+};
