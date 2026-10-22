@@ -1,0 +1,1 @@
+const e=root.querySelector("[data-consent]");e.checked=!!SWP.data.authorization.accepted;e.addEventListener("change",()=>{SWP.data.authorization={accepted:e.checked,timestamp:e.checked?new Date().toISOString():null};SWP.save();});

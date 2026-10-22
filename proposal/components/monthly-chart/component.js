@@ -1,0 +1,1 @@
+function draw(){const v=SWP.data.currentEnergy.monthlyKwh.map(Number),mx=Math.max(...v,1);root.querySelector("[data-chart]").innerHTML=v.map((x,i)=>`<div class="bar"><span>${SWP.num(x)}</span><i style="height:${Math.max(4,x/mx*200)}px"></i><b>${SWP.calc.months[i]}</b></div>`).join("");}draw();document.addEventListener("swp:data",draw);
