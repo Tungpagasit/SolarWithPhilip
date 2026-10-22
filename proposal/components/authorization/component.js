@@ -1,1 +1,0 @@
-const c=root.querySelector('[data-c]'),n=root.querySelector('[data-note]'),sync=()=>c.checked=!!SWP.data.authorization.accepted;sync();c.onchange=()=>{SWP.data.authorization={accepted:c.checked,timestamp:c.checked?new Date().toISOString():null};SWP.save()};document.addEventListener('swp:consent-reset',()=>{sync();n.textContent='A document changed. Review and authorize again.'});

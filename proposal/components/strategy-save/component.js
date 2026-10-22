@@ -1,1 +1,0 @@
-const s=root.querySelector('[data-status]');root.querySelector('[data-save]').onclick=async()=>{try{s.textContent='Saving…';await SWP.submit('strategy');s.textContent='Saved.'}catch(e){s.textContent=e.message}};

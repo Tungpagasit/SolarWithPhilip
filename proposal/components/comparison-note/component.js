@@ -1,1 +1,0 @@
-const e=root.querySelector('[data-note]');e.value=SWP.data.comparisonNote||'';e.oninput=()=>{SWP.data.comparisonNote=e.value;SWP.save()};

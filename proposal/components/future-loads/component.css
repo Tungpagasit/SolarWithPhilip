@@ -1,1 +1,0 @@
-.profile-load-list{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.profile-load-card{padding:16px;border-radius:14px;background:#fff}.profile-load-card span{display:block;color:#465a64}.profile-load-card strong{display:block;color:#12324a}@media(max-width:800px){.profile-load-list{grid-template-columns:1fr}}
