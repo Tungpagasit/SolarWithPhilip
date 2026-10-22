@@ -2,12 +2,7 @@
 const outcomes=[['lower_cost','Lower energy cost'],['future_utility','Reduce future utility exposure'],['future_use','Support future electricity use'],['backup','Backup capability'],['low_upfront','Low upfront cost'],['preserve_cash','Preserve cash'],['own_equipment','Own the equipment'],['less_responsibility','Reduce equipment responsibility']];
 const oval=['Must Have','Important','Nice to Have','Not Important'];const deliver={lower_cost:['no','maybe','maybe'],future_utility:['no','yes','yes'],future_use:['maybe','yes','yes'],backup:['no','yes','yes'],low_upfront:['yes','maybe','yes'],preserve_cash:['yes','maybe','yes'],own_equipment:['no','yes','maybe'],less_responsibility:['yes','no','yes']};
 const saved=SWPProfile.get().section5||{};let O={...(saved.outcomes||{})},C={...(saved.concerns||{})},D={...(saved.concernDetails||{})},other=saved.otherConcern||'';
-const esc = s => String(s || '').replace(/[&<>"]/g, m => ({
-  '&': '&amp;',
-  '<': '&lt;',
-  '>': '&gt;',
-  '"': '&quot;'
-}[m]));
+const esc=s=>String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 function btns(vals,kind,id){return `<div class="${kind==='o'?'decision-buttons':'classify'}">${vals.map(v=>`<button type="button" data-kind="${kind}" data-id="${id}" data-value="${v}" class="${(kind==='o'?O:C)[id]===v?'active':''}">${v}</button>`).join('')}</div>`}
 document.getElementById('s5-outcome-grid').innerHTML=outcomes.map(([id,label])=>`<div class="decision-card"><h3>${label}</h3>${btns(oval,'o',id)}</div>`).join('');
 const nav=document.getElementById('s5-category-nav'),groups=document.getElementById('s5-concern-groups');nav.innerHTML=L.categories.map((g,i)=>`<button type="button" data-group="${g.id}" class="${i===0?'active':''}">${g.label}</button>`).join('');
