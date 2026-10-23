@@ -1,1 +1,0 @@
-.months{display:grid;grid-template-columns:repeat(6,1fr);gap:9px}.months label{text-align:center;font-size:.78rem;font-weight:800}.months input{display:block;width:100%;padding:9px;text-align:center;border:1px solid var(--line);border-radius:8px}@media(max-width:700px){.months{grid-template-columns:repeat(3,1fr)}}
