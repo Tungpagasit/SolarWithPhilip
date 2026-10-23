@@ -1,1 +1,0 @@
-window.SWP=window.SWP||{};document.addEventListener('DOMContentLoaded',async()=>{try{await SWP.loadProposal();SWP.bindGlobalActions();}catch(e){console.error(e);document.querySelector('#proposal-app').innerHTML='<div class="loading-card error">Proposal could not load. '+e.message+'</div>';}});
