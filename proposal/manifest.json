@@ -1,0 +1,21 @@
+{
+  "version": "9.0",
+  "components": [
+    "uploads",
+    "home-and-property",
+    "energy-history",
+    "authorization",
+    "section1-actions",
+    "energy-baseline",
+    "monthly-chart",
+    "future-summary",
+    "current-future-summary",
+    "property-results",
+    "battery-planning",
+    "offset-comparison",
+    "nem3-fun-fact",
+    "cost-of-energy-lab",
+    "final-summary",
+    "strategy-save"
+  ]
+}
