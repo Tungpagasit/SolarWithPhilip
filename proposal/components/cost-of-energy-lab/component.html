@@ -5,23 +5,13 @@
 
   <div class="cost-controls">
     <label>Utility Rate ($/kWh)<input data-u type="number" min="0" max="3" step=".01"></label>
-    <label class="with-info">Utility Annual Increase %
-      <button class="info-button" type="button" aria-label="Utility increase information">i<span>Historical perspective: PG&E’s residential electricity rates approximately doubled from 2015 to 2025, rather than tripled. The selected annual increase is a planning assumption, not a forecast.</span></button>
-      <input data-ug type="number" min="0" step=".5">
-    </label>
-    <label class="with-info">Solar Rate
-      <button class="info-button" type="button" aria-label="Solar rate information">i<span>The solar rate is influenced by the amount of production, system size, production target, battery amount and configuration, and the actual solution offered.</span></button>
-      <input data-s type="number" min="0" max="3" step=".01">
-    </label>
+    <label class="with-info"><span class="label-line"><button class="info-button" type="button" aria-label="Utility increase information">i<span>Historical perspective: PG&E’s residential electricity rates approximately doubled from 2015 to 2025, rather than tripled. The selected annual increase is a planning assumption, not a forecast.</span></button>Utility Annual Increase %</span><input data-ug type="number" min="0" step=".5"></label>
+    <label class="with-info"><span class="label-line"><button class="info-button" type="button" aria-label="Solar rate information">i<span>The solar rate is influenced by the amount of production, system size, production target, battery amount and configuration, and the actual solution offered.</span></button>Solar Rate</span><input data-s type="number" min="0" max="3" step=".01"></label>
     <label>Solar Annual Increase %<input data-sg type="number" min="0" step=".5"></label>
     <label>Production Strategy<select data-o><option value="1">100%</option><option value="1.25">125%</option><option value="1.6">160%</option></select></label>
   </div>
 
-  <div class="wow-note">
-    <b>You are comparing more than cost.</b>
-    <p>More production gives the home more electricity to work with, but the biggest system is not automatically the best financial result. Compare how each strategy supports the home, charges the battery, reduces grid imports, creates exports, and changes long-term savings.</p>
-  </div>
-
+  <div class="wow-note"><b>You are comparing more than cost.</b><p>More production gives the home more electricity to work with, but the biggest system is not automatically the best financial result. Compare how each strategy supports the home, charges the battery, reduces grid imports, creates exports, and changes long-term savings.</p></div>
   <div data-chart class="line-chart"></div>
   <div data-milestones class="milestones"></div>
   <p class="disclosure">Remaining Utility comes directly from the selected Production Strategy calculation. Utility fees are not included in the calculations.</p>
