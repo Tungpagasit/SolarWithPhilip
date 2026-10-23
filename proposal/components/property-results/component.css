@@ -1,1 +1,0 @@
-.property-view{display:grid;grid-template-columns:1fr 1fr;gap:18px}.property-view img{width:100%;border-radius:14px}.method{margin-top:18px;padding:16px;border-radius:14px;background:#eef8f7}@media(max-width:700px){.property-view{grid-template-columns:1fr}}

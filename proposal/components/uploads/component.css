@@ -1,1 +1,0 @@
-.path-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.path-card{display:block;padding:22px;border:2px dashed #91bbb7;border-radius:17px}.path-card.quote{border-style:solid;border-color:#d7a640;background:#fff9e9}.path-card input,.path-card b{display:block;margin-top:12px}@media(max-width:700px){.path-grid{grid-template-columns:1fr}}
