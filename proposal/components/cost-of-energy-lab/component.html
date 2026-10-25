@@ -2,41 +2,14 @@
   <div class="mini">Interactive 30-Year Cost Lab</div>
   <h2>Compare Utility vs Solar</h2>
   <p class="comparison-rule"><strong>Stay with Utility</strong> always represents 100% of planned household electricity purchased from the utility. The selected Production Strategy changes solar production or the amount of electric power available for your use.</p>
-
   <div class="cost-controls">
-    <label>Utility Rate ($/kWh)
-      <input data-u type="number" min="0" max="3" step=".01">
-    </label>
-
-    <label>Utility Annual Increase %
-      <input data-ug type="number" min="0" step=".5">
-      <small class="control-note">Historical perspective: PG&amp;E’s residential electricity rates approximately doubled from 2015 to 2025, rather than tripled. The selected annual increase is a planning assumption, not a forecast.</small>
-    </label>
-
-    <label>Solar Rate
-      <input data-s type="number" min="0" max="3" step=".01">
-      <small class="control-note">The solar rate is influenced by the amount of production, system size, production target, battery amount and configuration, and the actual solution offered.</small>
-    </label>
-
-    <label>Solar Annual Increase %
-      <input data-sg type="number" min="0" step=".5">
-    </label>
-
-    <label>Production Strategy
-      <select data-o>
-        <option value="1">100%</option>
-        <option value="1.25">125%</option>
-        <option value="1.6">160%</option>
-      </select>
-    </label>
+    <label>Utility Rate ($/kWh)<input data-u type="number" min="0" max="3" step=".01"></label>
+    <label>Utility Annual Increase %<input data-ug type="number" min="0" step=".5"><small class="control-note">Historical perspective: PG&amp;E’s residential electricity rates approximately doubled from 2015 to 2025, rather than tripled. The selected annual increase is a planning assumption, not a forecast.</small></label>
+    <label>Solar Rate<input data-s type="number" min="0" max="3" step=".01"><small class="control-note">The solar rate is influenced by the amount of production, system size, production target, battery amount and configuration, and the actual solution offered. e.g. usual solar rate is $0.27 while wholesale* solar rate can be reduced to $0.23 or lower</small></label>
+    <label>Solar Annual Increase %<input data-sg type="number" min="0" step=".5"></label>
+    <label>Production Strategy<select data-o><option value="1">100%</option><option value="1.25">125%</option><option value="1.6">160%</option></select></label>
   </div>
-
-  <div class="wow-note">
-    <b>You are comparing more than cost.</b>
-    <p>More production gives your home more electricity to work with. Change the variables to see if more power costs more for you.</p>
-  </div>
-
-  <div data-chart class="line-chart"></div>
-  <div data-milestones class="milestones"></div>
+  <div class="wow-note"><b>You are comparing more than cost.</b><p><strong>Ask Philip if you qualify for solar wholesale power</strong></p><p>More production gives your home more electricity to work with. Change the variables to see if more power costs more for you.</p><small>*Solar wholesale rate depends upon qualifications, system size, and production.</small></div>
+  <div data-chart class="line-chart"></div><div data-milestones class="milestones"></div>
   <p class="disclosure">Remaining Utility comes directly from the selected Production Strategy calculation. Utility fees are not included in the calculations.</p>
 </div>
