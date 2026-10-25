@@ -1,11 +1,80 @@
-const crypto=require('crypto');
-const R=(s,v)=>({statusCode:s,headers:{'content-type':'application/json','cache-control':'no-store'},body:JSON.stringify(v)});
-async function upload(url,key,id,label,file){if(!file?.data)return null;const safe=String(file.name||label).replace(/[^a-zA-Z0-9._-]/g,'_'),path=`${id}/${label}-${safe}`,r=await fetch(`${url}/storage/v1/object/proposal-uploads/${path}`,{method:'POST',headers:{apikey:key,authorization:`Bearer ${key}`,'content-type':file.type||'application/octet-stream','x-upsert':'true'},body:Buffer.from(file.data,'base64')});if(!r.ok)throw new Error(await r.text());return{name:file.name,path,type:file.type,size:file.size};}
-async function sendJson(profile,id){
-  const key=process.env.RESEND_API_KEY,from=process.env.NOTIFICATION_FROM_EMAIL,to=process.env.NOTIFICATION_TO_EMAIL||'vt@wegreenourworld.com';
-  if(!key||!from)throw new Error('Email is not configured. Add RESEND_API_KEY and NOTIFICATION_FROM_EMAIL in Netlify.');
-  const content=JSON.stringify(profile,null,2),name=profile.homeowner?.name||'Homeowner';
-  const r=await fetch('https://api.resend.com/emails',{method:'POST',headers:{authorization:`Bearer ${key}`,'content-type':'application/json'},body:JSON.stringify({from,to:[to],subject:`Full Decision Profile - ${name} - ${id}`,html:`<p>A confirmed Solar With Philip Full Decision Profile is attached.</p><p>Proposal ID: <b>${id}</b></p>`,attachments:[{filename:'SolarWithPhilip_Full_Decision_Profile.json',content:Buffer.from(content).toString('base64')} ]})});
-  if(!r.ok)throw new Error(`Email failed: ${await r.text()}`);return true;
+const crypto = require('crypto');
+const response = (statusCode, value) => ({
+  statusCode,
+  headers: { 'content-type': 'application/json', 'cache-control': 'no-store' },
+  body: JSON.stringify(value)
+});
+
+async function uploadFile(supabaseUrl, serviceKey, submissionId, fileType, file) {
+  if (!file || !file.data) return null;
+  const cleanName = String(file.name || fileType).replace(/[^a-zA-Z0-9._-]/g, '_');
+  const path = `${submissionId}/${fileType}-${cleanName}`;
+  const uploadResponse = await fetch(`${supabaseUrl}/storage/v1/object/proposal-uploads/${path}`, {
+    method: 'POST',
+    headers: {
+      apikey: serviceKey,
+      authorization: `Bearer ${serviceKey}`,
+      'content-type': file.type || 'application/octet-stream',
+      'x-upsert': 'true'
+    },
+    body: Buffer.from(file.data, 'base64')
+  });
+  if (!uploadResponse.ok) throw new Error(`Could not upload ${file.name || fileType}: ${await uploadResponse.text()}`);
+  return { name: file.name || fileType, path, type: file.type || '', size: file.size || 0 };
 }
-exports.handler=async event=>{if(event.httpMethod!=='POST')return R(405,{error:'Method not allowed.'});try{const p=JSON.parse(event.body||'{}'),url=process.env.SUPABASE_URL,key=process.env.SUPABASE_SERVICE_ROLE_KEY;if(!url||!key)throw new Error('Supabase is not configured.');const id=crypto.randomUUID(),full={...p,files:undefined,savedProposalId:id,savedAt:new Date().toISOString()},content=JSON.stringify(full,null,2);const uploads={utilityBill:await upload(url,key,id,'utilityBill',p.files?.utilityBill),decisionProfile:await upload(url,key,id,'decisionProfile',p.files?.decisionProfile)};uploads.fullDecisionProfile=await upload(url,key,id,'fullDecisionProfile',{name:'SolarWithPhilip_Full_Decision_Profile.json',type:'application/json',size:Buffer.byteLength(content),data:Buffer.from(content).toString('base64')});const row={id,homeowner:p.homeowner||{},concern_profile:p.decisionProfile||{},current_energy:p.currentEnergy||{},future_energy:p.futureEnergy||{},property:p.property||{},planning:{...(p.planning||{}),scenarios:p.scenarios||{}},comparison:p.selectedScenario||{},uploads,authorization:p.authorization||{},submission:{kind:'confirmed-choice',submittedAt:new Date().toISOString(),fullProfile:full},status:'confirmed'};const r=await fetch(`${url}/rest/v1/proposals`,{method:'POST',headers:{apikey:key,authorization:`Bearer ${key}`,'content-type':'application/json',prefer:'return=minimal'},body:JSON.stringify(row)});if(!r.ok)throw new Error(await r.text());const emailSent=await sendJson(full,id);return R(200,{ok:true,id,uploads,emailSent,fullProfile:full});}catch(error){return R(500,{error:error.message})}};
+
+async function saveJsonFile(supabaseUrl, serviceKey, submissionId, filename, object) {
+  const content = JSON.stringify(object, null, 2);
+  const path = `${submissionId}/${filename}`;
+  const uploadResponse = await fetch(`${supabaseUrl}/storage/v1/object/proposal-uploads/${path}`, {
+    method: 'POST',
+    headers: { apikey: serviceKey, authorization: `Bearer ${serviceKey}`, 'content-type': 'application/json', 'x-upsert': 'true' },
+    body: Buffer.from(content, 'utf8')
+  });
+  if (!uploadResponse.ok) throw new Error(`Could not save Full Decision Profile: ${await uploadResponse.text()}`);
+  return { name: filename, path, type: 'application/json', size: Buffer.byteLength(content, 'utf8') };
+}
+
+exports.handler = async event => {
+  if (event.httpMethod !== 'POST') return response(405, { error: 'Method not allowed.' });
+  try {
+    const payload = JSON.parse(event.body || '{}');
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    if (!supabaseUrl || !serviceKey) throw new Error('Supabase is not configured.');
+
+    const id = crypto.randomUUID();
+    const fullProfile = { ...payload, files: undefined, savedProposalId: id, savedAt: new Date().toISOString() };
+    const uploads = {
+      utilityBill: await uploadFile(supabaseUrl, serviceKey, id, 'utilityBill', payload.files?.utilityBill),
+      decisionProfile: await uploadFile(supabaseUrl, serviceKey, id, 'decisionProfile', payload.files?.decisionProfile),
+      fullDecisionProfile: await saveJsonFile(supabaseUrl, serviceKey, id, 'SolarWithPhilip_Full_Decision_Profile.json', fullProfile)
+    };
+
+    const row = {
+      id,
+      homeowner: payload.homeowner || {},
+      concern_profile: payload.decisionProfile || {},
+      current_energy: payload.currentEnergy || {},
+      future_energy: payload.futureEnergy || {},
+      property: payload.property || {},
+      planning: { ...(payload.planning || {}), scenarios: payload.scenarios || {} },
+      comparison: payload.selectedScenario || {},
+      uploads,
+      authorization: payload.authorization || {},
+      submission: { kind: 'confirmed-choice', submittedAt: new Date().toISOString(), fullProfile },
+      status: 'confirmed'
+    };
+
+    const saveResponse = await fetch(`${supabaseUrl}/rest/v1/proposals`, {
+      method: 'POST',
+      headers: { apikey: serviceKey, authorization: `Bearer ${serviceKey}`, 'content-type': 'application/json', prefer: 'return=minimal' },
+      body: JSON.stringify(row)
+    });
+    if (!saveResponse.ok) throw new Error(await saveResponse.text());
+
+    return response(200, { ok: true, id, uploads, emailSent: false, fullProfile });
+  } catch (error) {
+    return response(500, { error: error.message });
+  }
+};
