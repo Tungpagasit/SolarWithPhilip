@@ -7,6 +7,14 @@ model.value = SWP.data.planning.batteryModel;
 count.value = SWP.data.planning.batteryCount;
 reserve.value = SWP.data.planning.reserve;
 exportRate.value = SWP.data.planning.exportRate;
+document.addEventListener('swp:state-restored', () => {
+  const set = (el, v) => { const o = [...el.options || []].find(x => Number(x.value) === Number(v)); el.value = o ? o.value : v; };
+  model.value = SWP.data.planning.batteryModel;
+  set(count, SWP.data.planning.batteryCount);
+  set(reserve, SWP.data.planning.reserve);
+  exportRate.value = SWP.data.planning.exportRate;
+  draw();
+});
 
 function formatEnergy(value) {
   return Number(value).toLocaleString('en-US', {

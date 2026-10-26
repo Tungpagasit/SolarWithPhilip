@@ -26,3 +26,6 @@ function draw() {
 
 draw();
 document.addEventListener('swp:data', draw);
+document.addEventListener('swp:state-restored', () => {
+  if (!SWP.data.property) root.querySelector('[data-property]').innerHTML = '<p>Use &ldquo;Analyze This Property&rdquo; above to connect Google rooftop intelligence.</p>';
+});
