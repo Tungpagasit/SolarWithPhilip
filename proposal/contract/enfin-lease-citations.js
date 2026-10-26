@@ -6,7 +6,8 @@
 // (the line containing info@enfin.com), blank lines included, as extracted from the PDF text layer.
 // Quote text is the page text for exactly that line range; only PDF text-extraction artifacts (broken words,
 // substituted quotation marks) were normalised. Do not edit quotations without re-verifying against the PDF.
-module.exports = Object.freeze({
+(function(){
+const D = Object.freeze({
  "ENFIN-CONTRACTOR-01": {
   "id": "ENFIN-CONTRACTOR-01",
   "section": "Section 1 - Contractor and maintenance",
@@ -584,3 +585,5 @@ module.exports = Object.freeze({
   "quote": "… c) Overproduction. If at the end of a True-up Term the Actual kWh is greater than the Guaranteed kWh during any True-Up Term, the extra kWh produced will be yours at no additional cost/this surplus will be carried over and will be used to offset any deficits that may occur in a subsequent True-Up Term."
  }
 });
+if(typeof module!=='undefined'&&module.exports)module.exports=D;else window.SWPEnfinCitations=D;
+})();
