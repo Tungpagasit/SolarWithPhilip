@@ -1,8 +1,10 @@
 window.SWP = window.SWP || {};
 (() => {
   const intake = new Set(['uploads','home-and-property','energy-history','authorization','section1-actions']);
+  SWP.billReady = () => !!SWP.data.files.bill || !!SWP.data.savedReferences?.utilityBill?.path;
   SWP.showAnalysis = () => {
-    SWP.data.analysisBuilt = true;
+    SWP.data.analysisBuilt = SWP.billReady();
+    if (!SWP.data.analysisBuilt) { SWP.save(); return; }
     document.querySelectorAll('.component-section[data-stage="analysis"]').forEach(section => { section.hidden = false; });
     SWP.save();
     document.dispatchEvent(new CustomEvent('swp:analysis-opened'));
@@ -19,7 +21,7 @@ window.SWP = window.SWP || {};
       root.className = 'component-section';
       root.dataset.component = name;
       root.dataset.stage = intake.has(name) ? 'intake' : 'analysis';
-      root.hidden = !intake.has(name) && !SWP.data.analysisBuilt;
+      root.hidden = !intake.has(name) && !(SWP.data.analysisBuilt && SWP.billReady());
       const htmlResponse = await fetch(`${base}.html`);
       if (!htmlResponse.ok) throw new Error(`${name} HTML ${htmlResponse.status}`);
       root.innerHTML = ` ${await htmlResponse.text()} `;
@@ -44,7 +46,7 @@ window.SWP = window.SWP || {};
     if (!button || button.dataset.bound==='true') return;
     button.dataset.bound='true';
     button.addEventListener('click',async()=>{
-      if (!new URLSearchParams(location.search).has('philip')) return;
+      if (!SWP.data.philipMode && !new URLSearchParams(location.search).has('philip')) return;
       const profile=SWP.data.lastFullDecisionProfile||null;
       const proposalId=profile?.savedProposalId||SWP.data.savedProposalId||null;
       if (!profile) return alert('Upload SolarWithPhilip_Full_Decision_Profile.json first. Reconfirmation is not required.');
