@@ -24,10 +24,15 @@
   if(!sent.view){sent.view=true;track('pge_landing_view');}
 
   links.forEach(function(a){
-    a.addEventListener('click',function(){
-      if(sent.explore)return;
-      sent.explore=true;
-      track('pge_landing_explore');
+    a.addEventListener('click',function(e){
+      e.preventDefault();
+
+      if(!sent.explore){
+        sent.explore=true;
+        track('pge_landing_explore');
+      }
+
+      window.location.replace(a.href);
     });
   });
 })();
