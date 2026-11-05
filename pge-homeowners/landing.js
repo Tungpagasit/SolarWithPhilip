@@ -23,6 +23,8 @@
 
   if(!sent.view){sent.view=true;track('pge_landing_view');}
 
+  var LP={lp_id:'pge_homeowners',lp_version:'v1',lp_key:'pge_homeowners_v1',lp_cta:'pge_landing_explore'};
+
   links.forEach(function(a){
     a.addEventListener('click',function(e){
       e.preventDefault();
@@ -32,7 +34,14 @@
         track('pge_landing_explore');
       }
 
-      window.location.replace(a.href);
+      var dest=a.href;
+      try{
+        var u=new URL(a.href,window.location.href);
+        var cta=a.classList.contains('lp-logo')?'pge_landing_logo':a.classList.contains('lp-hit')?'pge_landing_page':'pge_landing_explore';
+        Object.keys(LP).forEach(function(k){u.searchParams.set(k,k==='lp_cta'?cta:LP[k]);});
+        dest=u.href;
+      }catch(err){}
+      window.location.replace(dest);
     });
   });
 })();

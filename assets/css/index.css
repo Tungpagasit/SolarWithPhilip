@@ -51,3 +51,16 @@ color:#6B7280 !important;
 background:#EEF6F5;
 color:#147D78;
 }
+
+/* Important 2026 Solar Update */
+.swp-update{padding-bottom:20px}
+.swp-update h2{max-width:900px;text-wrap:balance}
+.swp-update-card{border-left:5px solid var(--gold);max-width:900px}
+.swp-update-support{max-width:860px;color:var(--ink);margin:0 0 24px}
+.swp-update-card h3{margin:0 0 14px;font-size:1.35rem;text-wrap:balance}
+.swp-update-note{background:#fff5df;border:1px solid #f0d9a5;border-radius:12px;padding:16px 18px;color:var(--navy);font-weight:700}
+.swp-update-cta{margin-top:22px}
+.swp-update-card p{text-wrap:pretty}
+.swp-update-cta .btn{text-align:center}
+.swp-update-cta p{margin:12px 0 0;color:var(--muted);font-size:.95rem}
+@media(max-width:540px){.swp-update-cta .btn{width:100%}}
