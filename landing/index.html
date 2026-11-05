@@ -6,4 +6,21 @@
 <section class="scene hero"><img class="bg" src="assets/hero.webp" alt=""><div class="shade"></div><div class="wrap"><div class="tag">Solar With Philip</div><h1>More Technology.<br>More Comfort.<br>More Electricity.</h1><div class="sub">Should You Prepare for What Comes Next?</div></div></section>
 <section class="scene progress"><img class="bg" src="assets/progress.webp" alt=""><div class="bottomshade"></div><div class="wrap"><div class="tag">People in Progress</div><h2>We’ve Always Moved Forward.</h2><p>The things we drive change. The technology around us changes. The way we live changes.</p><p><strong>Progress Changes What We Need From Electricity.</strong></p></div></section>
 <section class="scene clarity"><img class="bg" src="assets/clarity.webp" alt=""><div class="topfade"></div><div class="wrap"><div class="tag">What Gets In The Way?</div><h2>So What’s Holding You Back?</h2><div class="qs"><span>Too many choices?</span><span>Not sure who to trust?</span><span>Not sure it’s time?</span></div><p class="pivot">You Don’t Need Another Solar Pitch. You Need Clarity.</p><p>Solar With Philip is designed to help you understand today’s home-energy choices before asking you to make one, including the choice to do nothing yet.</p><p class="cred">Current information. Clear explanations. Transparent facts. Experienced guidance.</p><p class="promise">The goal isn’t to tell you what to choose. It’s to help you know enough to choose.</p></div></section>
-<section class="scene future"><img class="bg" src="assets/future.webp" alt=""><div class="bottomshade"></div><div class="wrap"><div class="tag">What Comes Next</div><h2>Eventually, the Future Arrives.</h2><div class="choice">You Can Choose It.<br>Or Let It Choose You.</div><p>You don’t have to make an energy decision today.</p><p><strong>You just have to decide whether it’s time to know more.</strong></p><a class="start" href="https://solarwithphilip.com/">START →</a><p class="micro">Simply press Start and let the information flow.</p></div></section></body></html>
+<section class="scene future"><img class="bg" src="assets/future.webp" alt=""><div class="bottomshade"></div><div class="wrap"><div class="tag">What Comes Next</div><h2>Eventually, the Future Arrives.</h2><div class="choice">You Can Choose It.<br>Or Let It Choose You.</div><p>You don’t have to make an energy decision today.</p><p><strong>You just have to decide whether it’s time to know more.</strong></p><a class="start" href="https://solarwithphilip.com/">START →</a><p class="micro">Simply press Start and let the information flow.</p></div></section>
+<script>
+(function(){
+ const LP_ID='future', LP_VERSION='v1', LP_KEY='future_v1';
+ const incoming=new URLSearchParams(location.search);
+ const a=document.querySelector('a.start'); if(!a) return;
+ a.addEventListener('click',function(e){
+  if(e.defaultPrevented||e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey) return;
+  e.preventDefault();
+  const dest=new URL(a.getAttribute('href'),location.href);
+  incoming.forEach((v,k)=>{if(!dest.searchParams.has(k)) dest.searchParams.set(k,v)});
+  dest.searchParams.set('lp_id',LP_ID); dest.searchParams.set('lp_version',LP_VERSION); dest.searchParams.set('lp_key',LP_KEY); dest.searchParams.set('lp_cta','landing_start_click');
+  let moved=false; const go=()=>{if(!moved){moved=true;location.replace(dest.href)}};
+  try{gtag('event','landing_start_click',{landing_page_id:LP_ID,landing_page_version:LP_VERSION,landing_page_key:LP_KEY,cta_name:'landing_start_click',destination_page:a.getAttribute('href'),transport_type:'beacon',event_callback:go,event_timeout:1000});}catch(err){go();}
+  setTimeout(go,1100);
+ });
+})();
+</script></body></html>
