@@ -64,3 +64,28 @@ color:#147D78;
 .swp-update-cta .btn{text-align:center}
 .swp-update-cta p{margin:12px 0 0;color:var(--muted);font-size:.95rem}
 @media(max-width:540px){.swp-update-cta .btn{width:100%}}
+
+/* The Solar With Philip Advantage */
+.swp-adv{padding-top:56px;padding-bottom:40px}
+.swp-adv h2{max-width:900px;text-wrap:balance}
+.swp-adv-copy{max-width:860px;margin-bottom:34px}
+.swp-adv-copy p{font-size:1.1rem;color:var(--ink);margin:0 0 14px;text-wrap:pretty}
+.swp-adv-copy strong{color:var(--navy)}
+.swp-adv-flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:14px;align-items:stretch}
+.swp-adv-card{border-top:5px solid var(--gold);display:flex;flex-direction:column;min-width:0}
+.swp-adv-label{color:var(--teal);font-weight:900;font-size:.78rem;letter-spacing:.14em}
+.swp-adv-big{font-size:clamp(1.35rem,2.4vw,1.8rem);font-weight:900;color:var(--navy);line-height:1.12;margin:10px 0 12px;overflow-wrap:anywhere}
+.swp-adv-card p{margin:0;color:var(--muted);text-wrap:pretty}
+.swp-adv-result{background:linear-gradient(160deg,#fff,#fff5df)}
+.swp-adv-plus{align-self:center;font-size:2rem;font-weight:900;color:var(--gold)}
+.swp-adv-statement{margin-top:34px;background:var(--navy);border-radius:22px;padding:38px;text-align:center}
+.swp-adv-quote{margin:0 auto;max-width:820px;font-size:clamp(1.15rem,2.2vw,1.45rem);font-weight:800;line-height:1.4;color:#fff;text-wrap:balance}
+.swp-adv-break{margin:18px auto 0;max-width:820px;font-size:clamp(1.05rem,2vw,1.25rem);font-weight:800;color:var(--gold);text-wrap:balance}
+.swp-adv-sub{margin:18px auto 0;max-width:760px;font-size:clamp(1rem,1.8vw,1.12rem);font-weight:400;line-height:1.6;color:#dbe8ed}
+.swp-adv-sub strong{color:var(--gold);font-weight:800}
+.swp-adv-cta{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:26px}
+.swp-adv-cta .btn{text-align:center}
+.swp-adv-faq{margin:20px 0 0;color:#dae8ee;font-size:.98rem}
+.swp-adv-faq a{color:var(--gold);font-weight:800}
+@media(max-width:900px){.swp-adv-flow{grid-template-columns:1fr}.swp-adv-plus{justify-self:center;line-height:1}}
+@media(max-width:540px){.swp-adv-statement{padding:28px 20px}.swp-adv-cta .btn{width:100%}}
