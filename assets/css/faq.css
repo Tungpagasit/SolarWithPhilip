@@ -66,6 +66,12 @@ margin:0 0 14px;
 line-height:1.75;
 }
  
+.acc div p{margin:0 0 12px}
+.acc div ul{margin:0 0 12px;padding-left:22px}
+.acc div li{margin:3px 0}
+.acc div p:last-child,.acc div ul:last-child{margin-bottom:0}
+.faq-cat{margin:44px 0 6px;font-size:clamp(1.35rem,2.6vw,1.8rem);color:var(--navy);padding-bottom:8px;border-bottom:3px solid var(--gold);scroll-margin-top:80px}
+.faq-sub{margin:20px 0 4px;font-size:1.15rem;color:var(--teal);scroll-margin-top:80px}
 .faq-intro p:last-child{
 margin-bottom:0;
 font-weight:700;
