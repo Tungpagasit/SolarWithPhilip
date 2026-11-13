@@ -97,16 +97,18 @@ function compare() {
 <form class="swp-form" id="swp-compare-form" data-swp-intake data-lead-type="quote_compare" data-form-source="compare_my_quote" aria-label="Send my quote for review" novalidate>
 <div class="swp-form__summary" data-summary tabindex="-1" hidden></div>
 ${text(p, 'firstName', 'First name', { required: true, auto: 'given-name' })}
-${text(p, 'lastName', 'Last name', { auto: 'family-name' })}
 ${text(p, 'zip', 'ZIP code', { required: true, auto: 'postal-code', mode: 'numeric', max: 10 })}
 <p class="swp-hint" data-zip-note aria-live="polite" style="margin:-14px 0 20px"></p>
+<div class="swp-field"><label for="cq-quoteFile">Your solar quote or proposal <span class="swp-req">(required: PDF, PNG or JPG, up to 10 MB)</span></label><input type="file" id="cq-quoteFile" name="quoteFile" accept=".pdf,.png,.jpg,.jpeg,application/pdf,image/png,image/jpeg" aria-required="true" aria-describedby="cq-quoteFile-hint cq-quoteFile-err"><span class="swp-hint" id="cq-quoteFile-hint">Please upload only your solar quote or proposal. Do not include unrelated sensitive documents such as ID, bank or tax records.</span>${err(p, 'quoteFile')}</div>
 ${preferred(p)}
 ${text(p, 'email', 'Email', { type: 'email', dynamic: true, auto: 'email', max: 254 })}
 ${text(p, 'phone', 'Mobile or phone number', { type: 'tel', dynamic: true, auto: 'tel', mode: 'tel', max: 40 })}
+<details class="swp-more"><summary>Add more details (optional)</summary>
+${text(p, 'lastName', 'Last name', { auto: 'family-name' })}
 ${select(p, 'utility', 'Electric utility', opts(UTIL, 'Choose your utility'))}
 ${select(p, 'concern', 'What would you most like reviewed?', opts(CONCERN, 'Choose one'))}
 <div class="swp-field"><label for="cq-message">Anything else we should know? <span class="swp-req">(optional, up to 500 characters)</span></label><textarea id="cq-message" name="message" maxlength="500" aria-describedby="cq-message-err"></textarea>${err(p, 'message')}</div>
-<div class="swp-field"><label for="cq-quoteFile">Your solar quote or proposal <span class="swp-req">(required: PDF, PNG or JPG, up to 10 MB)</span></label><input type="file" id="cq-quoteFile" name="quoteFile" accept=".pdf,.png,.jpg,.jpeg,application/pdf,image/png,image/jpeg" aria-required="true" aria-describedby="cq-quoteFile-hint cq-quoteFile-err"><span class="swp-hint" id="cq-quoteFile-hint">Please upload only your solar quote or proposal. Do not include unrelated sensitive documents such as ID, bank or tax records.</span>${err(p, 'quoteFile')}</div>
+</details>
 ${consent(p)}
 ${honeypot(p)}
 <button type="submit" class="swp-btn swp-btn--primary swp-form__submit" data-submit>Send My Quote for Review</button>

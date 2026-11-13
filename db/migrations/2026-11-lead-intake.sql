@@ -86,5 +86,7 @@ create index lead_intake_solar_lead_idx on public.lead_intake (solar_lead_id) wh
 
 alter table public.lead_intake enable row level security;
 -- Intentionally no policies: anon/authenticated roles are denied; service_role bypasses RLS.
+-- Defense in depth: also remove table privileges from the public API roles.
+revoke all on table public.lead_intake from anon, authenticated;
 
 commit;

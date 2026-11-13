@@ -1,5 +1,5 @@
 /* Solar With Philip conversion pages (Phase 2B): Home, Get Started, Compare My Quote. All selectors use the swp- prefix. */
-.swp-page{font-family:var(--swp-font);color:var(--swp-ink);line-height:1.6;background:#fff}
+.swp-page{margin:0;font-family:var(--swp-font);color:var(--swp-ink);line-height:1.6;background:#fff}
 .swp-page *,.swp-page *::before,.swp-page *::after{box-sizing:border-box}
 .swp-page h1,.swp-page h2,.swp-page h3{color:var(--swp-navy);line-height:1.15;margin:0 0 .5em;letter-spacing:-.02em}
 .swp-page h1{font-size:clamp(2.1rem,5vw,3.6rem);font-weight:900}
@@ -140,6 +140,10 @@
 .swp-formhero{padding:48px 0 24px;background:linear-gradient(180deg,var(--swp-cream),#fff)}
 .swp-formpage{padding:8px 0 var(--swp-space-8)}
 .swp-formpage__grid{display:grid;grid-template-columns:minmax(0,640px) 1fr;gap:56px;align-items:start}
+.swp-field fieldset,fieldset.swp-field{border:0;margin:0 0 20px;padding:0;min-width:0}
+.swp-more{margin:0 0 20px;border:1px solid var(--swp-line);border-radius:12px;padding:0 16px;background:#fff}
+.swp-more>summary{cursor:pointer;font-weight:800;color:var(--swp-navy);padding:14px 0;min-height:44px}
+.swp-more[open]>summary{border-bottom:1px solid var(--swp-line);margin-bottom:16px}
 .swp-aside{padding-top:8px;color:#33474f}
 .swp-aside h2{font-size:1.3rem}
 .swp-aside ul{padding-left:20px}
@@ -147,7 +151,7 @@
 /* Compare static content */
 .swp-qa{max-width:52rem;margin:0 0 44px}
 .swp-qa h3{font-size:1.4rem}
-.swp-qa .swp-direct{font-size:1.12rem;font-weight:650;color:var(--swp-navy)}
+.swp-qa .swp-direct{font-size:1.06rem;font-weight:600;color:var(--swp-navy)}
 .swp-qa .swp-vars{font-size:.97rem;color:#44565f}
 .swp-qa .swp-next{margin-top:10px;font-weight:700}
 .swp-struct{width:100%;border-collapse:collapse;font-size:.96rem;margin:14px 0}
@@ -160,14 +164,16 @@
   .swp-sec{padding:var(--swp-space-7) 0}
   .swp-hero{padding:28px 0 40px}
   .swp-hero__grid,.swp-split,.swp-formpage__grid{grid-template-columns:1fr;gap:28px}
-  .swp-hero__portrait{max-width:340px}
+  .swp-hero__portrait{max-width:340px;margin:0 auto}
+  .swp-hero__portrait figcaption{text-align:center}
   .swp-outcomes{grid-template-columns:1fr 1fr;gap:26px}
   .swp-pillars,.swp-paths,.swp-quotes,.swp-footer__grid{grid-template-columns:1fr}
   .swp-tools{grid-template-columns:1fr 1fr}
   .swp-quotes{gap:28px}
 }
 @media (max-width:560px){
-  .swp-outcomes,.swp-checks,.swp-tools,.swp-choices{grid-template-columns:1fr}
+  .swp-outcomes,.swp-checks,.swp-tools{grid-template-columns:1fr}
+.swp-choice span{padding:10px;gap:8px;font-size:.95rem}
   .swp-actions .swp-btn{width:100%}
   .swp-form,.swp-success{padding:22px 18px;border-radius:16px}
   .swp-hero h1{font-size:2rem}
