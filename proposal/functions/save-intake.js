@@ -5,8 +5,8 @@
 
 const json = (statusCode, value) => ({ statusCode, headers: { 'content-type': 'application/json', 'cache-control': 'no-store' }, body: JSON.stringify(value) });
 
-const CONSENT_VERSION = 'draft-2026-11-v1';
-const PRIVACY_VERSION = 'draft-2026-11-v1';
+const CONSENT_VERSION = 'draft-2026-11-v2';
+const PRIVACY_VERSION = 'draft-2026-11-v2';
 const ENUMS = {
   preferred: ['email', 'text', 'phone', 'email_text'],
   utility: ['pge', 'sce', 'sdge', 'smud', 'other', 'not_sure'],

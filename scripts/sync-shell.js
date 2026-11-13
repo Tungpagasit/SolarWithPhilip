@@ -16,6 +16,7 @@ const PAGES = {
   'about.html': { current: '/about.html' },
   'reviews.html': { current: '/reviews.html' },
   'contact.html': { current: '/contact.html' },
+  'privacy/index.html': { current: '/privacy/' },
   'california-guide.html': { current: '/california-guide.html', learn: true },
   'energy-costs.html': { current: '/energy-costs.html', learn: true },
   'pge-service-area.html': { current: '/pge-service-area.html', learn: true }
@@ -101,7 +102,9 @@ function stamp(file, cfg) {
   fs.writeFileSync(p, t.replace(/\n/g, eol));
 }
 
+const only = process.argv.slice(2);
 for (const [file, cfg] of Object.entries(PAGES)) {
+  if (only.length && !only.includes(file)) continue;
   stamp(file, cfg);
   console.log('stamped', file);
 }

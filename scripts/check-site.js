@@ -67,9 +67,11 @@ for (const page of [...SHELL_PAGES, 'proposal.html', 'energy-strategies.html']) 
 function git(args) { return cp.execFileSync(process.env.GIT_EXE || 'git', args, { cwd: root, encoding: 'utf8' }).trim(); }
 try {
   const changed = git(['diff', '--name-only', '--diff-filter=MDR', baseRef]).split('\n').filter(Boolean);
-  const prot = [/^proposal\//, /^energy-strategies\//, /^pge-homeowners\//, /^landing\//, /^pge-landing-v1\.html$/, /^assets\/js\/oaiq\.js$/, /^netlify\.toml$/, /^sitemap\.xml$/, /^robots\.txt$/, /^_headers$/];
+  const prot = [/^proposal\//, /^energy-strategies\//, /^pge-homeowners\//, /^landing\//, /^pge-landing-v1\.html$/, /^assets\/js\/oaiq\.js$/, /^netlify\.toml$/, /^robots\.txt$/, /^_headers$/];
   const hits = changed.filter(f => prot.some(r => r.test(f)));
   ok('protected files unchanged', hits.length === 0, hits.join(', '));
+  const smDiff = git(['diff', '-U0', baseRef, '--', 'sitemap.xml']).split(/\r?\n/).filter(l => /^[-+][^-+]/.test(l));
+  ok('sitemap.xml: additions only (get-started, compare-my-quote)', smDiff.length === 2 && smDiff.every(l => l.startsWith('+') && /\/(get-started|compare-my-quote)\/</.test(l)), smDiff.join(' | '));
   const es = git(['diff', '--numstat', baseRef, '--', 'energy-strategies.html']);
   const del = es ? Number(es.split('\t')[1]) : 0;
   ok('energy-strategies.html: additions only (GA4 snippet)', del === 0, es);
@@ -167,6 +169,32 @@ for (const f of ['favicon.ico', 'apple-touch-icon.png', 'assets/images/favicon-3
   ok('migration not wired anywhere (SQL file only, rollback present)', exists('db/migrations/2026-11-lead-intake.sql') && exists('db/migrations/2026-11-lead-intake.rollback.sql'));
   const an = read('assets/js/swp-analytics.js');
   ok('analytics: generate_lead not allow-listed', !/generate_lead/.test(an));
+
+  // Pre-launch polish checks
+  const norm = s => s.replace(/<[^>]+>/g, ' ').replace(/&amp;/g, '&').replace(/[\u2018\u2019]/g, "'").replace(/[\u201C\u201D]/g, '"').replace(/\s+/g, ' ').trim();
+  const stage1 = gs.match(/<div data-stage="1">([\s\S]*?)<div data-stage="2">/)[1];
+  const outside = stage1.replace(/<details[\s\S]*?<\/details>/, '');
+  const names = h => [...h.matchAll(/<(?:input|select|textarea)[^>]*name="([^"]+)"/g)].map(m => m[1]);
+  ok('get-started: stage 1 visible fields are firstName, zip, goal only', names(outside).join(',') === 'firstName,zip,goal', names(outside).join(','));
+  ok('get-started: bill and utility under optional progressive section', /<details class="swp-more"><summary>Want to tell us a little more\? \(optional\)<\/summary>[\s\S]*name="billBand"[\s\S]*name="utility"[\s\S]*<\/details>/.test(stage1));
+  ok('forms: utility hint disclaims service/program/qualification', [home, gs, cq].every(x => /Optional context only\. Listing a utility here does not mean service, program availability or qualification\./.test(x)));
+  const cqForm = cq.match(/<!-- swp-form:compare:start -->([\s\S]*?)<!-- swp-form:compare:end -->/)[1];
+  ok('compare: upload trust copy exact, no unverified security claims', cqForm.includes('Your proposal is used to help review your request. Upload only the solar proposal you want reviewed and avoid including unrelated identification, banking or tax documents.') && !/secure|encrypt|private|safe/i.test(norm(cqForm)));
+  ok('forms: SMS scope note + privacy link present', [home, gs, cq].every(x => /Choosing Text means you agree to a text response about this request\. It is not sign-up for recurring promotional text messages\./.test(x) && /href="\/privacy\/">Privacy page/.test(x)));
+  ok('footers link to /privacy/', [home, gs, cq].every(x => /<footer[\s\S]*href="\/privacy\/">Privacy<\/a>[\s\S]*<\/footer>/.test(x)));
+  const rv = norm(read('reviews.html'));
+  const quotes = [...home.matchAll(/<blockquote>([\s\S]*?)<\/blockquote>/g)].map(m => norm(m[1]));
+  ok('testimonials: 3 excerpts, each marked with ellipsis, wording verbatim to reviews.html', quotes.length === 3 && quotes.every(q => /\u2026/.test(q) && rv.includes(q.replace(/\u2026/g, '').replace(/^"\s*|\s*"$/g, '').replace(/\s+/g, ' ').trim())), quotes.map(q => q.slice(0, 30)).join(' | '));
+  const sm = read('sitemap.xml');
+  for (const [u, p] of [['https://solarwithphilip.com/get-started/', gs], ['https://solarwithphilip.com/compare-my-quote/', cq]]) {
+    ok('sitemap + SEO basics: ' + u, sm.includes('<loc>' + u + '</loc>') && !/name="robots"[^>]*noindex/i.test(p) && p.includes('<link rel="canonical" href="' + u + '"') && /<title>[^<]{5,}<\/title>/.test(p) && /name="description" content="[^"]{40,}"/.test(p) && count(p, /<h1[\s>]/g) === 1);
+  }
+  const pv = read('privacy/index.html');
+  ok('privacy: draft, noindex, self-canonical, one H1, required sections, not in sitemap', /noindex/.test(pv) && /rel="canonical" href="https:\/\/solarwithphilip\.com\/privacy\/"/.test(pv) && count(pv, /<h1[\s>]/g) === 1 && ['Information You Provide', 'How Information Is Used', 'Contact Preferences', 'Uploaded Documents', 'Analytics and Attribution', 'Who May Respond to Your Request', 'External Sharing', 'Data Retention', 'Your Choices', 'Contact'].every(h => pv.includes('<h2>' + h + '</h2>')) && /DRAFT\. Not approved for production/.test(pv) && !sm.includes('/privacy/'));
+  ok('privacy: makes no unverified security/compliance claims', !/\b(secure|encrypted|we never share|CCPA|GDPR|we do not sell|compliant)\b/i.test(norm(pv.replace(/<mark[\s\S]*?<\/mark>/g, ''))));
+  ok('start-here keeps content and links to /get-started/', /href="\/get-started\/"/.test(read('start-here.html')) && /We Know What Matters to Homeowners/.test(read('start-here.html')));
+  const sql = read('db/migrations/2026-11-lead-intake.sql');
+  ok('migration: DB-level updated_at trigger + rollback drops it', /create trigger lead_intake_set_updated_at\s+before update on public\.lead_intake/.test(sql) && /drop function if exists public\.lead_intake_set_updated_at/.test(read('db/migrations/2026-11-lead-intake.rollback.sql')));
 }
 
 // 11. Global-selector guard

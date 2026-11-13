@@ -1,5 +1,5 @@
 -- PROPOSED MIGRATION (Phase 2B). NOT EXECUTED. Requires explicit approval before running against Supabase.
--- Additive only: creates one new table. Does not read, alter, or write public.solar_leads (it only references solar_leads.id as an optional FK).
+-- Additive only: creates one new table plus one trigger function/trigger that belong to it. Does not read, alter, or write public.solar_leads (it only references solar_leads.id as an optional FK).
 -- Access model: RLS enabled with NO policies. Only the service-role key (used by Netlify functions) can read/write; the anon key has no access.
 
 begin;
@@ -83,6 +83,24 @@ create index lead_intake_email_idx on public.lead_intake (email_normalized) wher
 create index lead_intake_phone_idx on public.lead_intake (phone_normalized) where phone_normalized is not null;
 create index lead_intake_status_idx on public.lead_intake (status, created_at desc);
 create index lead_intake_solar_lead_idx on public.lead_intake (solar_lead_id) where solar_lead_id is not null;
+
+-- updated_at is maintained by the database, so no function has to remember to set it.
+-- The trigger function is new and specific to this table; no existing function or trigger is touched.
+create function public.lead_intake_set_updated_at()
+returns trigger
+language plpgsql
+set search_path = ''
+as $$
+begin
+  new.updated_at := now();
+  return new;
+end;
+$$;
+
+create trigger lead_intake_set_updated_at
+before update on public.lead_intake
+for each row
+execute function public.lead_intake_set_updated_at();
 
 alter table public.lead_intake enable row level security;
 -- Intentionally no policies: anon/authenticated roles are denied; service_role bypasses RLS.

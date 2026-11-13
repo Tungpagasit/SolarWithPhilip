@@ -2,4 +2,5 @@
 -- Data loss note: any rows in lead_intake are deleted. Export first if the table has been used.
 begin;
 drop table if exists public.lead_intake;
+drop function if exists public.lead_intake_set_updated_at();
 commit;

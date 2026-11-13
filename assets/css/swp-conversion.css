@@ -184,3 +184,8 @@
   body.swp-has-bar{padding-bottom:76px}
 }
 @media (prefers-reduced-motion:reduce){.swp-mbar{transition:none}}
+.swp-prose{max-width:46rem}
+.swp-prose h2{font-size:1.4rem;margin-top:1.9em}
+.swp-prose li{margin-bottom:.35em}
+.swp-draftbar{padding:14px 18px;border:2px solid var(--swp-gold);border-radius:12px;background:#fff8e3;color:var(--swp-navy)}
+.swp-confirm{background:#fff0c2;color:var(--swp-navy);padding:1px 5px;border-radius:4px;font-weight:700}
