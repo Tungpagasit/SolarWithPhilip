@@ -65,6 +65,16 @@ const body = r => JSON.parse(r.body);
     r = await save.handler(ev(good({ submissionKey: 'v' + Math.random().toString(36).slice(2, 20).padEnd(16, 'x'), ...over })));
     t('reject ' + name, r.statusCode === 400 && body(r).fields && body(r).fields[field], r.body);
   }
+  for (const [pref, needE, needP] of [['email', true, false], ['text', false, true], ['phone', false, true], ['email_text', true, true]]) {
+    const k = () => 'm' + Math.random().toString(36).slice(2, 20).padEnd(16, 'x');
+    const only = (e, ph) => ({ preferred: pref, email: e ? 'a@example.com' : '', phone: ph ? '916-555-0123' : '' });
+    const vOk = save._test.validate(good({ submissionKey: k(), ...only(true, true) }));
+    t('contact ' + pref + ': both supplied accepted', !!vOk.row, JSON.stringify(vOk.fields));
+    const vE = save._test.validate(good({ submissionKey: k(), ...only(false, true) }));
+    t('contact ' + pref + ': email-less ' + (needE ? 'rejected' : 'accepted'), needE ? !!(vE.fields && vE.fields.email) : !!vE.row, JSON.stringify(vE.fields));
+    const vP = save._test.validate(good({ submissionKey: k(), ...only(true, false) }));
+    t('contact ' + pref + ': phone-less ' + (needP ? 'rejected' : 'accepted'), needP ? !!(vP.fields && vP.fields.phone) : !!vP.row, JSON.stringify(vP.fields));
+  }
   t('invalid enum values dropped not stored', (() => { const v = save._test.validate(good({ billBand: 'DROP TABLE', utility: 'x', goal: '<script>' })); return v.row && !v.row.bill_band && !v.row.utility && !v.row.primary_goal; })());
   const v = save._test.validate(good({ attribution: { first: { utm_source: 'g', email: 'a@b.c', gclid: 'x'.repeat(500) }, current: { utm_medium: 'cpc', evil: 1 } }, sourcePage: 'https://evil.example/x', conversionPage: '/get-started/?e=a@b.c' }));
   t('attribution whitelisted and PII keys dropped', v.row && v.row.attribution_first && !('email' in v.row.attribution_first) && !('evil' in (v.row.attribution_current || {})), JSON.stringify(v.row && v.row.attribution_first));

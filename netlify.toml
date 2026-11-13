@@ -20,3 +20,10 @@
   to = "/404.html"
   status = 404
   force = true
+
+# Function source is deployed to /.netlify/functions/*; block the static copy of the source files.
+[[redirects]]
+  from = "/proposal/functions/*"
+  to = "/404.html"
+  status = 404
+  force = true

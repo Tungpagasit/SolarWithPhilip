@@ -73,6 +73,7 @@ try {
   const smDiff = git(['diff', '-U0', baseRef, '--', 'sitemap.xml']).split(/\r?\n/).filter(l => /^[-+][^-+]/.test(l));
   const ntDiff = git(['diff', '-U0', baseRef, '--', 'netlify.toml']).split(/\r?\n/).filter(l => /^[-+][^-+]/.test(l));
   const ntNew = fs.readFileSync(path.join(root, 'netlify.toml'), 'utf8');
+  ok('netlify.toml: /proposal/functions/* static source blocked (404, forced); functions dir unchanged', /from = "\/proposal\/functions\/\*"[\s\S]*?status = 404[\s\S]*?force = true/.test(fs.readFileSync(path.join(root, 'netlify.toml'), 'utf8')) && /functions = "proposal\/functions"/.test(fs.readFileSync(path.join(root, 'netlify.toml'), 'utf8')));
   ok('netlify.toml: additions only, deny /db/* and /scripts/* (404, forced); publish/functions unchanged', ntDiff.length > 0 && ntDiff.every(l => l.startsWith('+')) && /from = "\/db\/\*"[\s\S]*?status = 404[\s\S]*?force = true/.test(ntNew) && /from = "\/scripts\/\*"[\s\S]*?status = 404[\s\S]*?force = true/.test(ntNew) && /publish = "\."/.test(ntNew) && /functions = "proposal\/functions"/.test(ntNew), ntDiff.join(' | '));
   ok('sitemap.xml: additions only (get-started, compare-my-quote)', smDiff.length === 2 && smDiff.every(l => l.startsWith('+') && /\/(get-started|compare-my-quote)\/</.test(l)), smDiff.join(' | '));
   const es = git(['diff', '--numstat', baseRef, '--', 'energy-strategies.html']);

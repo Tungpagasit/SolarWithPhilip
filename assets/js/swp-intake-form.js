@@ -108,7 +108,7 @@
         list.push({ name: name, text: text.replace(/^Error: /, ''), input: input });
       });
       if (summary && list.length) {
-        summary.innerHTML = '<p class="swp-form__summary-title">Please fix the following:</p><ul>' + list.map(function (i) { return '<li><a href="#' + (i.input && i.input.id ? i.input.id : '') + '" data-focus="' + i.name + '">' + i.text.replace(/</g, '&lt;') + '</a></li>'; }).join('') + '</ul>';
+        summary.innerHTML = '<p class="swp-form__summary-title">A couple of things need your attention.</p><p class="swp-form__summary-sub">Check the highlighted fields below.</p><ul>' + list.map(function (i) { return '<li><a href="#' + (i.input && i.input.id ? i.input.id : '') + '" data-focus="' + i.name + '">' + i.text.replace(/</g, '&lt;') + '</a></li>'; }).join('') + '</ul>';
         summary.hidden = false;
         summary.focus();
       }
