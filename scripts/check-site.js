@@ -148,7 +148,7 @@ try {
 }
 
 // 9. Favicon assets
-for (const f of ['favicon.ico', 'favicon-32.png', 'apple-touch-icon.png', 'assets/css/swp-tokens.css', 'assets/css/swp-base.css', 'assets/css/swp-shell.css', 'assets/js/swp-nav.js', 'assets/js/swp-analytics.js', 'assets/js/swp-attribution.js', 'assets/js/swp-links.js']) ok(`asset exists: ${f}`, exists(f));
+for (const f of ['favicon.ico', 'apple-touch-icon.png', 'assets/images/favicon-32.png', 'assets/images/apple-touch-icon.png', 'assets/images/solar-with-philip-logo.png', 'assets/images/swp-logo-header.webp', 'assets/images/swp-logo-full-900.webp', 'assets/images/swp-logo-full-480.webp', 'assets/css/swp-tokens.css', 'assets/css/swp-base.css', 'assets/css/swp-shell.css', 'assets/js/swp-nav.js', 'assets/js/swp-analytics.js', 'assets/js/swp-attribution.js', 'assets/js/swp-links.js']) ok(`asset exists: ${f}`, exists(f));
 
 // 10. Global-selector guard for new CSS
 for (const f of ['assets/css/swp-tokens.css', 'assets/css/swp-base.css', 'assets/css/swp-shell.css']) {

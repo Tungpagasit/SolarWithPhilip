@@ -40,7 +40,7 @@ function navHtml(cfg) {
   return [
     '<header class="swp-shell">',
     '<nav class="swp-shell__inner" aria-label="Primary">',
-    '<a class="swp-shell__brand" href="/">Solar With <span>Philip</span></a>',
+    '<a class="swp-shell__brand" href="/"><img src="/assets/images/swp-logo-header.webp" alt="Solar With Philip" width="303" height="168" decoding="async"></a>',
     '<button class="swp-shell__toggle" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="swp-shell-menu"><span></span><span></span><span></span></button>',
     '<ul class="swp-shell__list" id="swp-shell-menu">',
     `<li>${link('/proposal.html', 'Compare My Quote', cur)}</li>`,
@@ -55,8 +55,8 @@ function navHtml(cfg) {
 }
 const HEAD = [
   '<link rel="icon" href="/favicon.ico" sizes="any">',
-  '<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">',
-  '<link rel="apple-touch-icon" href="/apple-touch-icon.png">',
+  '<link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32.png">',
+  '<link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">',
   '<script>document.documentElement.classList.add("swp-js")</script>',
   '<link rel="stylesheet" href="/assets/css/swp-tokens.css">',
   '<link rel="stylesheet" href="/assets/css/swp-base.css">'

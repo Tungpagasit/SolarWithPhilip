@@ -1,10 +1,15 @@
-/* Solar With Philip design tokens (Phase 2A). Custom properties only; no selectors beyond :root. */
+/* Solar With Philip design tokens (Phase 2A, brand update from approved master logo).
+   Brand tones sampled as medians of solid regions of the master: navy rgb(4,47,86), gold rgb(240,178,31).
+   --swp-navy / --swp-gold were adjusted from #0b2538 / #e8aa3b to the logo tones; the old deep navy is kept as --swp-navy-deep.
+   Gold is for fills/accents only, never body text (about 2:1 on white). Navy on gold is about 7:1. */
 :root{
-  --swp-navy:#0b2538;
+  --swp-navy:#042f56;
+  --swp-navy-deep:#0b2538;
   --swp-blue:#123b59;
   --swp-teal:#157b76;
   --swp-teal-dark:#0f6a65;
-  --swp-gold:#e8aa3b;
+  --swp-gold:#f0b21f;
+  --swp-gold-bright:#fdcd17;
   --swp-cream:#faf7ef;
   --swp-ink:#20323e;
   --swp-muted:#60717a;
