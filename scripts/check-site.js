@@ -67,10 +67,13 @@ for (const page of [...SHELL_PAGES, 'proposal.html', 'energy-strategies.html']) 
 function git(args) { return cp.execFileSync(process.env.GIT_EXE || 'git', args, { cwd: root, encoding: 'utf8' }).trim(); }
 try {
   const changed = git(['diff', '--name-only', '--diff-filter=MDR', baseRef]).split('\n').filter(Boolean);
-  const prot = [/^proposal\//, /^energy-strategies\//, /^pge-homeowners\//, /^landing\//, /^pge-landing-v1\.html$/, /^assets\/js\/oaiq\.js$/, /^netlify\.toml$/, /^robots\.txt$/, /^_headers$/];
+  const prot = [/^proposal\//, /^energy-strategies\//, /^pge-homeowners\//, /^landing\//, /^pge-landing-v1\.html$/, /^assets\/js\/oaiq\.js$/, /^robots\.txt$/, /^_headers$/];
   const hits = changed.filter(f => prot.some(r => r.test(f)));
   ok('protected files unchanged', hits.length === 0, hits.join(', '));
   const smDiff = git(['diff', '-U0', baseRef, '--', 'sitemap.xml']).split(/\r?\n/).filter(l => /^[-+][^-+]/.test(l));
+  const ntDiff = git(['diff', '-U0', baseRef, '--', 'netlify.toml']).split(/\r?\n/).filter(l => /^[-+][^-+]/.test(l));
+  const ntNew = fs.readFileSync(path.join(root, 'netlify.toml'), 'utf8');
+  ok('netlify.toml: additions only, deny /db/* and /scripts/* (404, forced); publish/functions unchanged', ntDiff.length > 0 && ntDiff.every(l => l.startsWith('+')) && /from = "\/db\/\*"[\s\S]*?status = 404[\s\S]*?force = true/.test(ntNew) && /from = "\/scripts\/\*"[\s\S]*?status = 404[\s\S]*?force = true/.test(ntNew) && /publish = "\."/.test(ntNew) && /functions = "proposal\/functions"/.test(ntNew), ntDiff.join(' | '));
   ok('sitemap.xml: additions only (get-started, compare-my-quote)', smDiff.length === 2 && smDiff.every(l => l.startsWith('+') && /\/(get-started|compare-my-quote)\/</.test(l)), smDiff.join(' | '));
   const es = git(['diff', '--numstat', baseRef, '--', 'energy-strategies.html']);
   const del = es ? Number(es.split('\t')[1]) : 0;
@@ -157,7 +160,7 @@ for (const f of ['favicon.ico', 'apple-touch-icon.png', 'assets/images/favicon-3
   const home = read('index.html'), gs = read('get-started/index.html'), cq = read('compare-my-quote/index.html');
   ok('nav: Get Started -> /get-started/, Compare -> /compare-my-quote/', [home, gs, cq, read('about.html')].every(t => /class="swp-shell__link swp-shell__cta" href="\/get-started\/"/.test(t) && /href="\/compare-my-quote\/"/.test(t)));
   ok('home: canonical, JSON-LD once, hero H1', /rel="canonical" href="https:\/\/solarwithphilip\.com\/"/.test(home) && count(home, /application\/ld\+json/g) === 1 && /See What Solar and Battery Options Fit Your Home/.test(home));
-  ok('home: approved first-screen line', /Access to more than one company's options: solar, battery, cash, financing, lease and PPA, plus select programs not available through local installers\./.test(home));
+  ok('home: calm advisor-first first-screen line (no local-installer claim)', /Explore solar, battery, cash, financing, lease and PPA options with guidance built around your home, energy use and goals\./.test(home) && !/not available through local installers/.test(home.split('More Than One Door')[0]));
   ok('home: compensation disclosure visible', /Philip may receive compensation if you choose a solution offered through him\./.test(home));
   ok('home: no old index.js router or star ratings', !/assets\/js\/index\.js|index\.css|★|AggregateRating/.test(home));
   ok('get-started: canonical + form source', /get-started\/"/.test(gs) && /data-form-source="get_started_page"/.test(gs) && /data-form-source="homepage_primary"/.test(home));
@@ -177,7 +180,7 @@ for (const f of ['favicon.ico', 'apple-touch-icon.png', 'assets/images/favicon-3
   const names = h => [...h.matchAll(/<(?:input|select|textarea)[^>]*name="([^"]+)"/g)].map(m => m[1]);
   ok('get-started: stage 1 visible fields are firstName, zip, goal only', names(outside).join(',') === 'firstName,zip,goal', names(outside).join(','));
   ok('get-started: bill and utility under optional progressive section', /<details class="swp-more"><summary>Want to tell us a little more\? \(optional\)<\/summary>[\s\S]*name="billBand"[\s\S]*name="utility"[\s\S]*<\/details>/.test(stage1));
-  ok('forms: utility hint disclaims service/program/qualification', [home, gs, cq].every(x => /Optional context only\. Listing a utility here does not mean service, program availability or qualification\./.test(x)));
+  ok('forms: utility hint disclaims service/program/qualification', [home, gs, cq].every(x => /Availability of specific programs varies, and listing a utility here does not mean service or qualification\./.test(x)));
   const cqForm = cq.match(/<!-- swp-form:compare:start -->([\s\S]*?)<!-- swp-form:compare:end -->/)[1];
   ok('compare: upload trust copy exact, no unverified security claims', cqForm.includes('Your proposal is used to help review your request. Upload only the solar proposal you want reviewed and avoid including unrelated identification, banking or tax documents.') && !/secure|encrypt|private|safe/i.test(norm(cqForm)));
   ok('forms: SMS scope note + privacy link present', [home, gs, cq].every(x => /Choosing Text means you agree to a text response about this request\. It is not sign-up for recurring promotional text messages\./.test(x) && /href="\/privacy\/">Privacy page/.test(x)));

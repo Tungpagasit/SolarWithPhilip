@@ -50,7 +50,7 @@ ${select(p, 'goal', 'What would you most like to do?', opts(GOAL, 'Choose one'))
 <p class="swp-form__note" data-quote-note hidden>Already have a quote? <a href="/compare-my-quote/">Go to Compare My Quote</a>. We will carry over what you have entered.</p>
 <details class="swp-more"><summary>Want to tell us a little more? (optional)</summary>
 ${select(p, 'billBand', 'Typical monthly electricity bill', opts(BILL, 'Choose a range'))}
-${select(p, 'utility', 'Electric utility', opts(UTIL, 'Choose your utility'), { hint: 'Optional context only. Listing a utility here does not mean service, program availability or qualification.' })}
+${select(p, 'utility', 'Electric utility', opts(UTIL, 'Choose your utility'), { hint: 'Optional. Utility helps us understand your energy situation. Availability of specific programs varies, and listing a utility here does not mean service or qualification.' })}
 </details>
 <button type="button" class="swp-btn swp-btn--navy swp-form__submit" data-next>Continue</button>
 </div>
@@ -69,8 +69,10 @@ ${honeypot(p)}
 <noscript><p class="swp-form__note">This form needs JavaScript. You can always call or text Philip at <a href="tel:+19165247187">916-524-7187</a> or email <a href="mailto:vt@wegreenourworld.com">vt@wegreenourworld.com</a>.</p></noscript>
 </form>
 <div class="swp-success" data-success hidden>
-<h3 data-success-title tabindex="-1">Got It. Want a More Useful Review?</h3>
-<p>The basics have been received. If you would like a more useful review, you can add more below. None of it is required.</p>
+<h3 data-success-title tabindex="-1">You're All Set.</h3>
+<p>We received your information. Philip or a qualified member of the Solar With Philip team will review what you shared and follow up using the contact method you selected.</p>
+<h3 style="margin-top:28px">Want to Go a Little Further?</h3>
+<p>You can add an electric bill, property details or an existing solar quote now, or stop here. Your request has already been received.</p>
 <ul class="swp-options">
 <li><button type="button" class="swp-btn swp-btn--outline" data-enrich="bill">Upload an electric bill</button></li>
 <li><button type="button" class="swp-btn swp-btn--outline" data-enrich="address">Add property address</button></li>
@@ -107,7 +109,7 @@ ${text(p, 'email', 'Email', { type: 'email', dynamic: true, auto: 'email', max: 
 ${text(p, 'phone', 'Mobile or phone number', { type: 'tel', dynamic: true, auto: 'tel', mode: 'tel', max: 40 })}
 <details class="swp-more"><summary>Add more details (optional)</summary>
 ${text(p, 'lastName', 'Last name', { auto: 'family-name' })}
-${select(p, 'utility', 'Electric utility', opts(UTIL, 'Choose your utility'), { hint: 'Optional context only. Listing a utility here does not mean service, program availability or qualification.' })}
+${select(p, 'utility', 'Electric utility', opts(UTIL, 'Choose your utility'), { hint: 'Optional. Utility helps us understand your energy situation. Availability of specific programs varies, and listing a utility here does not mean service or qualification.' })}
 ${select(p, 'concern', 'What would you most like reviewed?', opts(CONCERN, 'Choose one'))}
 <div class="swp-field"><label for="cq-message">Anything else we should know? <span class="swp-req">(optional, up to 500 characters)</span></label><textarea id="cq-message" name="message" maxlength="500" aria-describedby="cq-message-err"></textarea>${err(p, 'message')}</div>
 </details>
@@ -119,13 +121,14 @@ ${honeypot(p)}
 <noscript><p class="swp-form__note">This form needs JavaScript. You can always email your quote to <a href="mailto:vt@wegreenourworld.com">vt@wegreenourworld.com</a> or call or text Philip at <a href="tel:+19165247187">916-524-7187</a>.</p></noscript>
 </form>
 <div class="swp-success" data-success hidden>
-<h3 data-success-title tabindex="-1">Your Quote Is In.</h3>
-<p>The information you submitted has been received. Philip or a qualified member of the team may follow up using the contact method you chose.</p>
+<h3 data-success-title tabindex="-1">We Received Your Quote.</h3>
+<p>We received your quote and the information you submitted. Philip or a qualified member of the Solar With Philip team will review what you shared and follow up using the contact method you selected.</p>
 <div class="swp-panel" data-upload-retry tabindex="-1" hidden>
 <p data-retry-msg role="status" aria-live="polite"></p>
 <div data-retry-inputs><div class="swp-field"><label for="cq-retry-file">Quote file (PDF, PNG or JPG, up to 10 MB)</label><input type="file" id="cq-retry-file" accept=".pdf,.png,.jpg,.jpeg,application/pdf,image/png,image/jpeg"></div><button type="button" class="swp-btn swp-btn--navy" data-go>Try upload again</button></div>
 </div>
-<h3 style="margin-top:28px">Want to understand the numbers yourself while the quote is being reviewed?</h3>
+<h3 style="margin-top:28px">Want to Understand the Numbers While You Wait?</h3>
+<p>You can explore your own situation now, or stop here. Your quote has already been received.</p>
 <ul class="swp-options">
 <li><a class="swp-btn swp-btn--outline" href="/energy-strategies.html" data-enrich-link="build_plan">Build My Solar Plan</a></li>
 <li><a class="swp-btn swp-btn--outline" href="/proposal.html" data-enrich-link="home_energy_analysis">Home Energy Analysis</a></li>

@@ -372,7 +372,7 @@
         uploadFile('quote', f).then(function () {
           setBusy(btn, false);
           msg.textContent = 'Your quote file was added. Thank you.';
-          var title = $(successEl, '[data-success-title]'); if (title) title.textContent = 'Your Quote Is In.';
+          var title = $(successEl, '[data-success-title]'); if (title) title.textContent = 'We Received Your Quote.';
           var inputs = $(retry, '[data-retry-inputs]'); if (inputs) inputs.hidden = true;
         }, function () { setBusy(btn, false); msg.textContent = 'Your information was received, but the file did not upload. You can try again or continue without it.'; });
       });
