@@ -5,8 +5,8 @@
   else if(root)root.swpTrack=api.track;
 })(typeof window!=='undefined'?window:null,function(win){
   'use strict';
-  var EVENTS={cta_click:1,phone_click:1,text_click:1,email_click:1,nav_click:1,form_view:1,form_start:1,form_submit:1,page_section_view:1};
-  var PARAMS={cta_name:1,cta_location:1,destination:1,page_type:1,journey_type:1,link_location:1,form_id:1,lead_type:1,step_number:1,section:1,file_type:1,size_band:1,has_utility:1,bill_band:1,goal:1,has_upload:1,has_profile:1};
+  var EVENTS={cta_click:1,phone_click:1,text_click:1,email_click:1,nav_click:1,form_view:1,form_start:1,form_submit:1,page_section_view:1,contact_form_start:1,contact_form_submit:1,quote_compare_start:1,quote_compare_submit:1,quote_upload:1,form_submit_attempt:1,form_error:1,enrichment_select:1,path_select:1,tool_select:1};
+  var PARAMS={cta_name:1,cta_location:1,destination:1,page_type:1,journey_type:1,link_location:1,form_id:1,lead_type:1,step_number:1,section:1,file_type:1,size_band:1,has_utility:1,bill_band:1,goal:1,has_upload:1,has_profile:1,form_source:1,error_category:1,contact_pref:1,enrichment:1,path_choice:1,tool_name:1};
   var EMAIL=/[^\s@]+@[^\s@]+\.[^\s@]+/;
   var PHONE=/(?:\+?\d[\s().-]?){10,}/;
   var recent={};

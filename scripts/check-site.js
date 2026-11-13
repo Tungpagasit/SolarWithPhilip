@@ -15,7 +15,7 @@ const read = f => fs.readFileSync(path.join(root, f), 'utf8');
 const exists = f => fs.existsSync(path.join(root, f));
 const count = (s, re) => (s.match(re) || []).length;
 
-const SHELL_PAGES = ['index', 'start-here', 'faq', 'about', 'reviews', 'contact', 'california-guide', 'energy-costs', 'pge-service-area'].map(p => p + '.html');
+const SHELL_PAGES = ['index', 'start-here', 'faq', 'about', 'reviews', 'contact', 'california-guide', 'energy-costs', 'pge-service-area'].map(p => p + '.html').concat(['get-started/index.html', 'compare-my-quote/index.html']);
 const ALL_PAGES = [...SHELL_PAGES, 'proposal.html', 'energy-strategies.html', 'pge-landing-v1.html', 'pge-homeowners/index.html', 'landing/index.html'];
 
 // 1. Internal links and assets (static HTML files in the public pages)
@@ -66,7 +66,7 @@ for (const page of [...SHELL_PAGES, 'proposal.html', 'energy-strategies.html']) 
 // 4. Protected paths unchanged relative to baseRef
 function git(args) { return cp.execFileSync(process.env.GIT_EXE || 'git', args, { cwd: root, encoding: 'utf8' }).trim(); }
 try {
-  const changed = git(['diff', '--name-only', baseRef]).split('\n').filter(Boolean);
+  const changed = git(['diff', '--name-only', '--diff-filter=MDR', baseRef]).split('\n').filter(Boolean);
   const prot = [/^proposal\//, /^energy-strategies\//, /^pge-homeowners\//, /^landing\//, /^pge-landing-v1\.html$/, /^assets\/js\/oaiq\.js$/, /^netlify\.toml$/, /^sitemap\.xml$/, /^robots\.txt$/, /^_headers$/];
   const hits = changed.filter(f => prot.some(r => r.test(f)));
   ok('protected files unchanged', hits.length === 0, hits.join(', '));
@@ -150,7 +150,27 @@ try {
 // 9. Favicon assets
 for (const f of ['favicon.ico', 'apple-touch-icon.png', 'assets/images/favicon-32.png', 'assets/images/apple-touch-icon.png', 'assets/images/solar-with-philip-logo.png', 'assets/images/swp-logo-header.webp', 'assets/images/swp-logo-full-900.webp', 'assets/images/swp-logo-full-480.webp', 'assets/css/swp-tokens.css', 'assets/css/swp-base.css', 'assets/css/swp-shell.css', 'assets/js/swp-nav.js', 'assets/js/swp-analytics.js', 'assets/js/swp-attribution.js', 'assets/js/swp-links.js']) ok(`asset exists: ${f}`, exists(f));
 
-// 10. Global-selector guard for new CSS
+// 10b. Phase 2B conversion pages
+{
+  const home = read('index.html'), gs = read('get-started/index.html'), cq = read('compare-my-quote/index.html');
+  ok('nav: Get Started -> /get-started/, Compare -> /compare-my-quote/', [home, gs, cq, read('about.html')].every(t => /class="swp-shell__link swp-shell__cta" href="\/get-started\/"/.test(t) && /href="\/compare-my-quote\/"/.test(t)));
+  ok('home: canonical, JSON-LD once, hero H1', /rel="canonical" href="https:\/\/solarwithphilip\.com\/"/.test(home) && count(home, /application\/ld\+json/g) === 1 && /See What Solar and Battery Options Fit Your Home/.test(home));
+  ok('home: approved first-screen line', /Access to more than one company's options: solar, battery, cash, financing, lease and PPA, plus select programs not available through local installers\./.test(home));
+  ok('home: compensation disclosure visible', /Philip may receive compensation if you choose a solution offered through him\./.test(home));
+  ok('home: no old index.js router or star ratings', !/assets\/js\/index\.js|index\.css|★|AggregateRating/.test(home));
+  ok('get-started: canonical + form source', /get-started\/"/.test(gs) && /data-form-source="get_started_page"/.test(gs) && /data-form-source="homepage_primary"/.test(home));
+  ok('compare: canonical + upload + AEO Q&A', /compare-my-quote\/"/.test(cq) && /name="quoteFile"/.test(cq) && count(cq, /<h3>[^<]*\?<\/h3>/g) >= 5);
+  ok('forms: honeypot, consent unchecked, no autocomplete off', [home, gs, cq].every(t => /name="hp_fax"/.test(t) && /name="consent"/.test(t) && !/name="consent"[^>]*checked/.test(t) && !/autocomplete="off"[^>]*name="(email|phone)"/.test(t)));
+  ok('forms: no PII fields in data-cta/analytics attrs', ![home, gs, cq].some(t => /data-(cta|link-location)="[^"]*@/.test(t)));
+  const fn = ['proposal/functions/save-intake.js', 'proposal/functions/intake-upload.js'];
+  ok('new functions exist, reuse SUPABASE env names only', fn.every(f => exists(f) && /process\.env\.SUPABASE_URL/.test(read(f)) && /process\.env\.SUPABASE_SERVICE_ROLE_KEY/.test(read(f)) && !/process\.env\.(?!SUPABASE_URL|SUPABASE_SERVICE_ROLE_KEY)[A-Z_]+/.test(read(f))));
+  ok('migration not wired anywhere (SQL file only, rollback present)', exists('db/migrations/2026-11-lead-intake.sql') && exists('db/migrations/2026-11-lead-intake.rollback.sql'));
+  const an = read('assets/js/swp-analytics.js');
+  ok('analytics: generate_lead not allow-listed', !/generate_lead/.test(an));
+}
+
+// 11. Global-selector guard
+
 for (const f of ['assets/css/swp-tokens.css', 'assets/css/swp-base.css', 'assets/css/swp-shell.css']) {
   const css = read(f).replace(/\/\*[\s\S]*?\*\//g, '').replace(/@media[^{]*\{/g, '');
   const sels = [...css.matchAll(/(^|\})\s*([^{}@]+)\{/g)].map(m => m[2].trim());

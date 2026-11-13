@@ -9,6 +9,8 @@ const root = path.resolve(__dirname, '..');
 
 const PAGES = {
   'index.html': {},
+  'get-started/index.html': { current: '/get-started/' },
+  'compare-my-quote/index.html': { current: '/compare-my-quote/' },
   'start-here.html': { current: '/start-here.html' },
   'faq.html': { current: '/faq.html', learn: true },
   'about.html': { current: '/about.html' },
@@ -43,11 +45,11 @@ function navHtml(cfg) {
     '<a class="swp-shell__brand" href="/"><img src="/assets/images/swp-logo-header.webp" alt="Solar With Philip" width="303" height="168" decoding="async"></a>',
     '<button class="swp-shell__toggle" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="swp-shell-menu"><span></span><span></span><span></span></button>',
     '<ul class="swp-shell__list" id="swp-shell-menu">',
-    `<li>${link('/proposal.html', 'Compare My Quote', cur)}</li>`,
+    `<li>${link('/compare-my-quote/', 'Compare My Quote', cur)}</li>`,
     `<li class="swp-shell__has-sub"><button class="swp-shell__sub-toggle${cfg.learn ? ' is-current' : ''}" type="button" aria-expanded="false" aria-controls="swp-shell-learn">Learn <span aria-hidden="true">&#9662;</span></button><ul class="swp-shell__sub" id="swp-shell-learn">${subs}</ul></li>`,
     `<li>${link('/reviews.html', 'Reviews', cur)}</li>`,
     `<li>${link('/about.html', 'About', cur)}</li>`,
-    `<li>${link('/start-here.html', 'Get Started', cur, 'swp-shell__cta')}</li>`,
+    `<li>${link('/get-started/', 'Get Started', cur, 'swp-shell__cta')}</li>`,
     '</ul>',
     '</nav>',
     '</header>'
