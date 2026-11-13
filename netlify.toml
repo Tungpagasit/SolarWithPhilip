@@ -2,6 +2,13 @@
   publish = "."
   functions = "proposal/functions"
 
+# Non-production deploys only: send X-Robots-Tag noindex. Production has no build command.
+[context.branch-deploy]
+  command = "node scripts/preview-noindex.js"
+
+[context.deploy-preview]
+  command = "node scripts/preview-noindex.js"
+
 [[headers]]
   for = "/*"
   [headers.values]
