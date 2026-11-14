@@ -3,6 +3,7 @@
    Flow: sign (validate request, issue signed upload URL to a randomized private path) -> browser PUTs file -> confirm (server verifies magic bytes + size, then links the path to the intake row).
    Uses the existing private proposal-uploads bucket under the intake-uploads/ prefix. Files are never given public URLs and are not malware-scanned. */
 const crypto = require('crypto');
+const { notifyDocument } = require('./_lib/notify');
 
 const json = (statusCode, value) => ({ statusCode, headers: { 'content-type': 'application/json', 'cache-control': 'no-store' }, body: JSON.stringify(value) });
 const BUCKET = 'proposal-uploads';
@@ -27,11 +28,11 @@ function authOk(p) {
   return /^\d{1,18}$/.test(String(p.id == null ? '' : p.id)) && new RegExp(`^${UUID}$`, 'i').test(String(p.token == null ? '' : p.token));
 }
 
-async function owns(url, key, p) {
-  const r = await fetch(`${url}/rest/v1/lead_intake?select=id&id=eq.${String(p.id)}&enrich_token=eq.${encodeURIComponent(String(p.token))}&limit=1`, { headers: { apikey: key, authorization: `Bearer ${key}` } });
+async function owns(url, key, p, cols) {
+  const r = await fetch(`${url}/rest/v1/lead_intake?select=${cols || 'id'}&id=eq.${String(p.id)}&enrich_token=eq.${encodeURIComponent(String(p.token))}&limit=1`, { headers: { apikey: key, authorization: `Bearer ${key}` } });
   if (!r.ok) throw new Error('lookup_failed');
   const rows = await r.json();
-  return !!(rows && rows[0]);
+  return (rows && rows[0]) || null;
 }
 
 async function sign(url, key, p) {
@@ -56,7 +57,8 @@ async function confirm(url, key, p) {
   const kind = KINDS[p.kind];
   const path = String(p.path || '');
   if (!kind || !PATH_RE.test(path) || !path.includes(`/${kind}.`)) return json(400, { ok: false, error: 'invalid' });
-  if (!(await owns(url, key, p))) return json(404, { ok: false, error: 'not_found' });
+  const lead = await owns(url, key, p, `id,first_name,last_name,zip,email_normalized,phone_normalized,${kind}_upload_path`);
+  if (!lead) return json(404, { ok: false, error: 'not_found' });
   const headers = { apikey: key, authorization: `Bearer ${key}` };
   const g = await fetch(`${url}/storage/v1/object/${BUCKET}/${path}`, { headers: { ...headers, range: 'bytes=0-1023' } });
   if (!g.ok) return json(422, { ok: false, error: 'upload_missing' });
@@ -76,6 +78,7 @@ async function confirm(url, key, p) {
   if (!r.ok) throw new Error('patch_failed');
   const rows = await r.json();
   if (!rows || !rows[0]) return json(404, { ok: false, error: 'not_found' });
+  if (lead[`${kind}_upload_path`] !== path) await notifyDocument(url, key, lead, kind, path);
   return json(200, { ok: true, fileType: kindSniffed, size: total });
 }
 

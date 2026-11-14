@@ -5,6 +5,7 @@
 const path = require('path');
 process.env.SUPABASE_URL = 'https://mock.supabase.test';
 process.env.SUPABASE_SERVICE_ROLE_KEY = 'mock-service-key';
+process.env.DEPLOY_PRIME_URL = 'https://mock.site.test';
 const save = require(path.resolve(__dirname, '../proposal/functions/save-intake.js'));
 const up = require(path.resolve(__dirname, '../proposal/functions/intake-upload.js'));
 
@@ -26,9 +27,11 @@ function mock() {
       if (m === 'POST') { const r = JSON.parse(opts.body); if (db.rows.find(x => x.submission_key === r.submission_key)) return res(409, {}); const row = { id: db.rows.length + 1, enrich_token: TOKEN, ...r }; db.rows.push(row); return res(201, [row]); }
       if (m === 'PATCH') { db.patched = JSON.parse(opts.body); return res(200, db.noMatch ? [] : [{ id: 1 }]); }
       if (url.includes('submission_key=eq.')) { const k = decodeURIComponent(/submission_key=eq\.([^&]+)/.exec(url)[1]); return res(200, db.rows.filter(r => r.submission_key === k).map(r => ({ id: r.id, enrich_token: r.enrich_token }))); }
-      if (url.includes('select=id&id=eq.')) return res(200, db.owner === false ? [] : [{ id: 1 }]);
+      if (/select=id[,&][^ ]*id=eq\./.test(url)) return res(200, db.owner === false ? [] : [{ id: 1, first_name: 'Ana', last_name: 'Lopez', zip: '95667', email_normalized: 'ana@example.com', phone_normalized: '+19165550123', quote_upload_path: db.priorPath || null, bill_upload_path: null }]);
       return res(200, db.recent || []);
     }
+    if (url.startsWith('https://mock.site.test/')) { db.forms = db.forms || []; db.forms.push({ url, body: new URLSearchParams(opts.body), redirect: opts.redirect }); return db.formFail ? res(500, {}) : res(200, {}); }
+    if (url.includes('/object/sign/proposal-uploads/')) return db.signFail ? res(500, {}) : res(200, { signedURL: '/object/sign/proposal-uploads/' + url.split('/object/sign/proposal-uploads/')[1] + '?token=SIGNEDTOKEN' });
     if (url.includes('/object/upload/sign/')) return res(200, { url: '/object/upload/sign/proposal-uploads/x?token=t' });
     if (url.includes('/storage/v1/object/proposal-uploads/') && m === 'GET') return res(200, null, db.bytes);
     if (url.includes('/storage/v1/object/proposal-uploads/') && m === 'DELETE') { db.deleted = true; return res(200, {}); }
@@ -150,6 +153,50 @@ const body = r => JSON.parse(r.body);
   r = await confirm({ path: 'proposals/abc/quote.pdf' });
   t('confirm rejects foreign prefix', r.statusCode === 400);
   t('sniff png/jpg/pdf', up._test.sniff(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])) === 'png' && up._test.sniff(Buffer.from([0xff, 0xd8, 0xff, 0xe0])) === 'jpg' && !up._test.sniff(Buffer.from([1, 2, 3, 4])));
+
+  // notifications
+  const FORBIDDEN = /enrich_token|submission_key|attribution|service|mock-service-key|apikey|authorization|jj@|vt@|11111111-2222/i;
+  mock();
+  r = await save.handler(ev(good({ firstName: 'Ana', lastName: 'Lopez', message: 'Call after 5', attribution: { first: { params: { utm_source: 'g' } } } })));
+  t('notify: new lead posts exactly one swp-new-lead form', r.statusCode === 200 && db.forms && db.forms.length === 1 && db.forms[0].body.get('form-name') === 'swp-new-lead' && db.forms[0].url === 'https://mock.site.test/form-registry.html', JSON.stringify(db.forms));
+  let nf = db.forms[0].body;
+  t('notify: subject without phone/email/address', nf.get('subject') === 'New Get Started Lead - Ana - 95667', nf.get('subject'));
+  t('notify: actionable fields first', [...nf.keys()].slice(0, 8).join() === 'form-name,subject,name,preferred_contact,phone,email,zip,primary_goal', [...nf.keys()].join());
+  t('notify: field values', nf.get('name') === 'Ana Lopez' && nf.get('preferred_contact') === 'Email' && nf.get('phone') === '(916) 555-0123' && nf.get('email') === 'ana@example.com' && nf.get('electricity_bill_range') === '$250-$349' && nf.get('quote_uploaded') === 'No' && nf.get('bill_uploaded') === 'No' && nf.get('lead_status') === 'New' && nf.get('intake_id') === '1' && !!nf.get('submitted_at') && nf.get('message') === 'Call after 5' && nf.get('utility') === 'PG&E', JSON.stringify([...nf]));
+  t('notify: no internal/security data in new-lead email', ![...nf.values()].some(v => FORBIDDEN.test(v)) && ![...nf.keys()].some(k => FORBIDDEN.test(k)), JSON.stringify([...nf]));
+  r = await save.handler(ev(good()));
+  t('notify: idempotent retry sends no second email', db.forms.length === 1 && body(r).duplicate === true);
+  mock(); r = await save.handler(ev(good({ formSource: 'compare_my_quote', leadType: 'quote_compare', submissionKey: 'qqqqqqqqqqqqqqqq0001' })));
+  t('notify: compare subject', db.forms[0].body.get('subject') === 'New Quote Review Lead - Ana - 95667' && db.forms[0].body.get('existing_quote') === 'Yes');
+  mock(); db.formFail = true; r = await save.handler(ev(good()));
+  t('notify: failed notification still saves and returns success', r.statusCode === 200 && body(r).ok && body(r).id === 1 && db.rows.length === 1, r.body);
+  mock(); global.fetch = (f => async (u, o) => { if (String(u).startsWith('https://mock.site.test/')) throw new Error('boom'); return f(u, o); })(global.fetch);
+  r = await save.handler(ev(good()));
+  t('notify: network error does not fail the lead', r.statusCode === 200 && body(r).ok);
+  mock(); r = await save.handler(ev(good({ firstName: '' })));
+  t('notify: invalid lead sends nothing', r.statusCode === 400 && !db.forms);
+
+  // document added
+  const pdf = bytes([0x25, 0x50, 0x44, 0x46, 0x2d, 0x31]);
+  mock(); db.bytes = pdf; r = await confirm();
+  t('doc: confirm posts one swp-document-added', r.statusCode === 200 && db.forms && db.forms.length === 1 && db.forms[0].body.get('form-name') === 'swp-document-added', JSON.stringify(db.forms));
+  nf = db.forms[0].body; const link = nf.get('download_solar_proposal') || '';
+  t('doc: subject', nf.get('subject') === 'Document Added - Ana - 95667 - Solar Proposal', nf.get('subject'));
+  t('doc: fields', nf.get('intake_id') === '1' && nf.get('name') === 'Ana Lopez' && nf.get('email') === 'ana@example.com' && nf.get('phone') === '(916) 555-0123' && nf.get('zip') === '95667' && nf.get('document_type') === 'Solar Proposal' && !!nf.get('uploaded_at'));
+  const sc = calls.find(c => c.url.includes('/object/sign/proposal-uploads/'));
+  t('doc: signed URL requested server-side for exactly that object, 1,209,600 s', sc && sc.m === 'POST' && sc.url.endsWith('/object/sign/proposal-uploads/' + path1) && JSON.parse(sc.body).expiresIn === 1209600, sc && sc.body);
+  t('doc: email link targets only that object', link.startsWith('https://mock.supabase.test/storage/v1/object/sign/proposal-uploads/' + path1 + '?token='));
+  t('doc: no credentials or tokens in email', ![...nf.entries()].filter(([k]) => k !== 'download_solar_proposal').some(([, v]) => FORBIDDEN.test(v)) && !link.includes('mock-service-key'));
+  mock(); db.bytes = pdf; db.priorPath = path1; r = await confirm();
+  t('doc: idempotent re-confirm of same object sends no email', r.statusCode === 200 && !db.forms);
+  mock(); db.bytes = pdf; db.formFail = true; r = await confirm();
+  t('doc: failed notification keeps upload and returns success', r.statusCode === 200 && body(r).ok);
+  mock(); db.bytes = pdf; db.signFail = true; r = await confirm();
+  t('doc: signing failure keeps upload, no email, success', r.statusCode === 200 && !db.forms);
+  mock(); db.bytes = bytes([0x4d, 0x5a, 0x90, 0x00]); r = await confirm();
+  t('doc: rejected file sends no email', r.statusCode === 422 && !db.forms);
+  mock(); db.bytes = pdf; r = await up.handler(ev({ action: 'confirm', id: 1, token: TOKEN, kind: 'bill', path: 'intake-uploads/11111111-2222-3333-4444-555555555555/bill.pdf', name: 'b.pdf' }));
+  t('doc: electric bill subject/link field', db.forms && db.forms[0].body.get('subject') === 'Document Added - Ana - 95667 - Electric Bill' && !!db.forms[0].body.get('download_electric_bill') && !db.forms[0].body.get('download_solar_proposal'));
 
   console.log(`${pass} passed, ${fail} failed`);
   process.exit(fail ? 1 : 0);

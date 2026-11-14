@@ -3,6 +3,8 @@
    Same Supabase REST + env-var pattern as the other functions (SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY).
    Never touches public.solar_leads. Never returns Supabase errors to the browser. */
 
+const { notifyNewLead } = require('./_lib/notify');
+
 const json = (statusCode, value) => ({ statusCode, headers: { 'content-type': 'application/json', 'cache-control': 'no-store' }, body: JSON.stringify(value) });
 
 const CONSENT_VERSION = 'draft-2026-11-v3';
@@ -130,7 +132,7 @@ function rest(url, key) {
       return r.json();
     },
     async insert(row) {
-      const r = await fetch(`${base}?select=id,enrich_token`, { method: 'POST', headers: { ...headers, prefer: 'return=representation' }, body: JSON.stringify(row) });
+      const r = await fetch(`${base}?select=id,enrich_token,created_at`, { method: 'POST', headers: { ...headers, prefer: 'return=representation' }, body: JSON.stringify(row) });
       if (r.status === 409) return { conflict: true };
       if (!r.ok) throw await fail('insert_failed', r);
       const rows = await r.json();
@@ -159,11 +161,13 @@ async function create(db, p, ip) {
     if (recent && recent.length >= CONTACT_LIMIT) return json(429, { ok: false, error: 'rate_limited' });
   }
   let out = await db.insert(row);
+  const fresh = !out.conflict;
   if (out.conflict) {
     const again = await db.select(`select=id,enrich_token&submission_key=eq.${encodeURIComponent(row.submission_key)}&limit=1`);
     out = { row: again && again[0] };
   }
   if (!out.row || out.row.id == null) throw new Error('no_id');
+  if (fresh) await notifyNewLead(row, out.row);
   return json(200, { ok: true, id: out.row.id, token: out.row.enrich_token });
 }
 
