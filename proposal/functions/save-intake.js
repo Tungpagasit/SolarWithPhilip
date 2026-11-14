@@ -3,7 +3,7 @@
    Same Supabase REST + env-var pattern as the other functions (SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY).
    Never touches public.solar_leads. Never returns Supabase errors to the browser. */
 
-const { notifyNewLead } = require('./_lib/notify');
+const { notifyNewLead, setOrigin } = require('./_lib/notify');
 
 const json = (statusCode, value) => ({ statusCode, headers: { 'content-type': 'application/json', 'cache-control': 'no-store' }, body: JSON.stringify(value) });
 
@@ -188,6 +188,7 @@ async function enrich(db, p) {
 
 exports.handler = async event => {
   if (event.httpMethod !== 'POST') return json(405, { ok: false, error: 'method_not_allowed' });
+  setOrigin(event.headers);
   try {
     const url = process.env.SUPABASE_URL, key = process.env.SUPABASE_SERVICE_ROLE_KEY;
     if (!url || !key) throw new Error('not_configured');

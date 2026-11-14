@@ -198,6 +198,13 @@ const body = r => JSON.parse(r.body);
   mock(); db.bytes = pdf; r = await up.handler(ev({ action: 'confirm', id: 1, token: TOKEN, kind: 'bill', path: 'intake-uploads/11111111-2222-3333-4444-555555555555/bill.pdf', name: 'b.pdf' }));
   t('doc: electric bill subject/link field', db.forms && db.forms[0].body.get('subject') === 'Document Added - Ana - 95667 - Electric Bill' && !!db.forms[0].body.get('download_electric_bill') && !db.forms[0].body.get('download_solar_proposal'));
 
+  // origin allow-list
+  const hostPost = async host => { mock(); const urls = []; const f = global.fetch; global.fetch = async (u, o) => { urls.push(String(u)); return f(u, o); }; await save.handler(ev(good(), { headers: { 'x-nf-client-connection-ip': '1.2.3.4', host } })); const o = urls.filter(u => u.endsWith('/form-registry.html')); setOrigin(); return o; };
+  const { setOrigin } = require('../proposal/functions/_lib/notify');
+  let o1 = await hostPost('redesign-v2--solarwithphilip.netlify.app');
+  t('notify: branch-preview host used as form origin', o1.length === 1 && o1[0] === 'https://redesign-v2--solarwithphilip.netlify.app/form-registry.html', JSON.stringify(o1));
+  o1 = await hostPost('evil.example.com');
+  t('notify: arbitrary Host header is never used as form origin', o1.length === 1 && o1[0] === 'https://mock.site.test/form-registry.html', JSON.stringify(o1));
   console.log(`${pass} passed, ${fail} failed`);
   process.exit(fail ? 1 : 0);
 })().catch(e => { console.error('TEST CRASH', e); process.exit(2); });

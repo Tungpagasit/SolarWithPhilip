@@ -15,7 +15,15 @@ const CONCERN = { price: 'Price', size_production: 'System size / production', b
 const LEAD_TYPE = { get_started: 'Get Started', quote_compare: 'Compare My Quote' };
 const SOURCE = { homepage_primary: 'Homepage form', get_started_page: 'Get Started page', compare_my_quote: 'Compare My Quote page' };
 
-const base = () => String(process.env.DEPLOY_PRIME_URL || process.env.URL || '').replace(/\/+$/, '');
+let origin = '';
+// Runtime has no DEPLOY_PRIME_URL; trust the request host only for this site's own domain or its branch/preview subdomains.
+function setOrigin(headers) {
+  origin = '';
+  const h = String((headers && (headers['x-forwarded-host'] || headers.host)) || '').split(',')[0].trim().toLowerCase();
+  let own = ''; try { own = new URL(process.env.URL || '').host.toLowerCase(); } catch (e) { /* unset */ }
+  if (h && (h === own || /^[a-z0-9-]+--solarwithphilip\.netlify\.app$/.test(h))) origin = 'https://' + h;
+}
+const base = () => String(origin || process.env.DEPLOY_PRIME_URL || process.env.URL || '').replace(/\/+$/, '');
 const clean = v => String(v == null ? '' : v).replace(/[\u0000-\u001f\u007f]/g, ' ').replace(/\s+/g, ' ').trim();
 const pacific = d => { try { return new Date(d).toLocaleString('en-US', { timeZone: 'America/Los_Angeles', dateStyle: 'medium', timeStyle: 'short' }) + ' Pacific'; } catch (e) { return String(d); } };
 function prettyPhone(p) { const m = /^\+1(\d{3})(\d{3})(\d{4})$/.exec(p || ''); return m ? `(${m[1]}) ${m[2]}-${m[3]}` : (p || ''); }
@@ -117,4 +125,4 @@ async function notifyDocument(url, key, lead, kind, path) {
   }
 }
 
-module.exports = { notifyNewLead, notifyDocument, signDownload, SIGNED_SECONDS, FORM_PATH };
+module.exports = { setOrigin, notifyNewLead, notifyDocument, signDownload, SIGNED_SECONDS, FORM_PATH };

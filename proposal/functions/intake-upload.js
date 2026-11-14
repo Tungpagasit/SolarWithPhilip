@@ -3,7 +3,7 @@
    Flow: sign (validate request, issue signed upload URL to a randomized private path) -> browser PUTs file -> confirm (server verifies magic bytes + size, then links the path to the intake row).
    Uses the existing private proposal-uploads bucket under the intake-uploads/ prefix. Files are never given public URLs and are not malware-scanned. */
 const crypto = require('crypto');
-const { notifyDocument } = require('./_lib/notify');
+const { notifyDocument, setOrigin } = require('./_lib/notify');
 
 const json = (statusCode, value) => ({ statusCode, headers: { 'content-type': 'application/json', 'cache-control': 'no-store' }, body: JSON.stringify(value) });
 const BUCKET = 'proposal-uploads';
@@ -84,6 +84,7 @@ async function confirm(url, key, p) {
 
 exports.handler = async event => {
   if (event.httpMethod !== 'POST') return json(405, { ok: false, error: 'method_not_allowed' });
+  setOrigin(event.headers);
   try {
     const url = process.env.SUPABASE_URL, key = process.env.SUPABASE_SERVICE_ROLE_KEY;
     if (!url || !key) throw new Error('not_configured');
