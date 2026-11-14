@@ -69,7 +69,7 @@ create table public.lead_intake (
   solar_lead_id           bigint references public.solar_leads(id) on delete set null,
 
   constraint lead_intake_contact_present check (email_normalized is not null or phone_normalized is not null),
-  constraint lead_intake_preferred_contact check (preferred_contact in ('email','text','phone','email_text')),
+  constraint lead_intake_preferred_contact check (preferred_contact in ('email','phone')),
   constraint lead_intake_lead_type check (lead_type in ('get_started','quote_compare')),
   constraint lead_intake_form_source check (form_source in ('homepage_primary','get_started_page','compare_my_quote')),
   constraint lead_intake_status check (status in ('new','contacted','qualified','proposal','won','lost','spam','duplicate')),
