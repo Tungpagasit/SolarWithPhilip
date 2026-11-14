@@ -36,7 +36,7 @@ async function postForm(name, fields) {
   const ctl = typeof AbortController === 'function' ? new AbortController() : null;
   const timer = ctl ? setTimeout(() => ctl.abort(), TIMEOUT_MS) : null;
   try {
-    const r = await fetch(root + FORM_PATH, { method: 'POST', headers: { 'content-type': 'application/x-www-form-urlencoded' }, body: body.toString(), redirect: 'manual', signal: ctl ? ctl.signal : undefined });
+    const r = await fetch(root + FORM_PATH, { method: 'POST', headers: { 'content-type': 'application/x-www-form-urlencoded', 'user-agent': 'Mozilla/5.0 (compatible; SolarWithPhilip-Notify/1.0; +https://solarwithphilip.com)', referer: root + '/', origin: root }, body: body.toString(), redirect: 'manual', signal: ctl ? ctl.signal : undefined });
     const ok = r.status >= 200 && r.status < 400;
     if (!ok) console.error('notify failed:', name, 'status=' + r.status);
     return ok;
