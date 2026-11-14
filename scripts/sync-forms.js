@@ -56,7 +56,7 @@ ${select(p, 'utility', 'Electric utility', opts(UTIL, 'Choose your utility'), { 
 </div>
 <div data-stage="2">
 <h3 class="swp-form__stage-title" data-stage-title tabindex="-1">How Should We Reach You?</h3>
-<p>Philip or a qualified member of the Solar With Philip team may follow up about your request using the contact method you choose.</p>
+<p>Philip or an authorized Solar With Philip representative may follow up about your request using the contact method you choose.</p>
 ${preferred(p)}
 ${text(p, 'email', 'Email', { type: 'email', dynamic: true, auto: 'email', max: 254 })}
 ${text(p, 'phone', 'Phone number', { type: 'tel', dynamic: true, auto: 'tel', mode: 'tel', max: 40 })}
@@ -70,7 +70,7 @@ ${honeypot(p)}
 </form>
 <div class="swp-success" data-success hidden>
 <h3 data-success-title tabindex="-1">You're All Set.</h3>
-<p>We received your information. Philip or a qualified member of the Solar With Philip team will review what you shared and follow up using the contact method you selected.</p>
+<p>We received your information. Philip or an authorized Solar With Philip representative will review what you shared and follow up using the contact method you selected.</p>
 <h3 style="margin-top:28px">Want to Go a Little Further?</h3>
 <p>You can add an electric bill, property details or an existing solar quote now, or stop here. Your request has already been received.</p>
 <ul class="swp-options">
@@ -90,7 +90,7 @@ ${honeypot(p)}
 <button type="button" class="swp-btn swp-btn--navy" data-go>Save address</button>
 <p data-panel-msg role="status" aria-live="polite"></p>
 </div>
-<div class="swp-panel" data-panel="done" tabindex="-1" hidden><p><strong>Thank you.</strong> Your request is in. Philip or a qualified member of the team may follow up using the contact method you chose.</p></div>
+<div class="swp-panel" data-panel="done" tabindex="-1" hidden><p><strong>Thank you.</strong> Your request is in. Philip or an authorized Solar With Philip representative may follow up using the contact method you chose.</p></div>
 </div>
 </div>`;
 }
@@ -117,12 +117,12 @@ ${consent(p)}
 ${honeypot(p)}
 <button type="submit" class="swp-btn swp-btn--primary swp-form__submit" data-submit>Send My Quote for Review</button>
 <p class="swp-status" data-status role="status" aria-live="polite"></p>
-<p class="swp-form__assure">No obligation. Philip or a qualified member of the Solar With Philip team may follow up about your request using the contact method you choose.</p>
+<p class="swp-form__assure">No obligation. Philip or an authorized Solar With Philip representative may follow up about your request using the contact method you choose.</p>
 <noscript><p class="swp-form__note">This form needs JavaScript. You can always email your quote to <a href="mailto:vt@wegreenourworld.com">vt@wegreenourworld.com</a> or call or text Philip at <a href="tel:+19165247187">916-524-7187</a>.</p></noscript>
 </form>
 <div class="swp-success" data-success hidden>
 <h3 data-success-title tabindex="-1">We Received Your Quote.</h3>
-<p>We received your quote and the information you submitted. Philip or a qualified member of the Solar With Philip team will review what you shared and follow up using the contact method you selected.</p>
+<p>We received your quote and the information you submitted. Philip or an authorized Solar With Philip representative will review what you shared and follow up using the contact method you selected.</p>
 <div class="swp-panel" data-upload-retry tabindex="-1" hidden>
 <p data-retry-msg role="status" aria-live="polite"></p>
 <div data-retry-inputs><div class="swp-field"><label for="cq-retry-file">Quote file (PDF, PNG or JPG, up to 10 MB)</label><input type="file" id="cq-retry-file" accept=".pdf,.png,.jpg,.jpeg,application/pdf,image/png,image/jpeg"></div><button type="button" class="swp-btn swp-btn--navy" data-go>Try upload again</button></div>

@@ -106,5 +106,7 @@ alter table public.lead_intake enable row level security;
 -- Intentionally no policies: anon/authenticated roles are denied; service_role bypasses RLS.
 -- Defense in depth: also remove table privileges from the public API roles.
 revoke all on table public.lead_intake from anon, authenticated;
+-- Required on this project: service_role does not receive automatic table privileges (observed 42501 on first production use).
+grant select, insert, update on public.lead_intake to service_role;
 
 commit;
