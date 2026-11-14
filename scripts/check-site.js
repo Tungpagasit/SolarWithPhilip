@@ -184,7 +184,7 @@ for (const f of ['favicon.ico', 'apple-touch-icon.png', 'assets/images/favicon-3
   ok('forms: utility hint disclaims service/program/qualification', [home, gs, cq].every(x => /Availability of specific programs varies, and listing a utility here does not mean service or qualification\./.test(x)));
   const cqForm = cq.match(/<!-- swp-form:compare:start -->([\s\S]*?)<!-- swp-form:compare:end -->/)[1];
   ok('compare: upload trust copy exact, no unverified security claims', cqForm.includes('Your proposal is used to help review your request. Upload only the solar proposal you want reviewed and avoid including unrelated identification, banking or tax documents.') && !/secure|encrypt|private|safe/i.test(norm(cqForm)));
-  ok('forms: SMS scope note + privacy link present', [home, gs, cq].every(x => /Choosing Text means you agree to a text response about this request\. It is not sign-up for recurring promotional text messages\./.test(x) && /href="\/privacy\/">Privacy page/.test(x)));
+  ok('forms: only phone/email follow-up, no form text-consent copy, privacy link present', [home, gs, cq].every(x => { const vals = [...x.matchAll(/name="preferred" value="([a-z_]+)"/g)].map(m => m[1]).sort().join(','); return vals === 'email,phone' && !/Choosing Text|data-sms-note|email_text/.test(x) && /href="\/privacy\/">Privacy page/.test(x); }));
   ok('footers link to /privacy/', [home, gs, cq].every(x => /<footer[\s\S]*href="\/privacy\/">Privacy<\/a>[\s\S]*<\/footer>/.test(x)));
   const rv = norm(read('reviews.html'));
   const quotes = [...home.matchAll(/<blockquote>([\s\S]*?)<\/blockquote>/g)].map(m => norm(m[1]));

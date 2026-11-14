@@ -5,10 +5,10 @@
 
 const json = (statusCode, value) => ({ statusCode, headers: { 'content-type': 'application/json', 'cache-control': 'no-store' }, body: JSON.stringify(value) });
 
-const CONSENT_VERSION = 'draft-2026-11-v2';
-const PRIVACY_VERSION = 'draft-2026-11-v2';
+const CONSENT_VERSION = 'draft-2026-11-v3';
+const PRIVACY_VERSION = 'draft-2026-11-v3';
 const ENUMS = {
-  preferred: ['email', 'text', 'phone', 'email_text'],
+  preferred: ['email', 'phone'],
   utility: ['pge', 'sce', 'sdge', 'smud', 'other', 'not_sure'],
   bill: ['lt150', '150_249', '250_349', '350_499', '500_749', '750_plus', 'not_sure'],
   goal: ['lower_costs', 'solar', 'solar_battery', 'backup', 'add_replace', 'compare_quote', 'not_sure'],
@@ -60,8 +60,8 @@ function validate(p) {
   const email = normalizeEmail(emailRaw), phone = normalizePhone(phoneRaw);
   if (emailRaw && !email) f.email = 'invalid_email';
   if (phoneRaw && !phone) f.phone = 'invalid_phone';
-  const needEmail = preferred === 'email' || preferred === 'email_text';
-  const needPhone = preferred === 'text' || preferred === 'phone' || preferred === 'email_text';
+  const needEmail = preferred === 'email';
+  const needPhone = preferred === 'phone';
   if (needEmail && !emailRaw) f.email = 'missing_contact';
   if (needPhone && !phoneRaw) f.phone = 'missing_contact';
   if (!email && !phone && !f.email && !f.phone) f.preferred = 'missing_contact';

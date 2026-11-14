@@ -28,14 +28,14 @@ function select(p, n, label, html, o = {}) {
     (o.hint ? `<span class="swp-hint" id="${p}-${n}-hint">${o.hint}</span>` : '') + err(p, n) + '</div>';
 }
 function preferred(p) {
-  const r = [['email', 'Email'], ['text', 'Text'], ['phone', 'Phone'], ['email_text', 'Email + Text']];
+  const r = [['email', 'Email'], ['phone', 'Phone']];
   return `<fieldset class="swp-field" aria-describedby="${p}-preferred-err"><legend>Preferred contact method <span class="swp-req">(required)</span></legend><div class="swp-choices">` +
     r.map(([v, l], i) => `<label class="swp-choice"><input type="radio" name="preferred" value="${v}" id="${p}-preferred-${v}"${i === 0 ? ' required' : ''}><span>${l}</span></label>`).join('') +
-    `</div><span class="swp-hint" data-sms-note>Choosing Text means you agree to a text response about this request. It is not sign-up for recurring promotional text messages.</span>${err(p, 'preferred')}</fieldset>`;
+    `</div>${err(p, 'preferred')}</fieldset>`;
 }
 const honeypot = p => `<div class="swp-hp" aria-hidden="true"><label for="${p}-hp">Leave this field empty</label><input type="text" id="${p}-hp" name="hp_fax" tabindex="-1" autocomplete="off"></div>`;
-// Consent wording is a DRAFT (version draft-2026-11-v2) and needs owner/legal approval before launch.
-const consent = p => `<div class="swp-field"><div class="swp-consent"><input type="checkbox" id="${p}-consent" name="consent" aria-describedby="${p}-consent-err"><label for="${p}-consent">I agree that Philip or a qualified member of the Solar With Philip team may contact me about this request using the method I selected.</label></div><span class="swp-hint">See how information is handled on our <a href="/privacy/">Privacy page</a>.</span>${err(p, 'consent')}</div>`;
+// Consent wording is a DRAFT (version draft-2026-11-v3) and needs owner/legal approval before launch.
+const consent = p => `<div class="swp-field"><div class="swp-consent"><input type="checkbox" id="${p}-consent" name="consent" aria-describedby="${p}-consent-err"><label for="${p}-consent">I agree that Philip or an authorized Solar With Philip representative may contact me about this request using the method I selected.</label></div><span class="swp-hint">See how information is handled on our <a href="/privacy/">Privacy page</a>.</span>${err(p, 'consent')}</div>`;
 
 function intake(source) {
   const p = 'gs';
@@ -59,7 +59,7 @@ ${select(p, 'utility', 'Electric utility', opts(UTIL, 'Choose your utility'), { 
 <p>Philip or a qualified member of the Solar With Philip team may follow up about your request using the contact method you choose.</p>
 ${preferred(p)}
 ${text(p, 'email', 'Email', { type: 'email', dynamic: true, auto: 'email', max: 254 })}
-${text(p, 'phone', 'Mobile or phone number', { type: 'tel', dynamic: true, auto: 'tel', mode: 'tel', max: 40 })}
+${text(p, 'phone', 'Phone number', { type: 'tel', dynamic: true, auto: 'tel', mode: 'tel', max: 40 })}
 ${consent(p)}
 ${honeypot(p)}
 <button type="submit" class="swp-btn swp-btn--primary swp-form__submit" data-submit>Review My Options</button>
@@ -106,7 +106,7 @@ ${text(p, 'zip', 'ZIP code', { required: true, auto: 'postal-code', mode: 'numer
 <div class="swp-field"><label for="cq-quoteFile">Your solar quote or proposal <span class="swp-req">(required: PDF, PNG or JPG, up to 10 MB)</span></label><input type="file" id="cq-quoteFile" name="quoteFile" accept=".pdf,.png,.jpg,.jpeg,application/pdf,image/png,image/jpeg" aria-required="true" aria-describedby="cq-quoteFile-hint cq-quoteFile-err"><span class="swp-hint" id="cq-quoteFile-hint">Your proposal is used to help review your request. Upload only the solar proposal you want reviewed and avoid including unrelated identification, banking or tax documents.</span>${err(p, 'quoteFile')}</div>
 ${preferred(p)}
 ${text(p, 'email', 'Email', { type: 'email', dynamic: true, auto: 'email', max: 254 })}
-${text(p, 'phone', 'Mobile or phone number', { type: 'tel', dynamic: true, auto: 'tel', mode: 'tel', max: 40 })}
+${text(p, 'phone', 'Phone number', { type: 'tel', dynamic: true, auto: 'tel', mode: 'tel', max: 40 })}
 <details class="swp-more"><summary>Add more details (optional)</summary>
 ${text(p, 'lastName', 'Last name', { auto: 'family-name' })}
 ${select(p, 'utility', 'Electric utility', opts(UTIL, 'Choose your utility'), { hint: 'Optional. Utility helps us understand your energy situation. Availability of specific programs varies, and listing a utility here does not mean service or qualification.' })}

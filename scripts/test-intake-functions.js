@@ -12,7 +12,7 @@ let pass = 0, fail = 0;
 const t = (name, cond, detail) => { if (cond) pass++; else { fail++; console.log('FAIL', name, detail || ''); } };
 const TOKEN = '11111111-2222-3333-4444-555555555555';
 const ev = (body, extra) => ({ httpMethod: 'POST', headers: { 'x-nf-client-connection-ip': '1.2.3.' + (Math.random() * 250 | 0) }, body: JSON.stringify(body), ...extra });
-const good = o => ({ firstName: 'Ana', zip: '95667-1234', preferred: 'email_text', email: ' Ana@Example.COM ', phone: '(916) 555-0123', consent: true, leadType: 'get_started', formSource: 'get_started_page', submissionKey: 'abcdefghijklmnop1234', billBand: '250_349', goal: 'solar', utility: 'pge', ...o });
+const good = o => ({ firstName: 'Ana', zip: '95667-1234', preferred: 'email', email: ' Ana@Example.COM ', phone: '(916) 555-0123', consent: true, leadType: 'get_started', formSource: 'get_started_page', submissionKey: 'abcdefghijklmnop1234', billBand: '250_349', goal: 'solar', utility: 'pge', ...o });
 
 let calls, db;
 function mock() {
@@ -59,13 +59,13 @@ const body = r => JSON.parse(r.body);
   for (const [name, over, field] of [
     ['missing name', { firstName: '' }, 'firstName'], ['bad zip', { zip: '123' }, 'zip'], ['no consent', { consent: false }, 'consent'],
     ['bad email', { email: 'nope' }, 'email'], ['email required for email pref', { preferred: 'email', email: '' }, 'email'],
-    ['phone required for text', { preferred: 'text', phone: '' }, 'phone'], ['bad preferred', { preferred: 'carrier_pigeon' }, 'preferred'],
+    ['phone required for phone pref', { preferred: 'phone', phone: '' }, 'phone'], ['text no longer accepted', { preferred: 'text' }, 'preferred'], ['email_text no longer accepted', { preferred: 'email_text' }, 'preferred'], ['bad preferred', { preferred: 'carrier_pigeon' }, 'preferred'],
     ['compare type wrong source', { leadType: 'quote_compare', formSource: 'get_started_page' }, 'form'], ['short key', { submissionKey: 'short' }, 'form'],
     ['consent string not true', { consent: 'true' }, 'consent']]) {
     r = await save.handler(ev(good({ submissionKey: 'v' + Math.random().toString(36).slice(2, 20).padEnd(16, 'x'), ...over })));
     t('reject ' + name, r.statusCode === 400 && body(r).fields && body(r).fields[field], r.body);
   }
-  for (const [pref, needE, needP] of [['email', true, false], ['text', false, true], ['phone', false, true], ['email_text', true, true]]) {
+  for (const [pref, needE, needP] of [['email', true, false], ['phone', false, true]]) {
     const k = () => 'm' + Math.random().toString(36).slice(2, 20).padEnd(16, 'x');
     const only = (e, ph) => ({ preferred: pref, email: e ? 'a@example.com' : '', phone: ph ? '916-555-0123' : '' });
     const vOk = save._test.validate(good({ submissionKey: k(), ...only(true, true) }));

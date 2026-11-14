@@ -126,7 +126,7 @@
     function preferred() { var r = $(form, '[name="preferred"]:checked'); return r ? r.value : ''; }
     function updateContactHints() {
       var p = preferred();
-      var needEmail = p === 'email' || p === 'email_text', needPhone = p === 'text' || p === 'phone' || p === 'email_text';
+      var needEmail = p === 'email', needPhone = p === 'phone';
       var e = field('email'), ph = field('phone');
       if (e) { e.required = needEmail; e.setAttribute('aria-required', needEmail ? 'true' : 'false'); }
       if (ph) { ph.required = needPhone; ph.setAttribute('aria-required', needPhone ? 'true' : 'false'); }
@@ -149,7 +149,7 @@
       var errs = validateStage1();
       var p = preferred(), em = val('email'), ph = val('phone');
       if (!p) errs.preferred = 'missing_contact';
-      var needEmail = p === 'email' || p === 'email_text', needPhone = p === 'text' || p === 'phone' || p === 'email_text';
+      var needEmail = p === 'email', needPhone = p === 'phone';
       if (needEmail && !em) errs.email = 'missing_email';
       else if (em && !validEmail(em)) errs.email = 'invalid_email';
       if (needPhone && !ph) errs.phone = 'missing_phone';
