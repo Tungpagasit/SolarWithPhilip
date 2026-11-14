@@ -1,0 +1,10 @@
+/* Solar With Philip base helpers (Phase 2A). Zero-specificity focus rule plus explicit swp-* classes only. */
+:where(a,button,input,select,textarea,summary,[tabindex]):focus-visible{outline:3px solid var(--swp-focus,#0f6a65);outline-offset:3px}
+.swp-skip{position:absolute;left:12px;top:-100px;z-index:10000;background:var(--swp-navy,#0b2538);color:#fff;padding:10px 16px;border-radius:0 0 10px 10px;font-weight:800;text-decoration:none}
+.swp-skip:focus{top:0;color:#fff}
+.swp-container{width:min(var(--swp-container,1180px),calc(100% - 40px));margin-inline:auto}
+.swp-sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+main:focus{outline:none}
+@media (prefers-reduced-motion:reduce){
+  .swp-shell *,.swp-skip{transition:none!important;animation:none!important}
+}

@@ -2,8 +2,35 @@
   publish = "."
   functions = "proposal/functions"
 
+# Non-production deploys only: send X-Robots-Tag noindex. Production has no build command.
+[context.branch-deploy]
+  command = "node scripts/preview-noindex.js"
+
+[context.deploy-preview]
+  command = "node scripts/preview-noindex.js"
+
 [[headers]]
   for = "/*"
   [headers.values]
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Private development paths: never serve SQL migrations or build/test scripts publicly.
+[[redirects]]
+  from = "/db/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+[[redirects]]
+  from = "/scripts/*"
+  to = "/404.html"
+  status = 404
+  force = true
+
+# Function source is deployed to /.netlify/functions/*; block the static copy of the source files.
+[[redirects]]
+  from = "/proposal/functions/*"
+  to = "/404.html"
+  status = 404
+  force = true

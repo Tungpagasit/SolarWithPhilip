@@ -1,0 +1,27 @@
+/* Solar With Philip design tokens (Phase 2A, brand update from approved master logo).
+   Brand tones sampled as medians of solid regions of the master: navy rgb(4,47,86), gold rgb(240,178,31).
+   --swp-navy / --swp-gold were adjusted from #0b2538 / #e8aa3b to the logo tones; the old deep navy is kept as --swp-navy-deep.
+   Gold is for fills/accents only, never body text (about 2:1 on white). Navy on gold is about 7:1. */
+:root{
+  --swp-navy:#042f56;
+  --swp-navy-deep:#0b2538;
+  --swp-blue:#123b59;
+  --swp-teal:#157b76;
+  --swp-teal-dark:#0f6a65;
+  --swp-gold:#f0b21f;
+  --swp-gold-bright:#fdcd17;
+  --swp-cream:#faf7ef;
+  --swp-ink:#20323e;
+  --swp-muted:#60717a;
+  --swp-line:#dae4e7;
+  --swp-soft:#edf6f5;
+  --swp-white:#fff;
+  --swp-focus:#0f6a65;
+  --swp-font:Inter,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  --swp-space-1:4px;--swp-space-2:8px;--swp-space-3:12px;--swp-space-4:16px;--swp-space-5:24px;--swp-space-6:32px;--swp-space-7:48px;--swp-space-8:72px;
+  --swp-radius-s:9px;--swp-radius-m:14px;--swp-radius-l:22px;
+  --swp-container:1180px;
+  --swp-shadow-s:0 4px 15px rgba(6,31,47,.06);
+  --swp-shadow-m:0 18px 50px rgba(6,31,47,.18);
+  --swp-z-nav:9999;
+}
