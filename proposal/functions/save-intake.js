@@ -114,25 +114,31 @@ function limited(ip) {
   return arr.length > IP_LIMIT;
 }
 
+async function fail(code, r) {
+  let d = '';
+  try { d = (await r.text()).slice(0, 300); } catch (e) {}
+  return new Error(code + ' status=' + r.status + ' ' + d);
+}
+
 function rest(url, key) {
   const headers = { apikey: key, authorization: `Bearer ${key}`, 'content-type': 'application/json' };
   const base = `${url}/rest/v1/lead_intake`;
   return {
     async select(query) {
       const r = await fetch(`${base}?${query}`, { headers });
-      if (!r.ok) throw new Error('select_failed');
+      if (!r.ok) throw await fail('select_failed', r);
       return r.json();
     },
     async insert(row) {
       const r = await fetch(`${base}?select=id,enrich_token`, { method: 'POST', headers: { ...headers, prefer: 'return=representation' }, body: JSON.stringify(row) });
       if (r.status === 409) return { conflict: true };
-      if (!r.ok) throw new Error('insert_failed');
+      if (!r.ok) throw await fail('insert_failed', r);
       const rows = await r.json();
       return { row: rows && rows[0] };
     },
     async patch(filter, row) {
       const r = await fetch(`${base}?${filter}&select=id`, { method: 'PATCH', headers: { ...headers, prefer: 'return=representation' }, body: JSON.stringify(row) });
-      if (!r.ok) throw new Error('patch_failed');
+      if (!r.ok) throw await fail('patch_failed', r);
       return r.json();
     }
   };
